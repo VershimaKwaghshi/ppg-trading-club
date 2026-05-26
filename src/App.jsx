@@ -28,25 +28,22 @@ const HOW_STEPS = [
 ];
 
 function useInView(ref, threshold) {
-  var t = threshold || 0.15;
-  var _a = useState(false), inView = _a[0], setInView = _a[1];
-  useEffect(function() {
-    var observer = new IntersectionObserver(
-      function(entries) { if (entries[0].isIntersecting) setInView(true); },
+  const t = threshold || 0.15;
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => { if (entries[0].isIntersecting) setInView(true); },
       { threshold: t }
     );
     if (ref.current) observer.observe(ref.current);
-    return function() { observer.disconnect(); };
+    return () => observer.disconnect();
   }, [ref, t]);
   return inView;
 }
 
-function AnimatedSection(props) {
-  var children = props.children;
-  var className = props.className || "";
-  var delay = props.delay || 0;
-  var ref = useRef(null);
-  var inView = useInView(ref);
+function AnimatedSection({ children, className = "", delay = 0 }) {
+  const ref = useRef(null);
+  const inView = useInView(ref);
   return (
     <div
       ref={ref}
@@ -54,7 +51,7 @@ function AnimatedSection(props) {
       style={{
         opacity: inView ? 1 : 0,
         transform: inView ? "translateY(0)" : "translateY(40px)",
-        transition: "opacity 0.7s ease " + delay + "s, transform 0.7s ease " + delay + "s",
+        transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`,
       }}
     >
       {children}
@@ -63,11 +60,11 @@ function AnimatedSection(props) {
 }
 
 function Navbar() {
-  var _a = useState(false), scrolled = _a[0], setScrolled = _a[1];
-  useEffect(function() {
-    var fn = function() { setScrolled(window.scrollY > 40); };
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const fn = () => { setScrolled(window.scrollY > 40); };
     window.addEventListener("scroll", fn);
-    return function() { window.removeEventListener("scroll", fn); };
+    return () => window.removeEventListener("scroll", fn);
   }, []);
   return (
     <nav style={{
@@ -83,11 +80,9 @@ function Navbar() {
           <img src="/ppg-logo-text.svg" alt="PPG Trading Club" style={{ height: 60, width: "auto" }} />
         </div>
         <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-          {NAV_LINKS.map(function(l) {
-            return (
-              <a key={l.label} href={l.href} style={{ color: "#b0a080", fontSize: 14, fontFamily: "'DM Sans', sans-serif", textDecoration: "none", fontWeight: 500, letterSpacing: "0.03em" }}>{l.label}</a>
-            );
-          })}
+          {NAV_LINKS.map((l) => (
+            <a key={l.label} href={l.href} style={{ color: "#b0a080", fontSize: 14, fontFamily: "'DM Sans', sans-serif", textDecoration: "none", fontWeight: 500, letterSpacing: "0.03em" }}>{l.label}</a>
+          ))}
           <a href="#register" style={{ background: "linear-gradient(135deg,#c4a050,#f0d080)", color: "#050814", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 13, padding: "10px 22px", borderRadius: 6, textDecoration: "none", letterSpacing: "0.04em" }}>Join Now</a>
         </div>
       </div>
@@ -123,14 +118,12 @@ function Hero() {
           </a>
         </div>
         <div style={{ display: "flex", gap: 0, justifyContent: "center", marginTop: 80, flexWrap: "wrap", borderTop: "1px solid rgba(196,160,80,0.1)", paddingTop: 48 }}>
-          {[["$100", "Minimum Deposit"], ["7", "Risk Tiers"], ["24H", "Withdrawals"], ["15%", "Referral Earn"]].map(function(item, i) {
-            return (
-              <div key={i} style={{ padding: "0 40px", borderRight: i < 3 ? "1px solid rgba(196,160,80,0.1)" : "none", textAlign: "center" }}>
-                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 900, color: "#c4a050" }}>{item[0]}</div>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#606080", marginTop: 4, letterSpacing: "0.08em", textTransform: "uppercase" }}>{item[1]}</div>
-              </div>
-            );
-          })}
+          {[["$100", "Minimum Deposit"], ["7", "Risk Tiers"], ["24H", "Withdrawals"], ["15%", "Referral Earn"]].map((item, i) => (
+            <div key={i} style={{ padding: "0 40px", borderRight: i < 3 ? "1px solid rgba(196,160,80,0.1)" : "none", textAlign: "center" }}>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 900, color: "#c4a050" }}>{item[0]}</div>
+              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#606080", marginTop: 4, letterSpacing: "0.08em", textTransform: "uppercase" }}>{item[1]}</div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -171,15 +164,13 @@ function About() {
                 { icon: "👁️", title: "Watch Every Trade Live", desc: "Every member gets a view-only MT5 password to watch every position open and close, 24/7, in real time." },
                 { icon: "📊", title: "Expert Management", desc: "Our vetted managers use disciplined risk strategies aligned with your chosen risk tier." },
                 { icon: "🏢", title: "Formally Registered", desc: "PPG is registered with Nigeria's CAC. We operate with legal accountability and full transparency." },
-              ].map(function(c, i) {
-                return (
-                  <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(196,160,80,0.1)", borderRadius: 12, padding: "24px 20px" }}>
-                    <div style={{ fontSize: 28, marginBottom: 12 }}>{c.icon}</div>
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 14, color: "#f0e8d0", marginBottom: 8 }}>{c.title}</div>
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#606080", lineHeight: 1.6 }}>{c.desc}</div>
-                  </div>
-                );
-              })}
+              ].map((c, i) => (
+                <div key={i} style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(196,160,80,0.1)", borderRadius: 12, padding: "24px 20px" }}>
+                  <div style={{ fontSize: 28, marginBottom: 12 }}>{c.icon}</div>
+                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 14, color: "#f0e8d0", marginBottom: 8 }}>{c.title}</div>
+                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#606080", lineHeight: 1.6 }}>{c.desc}</div>
+                </div>
+              ))}
             </div>
           </div>
         </AnimatedSection>
@@ -200,17 +191,15 @@ function HowItWorks() {
           </div>
         </AnimatedSection>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
-          {HOW_STEPS.map(function(step, i) {
-            return (
-              <AnimatedSection key={i} delay={i * 0.08}>
-                <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(196,160,80,0.1)", borderRadius: 16, padding: "32px 28px", height: "100%" }}>
-                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 13, color: "rgba(196,160,80,0.4)", fontWeight: 500, marginBottom: 16, letterSpacing: "0.08em" }}>{step.n}</div>
-                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.15rem", fontWeight: 700, color: "#f0e8d0", marginBottom: 12 }}>{step.title}</h3>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#606080", lineHeight: 1.75 }}>{step.desc}</p>
-                </div>
-              </AnimatedSection>
-            );
-          })}
+          {HOW_STEPS.map((step, i) => (
+            <AnimatedSection key={i} delay={i * 0.08}>
+              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(196,160,80,0.1)", borderRadius: 16, padding: "32px 28px", height: "100%" }}>
+                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 13, color: "rgba(196,160,80,0.4)", fontWeight: 500, marginBottom: 16, letterSpacing: "0.08em" }}>{step.n}</div>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.15rem", fontWeight: 700, color: "#f0e8d0", marginBottom: 12 }}>{step.title}</h3>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#606080", lineHeight: 1.75 }}>{step.desc}</p>
+              </div>
+            </AnimatedSection>
+          ))}
         </div>
       </div>
     </section>
@@ -218,7 +207,7 @@ function HowItWorks() {
 }
 
 function RiskTiers() {
-  var _a = useState(2), selected = _a[0], setSelected = _a[1];
+  const [selected, setSelected] = useState(2);
   return (
     <section id="risk" style={{ padding: "120px 2rem", background: "#070a1a" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
@@ -232,31 +221,29 @@ function RiskTiers() {
           </div>
         </AnimatedSection>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 20, marginBottom: 48 }}>
-          {RISK_TIERS.map(function(tier, i) {
-            return (
-              <AnimatedSection key={i} delay={i * 0.06}>
-                <div
-                  onClick={function() { setSelected(i); }}
-                  style={{
-                    background: selected === i ? "rgba(196,160,80,0.06)" : "rgba(255,255,255,0.02)",
-                    border: "1px solid " + (selected === i ? tier.color : "rgba(196,160,80,0.1)"),
-                    borderRadius: 14, padding: "28px 24px", cursor: "pointer", position: "relative", overflow: "hidden",
-                    boxShadow: selected === i ? ("0 0 30px " + tier.color + "22") : "none",
-                  }}>
-                  {tier.badge && (
-                    <div style={{ position: "absolute", top: 14, right: 14, background: tier.color, color: "#050814", fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 4, letterSpacing: "0.08em" }}>
-                      {tier.badge}
-                    </div>
-                  )}
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.2rem", fontWeight: 900, color: tier.color, lineHeight: 1 }}>{tier.pct}</div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, color: "#f0e8d0", fontSize: 15, margin: "8px 0 4px" }}>{tier.label}</div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: tier.color, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 14, fontWeight: 600 }}>{tier.risk}</div>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#606080", lineHeight: 1.65, marginBottom: 16 }}>{tier.desc}</p>
-                  <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 12, color: "#c4a050" }}>~{tier.daily}/day on $100</div>
-                </div>
-              </AnimatedSection>
-            );
-          })}
+          {RISK_TIERS.map((tier, i) => (
+            <AnimatedSection key={i} delay={i * 0.06}>
+              <div
+                onClick={() => setSelected(i)}
+                style={{
+                  background: selected === i ? "rgba(196,160,80,0.06)" : "rgba(255,255,255,0.02)",
+                  border: `1px solid ${selected === i ? tier.color : "rgba(196,160,80,0.1)"}`,
+                  borderRadius: 14, padding: "28px 24px", cursor: "pointer", position: "relative", overflow: "hidden",
+                  boxShadow: selected === i ? `0 0 30px ${tier.color}22` : "none",
+                }}>
+                {tier.badge && (
+                  <div style={{ position: "absolute", top: 14, right: 14, background: tier.color, color: "#050814", fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 4, letterSpacing: "0.08em" }}>
+                    {tier.badge}
+                  </div>
+                )}
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.2rem", fontWeight: 900, color: tier.color, lineHeight: 1 }}>{tier.pct}</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, color: "#f0e8d0", fontSize: 15, margin: "8px 0 4px" }}>{tier.label}</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: tier.color, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 14, fontWeight: 600 }}>{tier.risk}</div>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#606080", lineHeight: 1.65, marginBottom: 16 }}>{tier.desc}</p>
+                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 12, color: "#c4a050" }}>~{tier.daily}/day on $100</div>
+              </div>
+            </AnimatedSection>
+          ))}
         </div>
         <AnimatedSection>
           <div style={{ background: "rgba(255,200,50,0.04)", border: "1px solid rgba(255,200,50,0.15)", borderRadius: 12, padding: "24px 28px", display: "flex", gap: 16, alignItems: "flex-start" }}>
@@ -271,4 +258,243 @@ function RiskTiers() {
   );
 }
 
-... (rest of your components like Fees, Referral, Register, Footer remain fully stylized)
+function Fees() {
+  return (
+    <section id="fees" style={{ padding: "120px 2rem", background: "#050814" }}>
+      <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+        <AnimatedSection>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "center" }}>
+            <div>
+              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#c4a050", letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 600, marginBottom: 16 }}>Simple Pricing</div>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 900, color: "#f0e8d0", lineHeight: 1.2, marginBottom: 24 }}>
+                Transparent Fees. No Hidden Costs.
+              </h2>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#7878a0", lineHeight: 1.8, fontSize: 15, marginBottom: 20 }}>
+                We believe in complete transparency. Our fees are simple, clear, and structured to align our interests completely with yours.
+              </p>
+              <div style={{ borderLeft: "2px solid #c4a050", paddingLeft: 20, marginBottom: 20 }}>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, color: "#f0e8d0", fontSize: 15, marginBottom: 4 }}>Performance Based Profit Share</div>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#606080", lineHeight: 1.6 }}>
+                  Our profit share is strictly performance-based. We use standard industry calculation models to ensure we only earn when you earn.
+                </p>
+              </div>
+            </div>
+            <div style={{ background: "rgba(255,255,255,0.01)", border: "1px solid rgba(196,160,80,0.15)", borderRadius: 20, padding: "40px 32px", position: "relative" }}>
+              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, color: "#c4a050", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>Monthly Access</div>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 28, borderBottom: "1px solid rgba(196,160,80,0.1)", paddingBottom: 24 }}>
+                <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "3.5rem", fontWeight: 900, color: "#f0e8d0", lineHeight: 1 }}>$4.99</span>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", color: "#606080", fontSize: 14 }}>/ month</span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {[
+                  "Access to vetted platform managers",
+                  "Real-time view-only MT5 tracking",
+                  "Flexible risk tier switching",
+                  "24/7 direct capital withdrawal control",
+                  "15% direct referral commission tier",
+                ].map((f, i) => (
+                  <div key={i} style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                    <span style={{ color: "#c4a050", fontSize: 14 }}>✓</span>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#8080a0" }}>{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </AnimatedSection>
+      </div>
+    </section>
+  );
+}
+
+function Referral() {
+  return (
+    <section id="referral" style={{ padding: "120px 2rem", background: "#070a1a" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <AnimatedSection>
+          <div style={{ background: "linear-gradient(135deg, rgba(196,160,80,0.05) 0%, rgba(30,60,140,0.05) 100%)", border: "1px solid rgba(196,160,80,0.15)", borderRadius: 24, padding: "64px 48px", display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: 64, alignItems: "center" }}>
+            <div>
+              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#c4a050", letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 600, marginBottom: 16 }}>Grow Together</div>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 3.5vw, 2.8rem)", fontWeight: 900, color: "#f0e8d0", lineHeight: 1.2, marginBottom: 20 }}>
+                Our 15% Mutual Referral System
+              </h2>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#7878a0", lineHeight: 1.8, fontSize: 15, marginBottom: 16 }}>
+                To maintain high community standards and security, PPG Trading Club operates exclusively on invitation. Every active member receives a unique referral code.
+              </p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#7878a0", lineHeight: 1.8, fontSize: 15 }}>
+                When someone registers using your link, you instantly earn a **15% direct referral reward** on their monthly subscription fees. This creates an immediate, recurring income line directly tied to our collective community growth.
+              </p>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ background: "rgba(5,8,20,0.4)", border: "1px solid rgba(196,160,80,0.1)", borderRadius: 12, padding: "20px" }}>
+                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 20, fontWeight: 700, color: "#c4a050", marginBottom: 4 }}>15%</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: "#f0e8d0", marginBottom: 4 }}>Recurring Commission</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#606080" }}>Earn every single month your referred member stays active.</div>
+              </div>
+              <div style={{ background: "rgba(5,8,20,0.4)", border: "1px solid rgba(196,160,80,0.1)", borderRadius: 12, padding: "20px" }}>
+                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 20, fontWeight: 700, color: "#60a5fa", marginBottom: 4 }}>Instant</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: "#f0e8d0", marginBottom: 4 }}>Balance Settlements</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#606080" }}>Earnings reflect inside your digital wallet immediately.</div>
+              </div>
+            </div>
+          </div>
+        </AnimatedSection>
+      </div>
+    </section>
+  );
+}
+
+function Register() {
+  const [formData, setFormData] = useState({
+    fullName: "", email: "", phone: "", country: "Nigeria", referralId: "", riskTier: "1%", broker: "No Preference"
+  });
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState({ type: "", msg: "" });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setStatus({ type: "", msg: "" });
+
+    if (!formData.fullName || !formData.email || !formData.phone || !formData.referralId) {
+      setStatus({ type: "error", msg: "Please fill out all required fields carefully." });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Netlify automatically forwards data to your cloud functions securely
+      const response = await fetch("/.netlify/functions/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setStatus({ type: "success", msg: "Registration successful! Our system onboarding coordinators will reach out shortly via WhatsApp." });
+        setFormData({ fullName: "", email: "", phone: "", country: "Nigeria", referralId: "", riskTier: "1%", broker: "No Preference" });
+      } else {
+        throw new Error("Server communication error.");
+      }
+    } catch (err) {
+      setStatus({ type: "error", msg: "An error occurred during submission. Please try again." });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section id="register" style={{ padding: "120px 2rem", background: "#050814" }}>
+      <div style={{ maxWidth: 680, margin: "0 auto" }}>
+        <AnimatedSection>
+          <div style={{ background: "rgba(255,255,255,0.01)", border: "1px solid rgba(196,160,80,0.2)", borderRadius: 24, padding: "48px 40px" }}>
+            <div style={{ textAlign: "center", marginBottom: 36 }}>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.2rem", fontWeight: 900, color: "#f0e8d0", marginBottom: 12 }}>Application Form</h2>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#606080", fontSize: 14 }}>Complete your details to request onboarding verification.</p>
+            </div>
+            {status.msg && (
+              <div style={{
+                background: status.type === "success" ? "rgba(74,222,128,0.08)" : "rgba(239,68,68,0.08)",
+                border: `1px solid ${status.type === "success" ? "#4ade80" : "#ef4444"}`,
+                color: status.type === "success" ? "#4ade80" : "#ef4444",
+                borderRadius: 8, padding: "14px 18px", marginBottom: 28, fontFamily: "'DM Sans', sans-serif", fontSize: 14, lineHeight: 1.5
+              }}>
+                {status.msg}
+              </div>
+            )}
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <div>
+                <label style={{ display: "block", fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: "#b0a080", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Full Name *</label>
+                <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} required style={{ width: "100%", background: "rgba(5,8,20,0.6)", border: "1px solid rgba(196,160,80,0.15)", borderRadius: 8, padding: "12px 16px", color: "#f0e8d0", fontFamily: "'DM Sans', sans-serif", fontSize: 14 }} />
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label style={{ display: "block", fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: "#b0a080", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Email Address *</label>
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} required style={{ width: "100%", background: "rgba(5,8,20,0.6)", border: "1px solid rgba(196,160,80,0.15)", borderRadius: 8, padding: "12px 16px", color: "#f0e8d0", fontFamily: "'DM Sans', sans-serif", fontSize: 14 }} />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: "#b0a080", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Phone / WhatsApp *</label>
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="e.g. +234..." required style={{ width: "100%", background: "rgba(5,8,20,0.6)", border: "1px solid rgba(196,160,80,0.15)", borderRadius: 8, padding: "12px 16px", color: "#f0e8d0", fontFamily: "'DM Sans', sans-serif", fontSize: 14 }} />
+                </div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label style={{ display: "block", fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: "#b0a080", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Country</label>
+                  <input type="text" name="country" value={formData.country} onChange={handleChange} style={{ width: "100%", background: "rgba(5,8,20,0.6)", border: "1px solid rgba(196,160,80,0.15)", borderRadius: 8, padding: "12px 16px", color: "#f0e8d0", fontFamily: "'DM Sans', sans-serif", fontSize: 14 }} />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: "#b0a080", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Referral ID *</label>
+                  <input type="text" name="referralId" value={formData.referralId} onChange={handleChange} placeholder="Required" required style={{ width: "100%", background: "rgba(5,8,20,0.6)", border: "1px solid rgba(196,160,80,0.15)", borderRadius: 8, padding: "12px 16px", color: "#f0e8d0", fontFamily: "'DM Sans', sans-serif", fontSize: 14 }} />
+                </div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label style={{ display: "block", fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: "#b0a080", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Preferred Risk Tier</label>
+                  <select name="riskTier" value={formData.riskTier} onChange={handleChange} style={{ width: "100%", background: "#050814", border: "1px solid rgba(196,160,80,0.15)", borderRadius: 8, padding: "12px 16px", color: "#f0e8d0", fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>
+                    {RISK_TIERS.map((t) => <option key={t.pct} value={t.pct}>{t.pct} - {t.label}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: "block", fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600, color: "#b0a080", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Broker Preference</label>
+                  <select name="broker" value={formData.broker} onChange={handleChange} style={{ width: "100%", background: "#050814", border: "1px solid rgba(196,160,80,0.15)", borderRadius: 8, padding: "12px 16px", color: "#f0e8d0", fontFamily: "'DM Sans', sans-serif", fontSize: 14 }}>
+                    <option value="No Preference">No Preference</option>
+                    <option value="Exness">Exness</option>
+                    <option value="HFM">HFM (HotForex)</option>
+                    <option value="FXTM">FXTM</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" disabled={loading} style={{ marginTop: 12, background: "linear-gradient(135deg,#c4a050,#f0d080)", color: "#050814", border: "none", borderRadius: 8, padding: "16px", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 15, cursor: "pointer", letterSpacing: "0.03em", boxShadow: "0 4px 20px rgba(196,160,80,0.25)" }}>
+                {loading ? "Processing Application..." : "Submit Application"}
+              </button>
+            </form>
+          </div>
+        </AnimatedSection>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer style={{ background: "#03050d", padding: "60px 2rem 40px", borderTop: "1px solid rgba(196,160,80,0.08)" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 32 }}>
+        <div>
+          <img src="/ppg-logo-text.svg" alt="PPG" style={{ height: 45, width: "auto", marginBottom: 12 }} />
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#404060", maxWidth: 360, lineHeight: 1.6 }}>
+            © {new Date().getFullYear()} PPG Solutions Global Trading Co. All rights reserved. Registered under the Corporate Affairs Commission, Federal Republic of Nigeria.
+          </p>
+        </div>
+        <div style={{ display: "flex", gap: 40 }}>
+          <div>
+            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 700, color: "#b0a080", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>Legal</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <a href="#risk" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#505070", textDecoration: "none" }}>Risk Disclaimer</a>
+              <a href="#fees" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "#505070", textDecoration: "none" }}>Terms of Service</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default function App() {
+  return (
+    <div style={{ minHeight: "100vh", background: "#050814", color: "#f0e8d0", overflowX: "hidden" }}>
+      <Navbar />
+      <Hero />
+      <About />
+      <HowItWorks />
+      <RiskTiers />
+      <Fees />
+      <Referral />
+      <Register />
+      <Footer />
+    </div>
+  );
+}
