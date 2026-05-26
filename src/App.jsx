@@ -50,7 +50,7 @@ function AnimatedSection({ children, className = "", delay = 0 }) {
       className={className}
       style={{
         opacity: inView ? 1 : 0,
-        transform: inView ? "translateY(30px)" : "translateY(0)",
+        transform: inView ? "translateY(0)" : "translateY(30px)",
         transition: `opacity 0.6s ease ${delay}s, transform 0.6s ease ${delay}s`,
       }}
     >
@@ -97,6 +97,7 @@ function Navbar() {
           {menuOpen ? "✕" : "☰"}
         </button>
       </div>
+      <style>{"\n        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');\n        * { box-sizing: border-box; margin: 0; padding: 0; }\n        body { background: #050814; }\n        a { transition: color 0.2s; }\n        \n        @media (max-width: 768px) {\n          .menu-toggle { display: block !important; }\n          .nav-links {\n            position: absolute; top: 70px; left: 0; right: 0;\n            background: #050814; flex-direction: column; padding: 24px;\n            gap: 20px !important; border-bottom: 1px solid rgba(196,160,80,0.15);\n            display: none;\n          }\n          .nav-links.open { display: flex !important; }\n          .about-split, .fees-split, .referral-box { flex-direction: column !important; gap: 32px !important; }\n          .form-row { flex-direction: column !important; gap: 16px; }\n          .stats-item { flex: 1 1 40% !important; border-right: none !important; }\n        }\n        @media (min-width: 769px) {\n          .menu-toggle { display: none !important; }\n          .nav-links { display: flex !important; gap: 32px; align-items: center; }\n          .about-split, .fees-split { flex-direction: row !important; gap: 80px !important; }\n          .referral-box { flex-direction: row !important; gap: 64px !important; }\n          .form-row { display: flex; gap: 16px; }\n          .stats-item:not(:last-child) { border-right: 1px solid rgba(196,160,80,0.1); }\n        }\n      "}</style>
     </nav>
   );
 }
@@ -117,7 +118,7 @@ function Hero() {
         <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "clamp(0.95rem, 2vw, 1.1rem)", color: "#8080a0", lineHeight: 1.7, maxWidth: 600, margin: "0 auto 40px", fontWeight: 300 }}>
           PPG Trading Club is an exclusive, members-only forex trading community. Your capital stays in your own broker account. You watch every trade live. You withdraw on your terms.
         </p>
-        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }} className="hero-buttons">
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
           <a href="#register" style={{ background: "linear-gradient(135deg,#c4a050,#f0d080)", color: "#050814", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: 14, padding: "14px 28px", borderRadius: 8, textDecoration: "none", boxShadow: "0 4px 14px rgba(196,160,80,0.2)" }}>
             Join the Club - $4.99/Mo
           </a>
@@ -143,7 +144,7 @@ function About() {
     <section id="about" style={{ padding: "80px 1rem", background: "#070a1a" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <AnimatedSection>
-          <div className="about-split" style={{ display: "flex", flexDirection: "column", gap: 48 }}>
+          <div className="about-split" style={{ display: "flex", gap: 48 }}>
             <div style={{ flex: 1 }}>
               <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#c4a050", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 600, marginBottom: 12 }}>Who We Are</div>
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 900, color: "#f0e8d0", lineHeight: 1.25, marginBottom: 20 }}>
@@ -166,7 +167,7 @@ function About() {
                 </div>
               </div>
             </div>
-            <div className="cards-grid" style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+            <div style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
               {[
                 { icon: "🔐", title: "Your Account, Your Money", desc: "You open and own your broker account. Our managers only have trading access, never withdrawal access." },
                 { icon: "👁️", title: "Watch Every Trade Live", desc: "Every member gets a view-only MT5 password to watch every position open and close, 24/7, in real time." },
@@ -271,7 +272,7 @@ function Fees() {
     <section id="fees" style={{ padding: "80px 1rem", background: "#050814" }}>
       <div style={{ maxWidth: 1000, margin: "0 auto" }}>
         <AnimatedSection>
-          <div className="fees-split" style={{ display: "flex", flexDirection: "column", gap: 40 }}>
+          <div className="fees-split" style={{ display: "flex", gap: 40 }}>
             <div style={{ flex: 1 }}>
               <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#c4a050", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 600, marginBottom: 12 }}>Simple Pricing</div>
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 900, color: "#f0e8d0", lineHeight: 1.25, marginBottom: 16 }}>
@@ -320,7 +321,7 @@ function Referral() {
     <section id="referral" style={{ padding: "80px 1rem", background: "#070a1a" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <AnimatedSection>
-          <div className="referral-box" style={{ background: "linear-gradient(135deg, rgba(196,160,80,0.03) 0%, rgba(30,60,140,0.03) 100%)", border: "1px solid rgba(196,160,80,0.1)", borderRadius: 16, padding: "32px 24px", display: "flex", flexDirection: "column", gap: 32 }}>
+          <div className="referral-box" style={{ background: "linear-gradient(135deg, rgba(196,160,80,0.03) 0%, rgba(30,60,140,0.03) 100%)", border: "1px solid rgba(196,160,80,0.1)", borderRadius: 16, padding: "32px 24px", display: "flex", gap: 32 }}>
             <div style={{ flex: 1.2 }}>
               <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#c4a050", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 600, marginBottom: 12 }}>Grow Together</div>
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem, 3.5vw, 2.3rem)", fontWeight: 900, color: "#f0e8d0", lineHeight: 1.25, marginBottom: 16 }}>
@@ -469,7 +470,7 @@ function Register() {
 function Footer() {
   return (
     <footer style={{ background: "#03050d", padding: "40px 1rem 30px", borderTop: "1px solid rgba(196,160,80,0.05)" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 24 }} className="footer-wrap">
+      <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 24 }}>
         <div>
           <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 900, fontSize: 18, color: "#f0d080", marginBottom: 6 }}>PPG</div>
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#404060", maxWidth: 400, lineHeight: 1.5 }}>
