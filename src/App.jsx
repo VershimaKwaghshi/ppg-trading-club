@@ -59,73 +59,55 @@ function AnimatedSection({ children, className = "", delay = 0 }) {
   );
 }
 
-function PpgLogo() {
+function ResponsiveBrandLogo() {
   return (
-    <div className="logo-wrapper" style={{ width: "100%", height: "100%", display: "flex", alignItems: "center" }}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="30 20 640 180" style={{ width: "100%", height: "auto", display: "block" }}>
-        <defs>
-          <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{ stopColor: "#8a6520", stopOpacity: 1 }} />
-            <stop offset="30%" style={{ stopColor: "#c4a050", stopOpacity: 1 }} />
-            <stop offset="50%" style={{ stopColor: "#f5e098", stopOpacity: 1 }} />
-            <stop offset="70%" style={{ stopColor: "#c4a050", stopOpacity: 1 }} />
-            <stop offset="100%" style={{ stopColor: "#8a6520", stopOpacity: 1 }} />
-          </linearGradient>
-          <linearGradient id="goldGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style={{ stopColor: "#8a6520", stopOpacity: 1 }} />
-            <stop offset="30%" style={{ stopColor: "#c4a050", stopOpacity: 1 }} />
-            <stop offset="50%" style={{ stopColor: "#e8d080", stopOpacity: 1 }} />
-            <stop offset="70%" style={{ stopColor: "#c4a050", stopOpacity: 1 }} />
-            <stop offset="100%" style={{ stopColor: "#8a6520", stopOpacity: 1 }} />
-          </linearGradient>
-          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          <filter id="subtleglow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="0.8" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-        <text x="350" y="82" fontFamily="Georgia, 'Times New Roman', serif" fontSize="52" fontWeight="700" fontStyle="italic" fill="url(#goldGrad)" textAnchor="middle" letterSpacing="6" filter="url(#glow)">Trading Club</text>
-        <line x1="38" y1="122" x2="178" y2="122" stroke="url(#goldGrad2)" strokeWidth="0.9" opacity="0.7"/>
-        <line x1="522" y1="122" x2="662" y2="122" stroke="url(#goldGrad2)" strokeWidth="0.9" opacity="0.7"/>
-        <text x="350" y="128" fontFamily="Arial, Helvetica, sans-serif" fontSize="13" fontWeight="600" fill="url(#goldGrad2)" textAnchor="middle" letterSpacing="10" filter="url(#subtleglow)">PENNY PARTNERS GROUP</text>
-        <line x1="38" y1="158" x2="662" y2="158" stroke="#c4a050" strokeWidth="0.6" opacity="0.2"/>
-        <text x="350" y="185" fontFamily="Arial, Helvetica, sans-serif" fontSize="11" fontWeight="500" fill="#c4a050" textAnchor="middle" letterSpacing="8" opacity="0.4">EST. NIGERIA</text>
-      </svg>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "2px", userSelect: "none" }}>
+      <div className="shimmer-text" style={{ 
+        fontFamily: "Georgia, 'Times New Roman', serif", 
+        fontSize: "24px", 
+        fontWeight: "700", 
+        fontStyle: "italic",
+        letterSpacing: "1px",
+      }}>
+        Trading Club
+      </div>
+      <div style={{ display: "flex", alignItems: "center", width: "100%", gap: "6px" }}>
+        <div style={{ height: "1px", flexGrow: 1, background: "linear-gradient(90deg, transparent, #c4a050)" }} />
+        <div style={{ 
+          fontFamily: "'DM Sans', sans-serif", 
+          fontSize: "7.5px", 
+          fontWeight: "700", 
+          color: "#e8d080", 
+          letterSpacing: "2.5px",
+          whiteSpace: "nowrap",
+          opacity: 0.95
+        }}>
+          PENNY PARTNERS GROUP
+        </div>
+        <div style={{ height: "1px", flexGrow: 1, background: "linear-gradient(90deg, #c4a050, transparent)" }} />
+      </div>
     </div>
   );
 }
 
 function Navbar({ onOpenRegister }) {
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const fn = () => { setScrolled(window.scrollY > 10); };
-    window.addEventListener("scroll", fn);
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
 
   return (
     <nav className="nav-container" style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      background: scrolled || menuOpen ? "#050814" : "rgba(5,8,20,0.6)",
+      position: "fixed", 
+      top: 0, 
+      left: 0, 
+      right: 0, 
+      zIndex: 100,
+      background: "#050814",
       backdropFilter: "blur(20px)",
       borderBottom: "1px solid rgba(196,160,80,0.12)",
-      transition: "all 0.3s ease",
       padding: "0 1.25rem",
     }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 75 }}>
-        <div style={{ display: "flex", alignItems: "center", width: "180px", overflow: "visible" }}>
-          <PpgLogo />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <ResponsiveBrandLogo />
         </div>
         
         <div className={`nav-links ${menuOpen ? "open" : ""}`}>
@@ -139,7 +121,7 @@ function Navbar({ onOpenRegister }) {
           {menuOpen ? "✕" : "☰"}
         </button>
       </div>
-      <style>{"\n        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');\n        * { box-sizing: border-box; margin: 0; padding: 0; }\n        body { background: #050814; color: #f0e8d0; -webkit-font-smoothing: antialiased; }\n        \n        @media (max-width: 840px) {\n          .menu-toggle { display: block !important; }\n          .nav-links {\n            position: absolute; top: 75px; left: 0; right: 0;\n            background: #050814; flex-direction: column; padding: 32px 24px;\n            gap: 24px !important; border-bottom: 1px solid rgba(196,160,80,0.15);\n            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);\n          }\n          .nav-links.open { display: flex !important; }\n          .about-split, .fees-split, .referral-box { flex-direction: column !important; gap: 40px !important; }\n          .form-row { flex-direction: column !important; gap: 16px; }\n          .stats-item { flex: 1 1 45% !important; border-right: none !important; border-bottom: 1px solid rgba(196,160,80,0.05); padding: 16px 0 !important; }\n          .logo-wrapper { width: 140px !important; }\n        }\n        @media (min-width: 841px) {\n          .nav-links { display: flex !important; gap: 32px; align-items: center; }\n          .nav-links button { width: auto !important; }\n          .about-split, .fees-split { flex-direction: row !important; gap: 64px !important; }\n          .referral-box { flex-direction: row !important; gap: 48px !important; }\n          .form-row { display: flex; gap: 16px; }\n          .stats-item:not(:last-child) { border-right: 1px solid rgba(196,160,80,0.1); }\n        }\n      "}</style>
+      <style>{"\n        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');\n        * { box-sizing: border-box; margin: 0; padding: 0; }\n        body { background: #050814; color: #f0e8d0; -webkit-font-smoothing: antialiased; }\n        \n        .shimmer-text {\n          background: linear-gradient(90deg, #8a6520 0%, #c4a050 25%, #f5e098 50%, #c4a050 75%, #8a6520 100%);\n          background-size: 200% auto;\n          WebkitBackgroundClip: text;\n          WebkitTextFillColor: transparent;\n          background-clip: text;\n          animation: goldShimmer 4s linear infinite;\n          filter: drop-shadow(0px 2px 4px rgba(138, 101, 32, 0.2));\n        }\n\n        @keyframes goldShimmer {\n          0% { background-position: 200% center; }\n          100% { background-position: -200% center; }\n        }\n\n        @media (max-width: 840px) {\n          .menu-toggle { display: block !important; }\n          .nav-links {\n            position: absolute; top: 75px; left: 0; right: 0;\n            background: #050814; flex-direction: column; padding: 32px 24px;\n            gap: 24px !important; border-bottom: 1px solid rgba(196,160,80,0.15);\n            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);\n          }\n          .nav-links.open { display: flex !important; }\n          .about-split, .fees-split, .referral-box { flex-direction: column !important; gap: 40px !important; }\n          .form-row { flex-direction: column !important; gap: 16px; }\n          .stats-item { flex: 1 1 45% !important; border-right: none !important; border-bottom: 1px solid rgba(196,160,80,0.05); padding: 16px 0 !important; }\n        }\n        @media (min-width: 841px) {\n          .nav-links { display: flex !important; gap: 32px; align-items: center; }\n          .nav-links button { width: auto !important; }\n          .about-split, .fees-split { flex-direction: row !important; gap: 64px !important; }\n          .referral-box { flex-direction: row !important; gap: 48px !important; }\n          .form-row { display: flex; gap: 16px; }\n          .stats-item:not(:last-child) { border-right: 1px solid rgba(196,160,80,0.1); }\n        }\n      "}</style>
     </nav>
   );
 }
