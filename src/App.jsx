@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 // --- Data Constants ---
 const NAV_LINKS = [
@@ -10,44 +10,16 @@ const NAV_LINKS = [
 ];
 
 const RISK_TIERS = [
-  { pct: "0.1%", label: "Micro", risk: "Minimal Risk", desc: "Ultra-conservative. Ideal for absolute beginners. Tiny, consistent gains with near-zero drawdown.", daily: "$0.10", color: "#4ade80" },
-  { pct: "0.5%", label: "Cautious", risk: "Very Low Risk", desc: "Gentle growth. Best for those who prioritise capital protection above all else.", daily: "$0.50", color: "#86efac" },
-  { pct: "1%", label: "Conservative", risk: "Low Risk", desc: "Our most popular tier. Realistic, sustainable daily targets. Best for long-term growth.", daily: "$1.00", color: "#fbbf24", badge: "Recommended" },
-  { pct: "5%", label: "Moderate", risk: "Medium Risk", desc: "Balanced approach. Moderate position sizing for members with measured risk appetite.", daily: "$5.00", color: "#f97316" },
-  { pct: "10%", label: "Balanced", risk: "Med-High Risk", desc: "Higher targets require larger positions. Drawdowns are more frequent and deeper.", daily: "$10.00", color: "#fb923c" },
-  { pct: "15%", label: "Aggressive", risk: "High Risk", desc: "Significant drawdowns possible. Only for members who fully accept volatility.", daily: "$15.00", color: "#f43f5e" },
-  { pct: "20%", label: "Maximum", risk: "Very High Risk", desc: "Maximum aggression. Entire capital may be lost. For experienced traders only.", daily: "$20.00", color: "#dc2626" },
+  { pct: "0.1%", label: "Micro", risk: "Minimal", desc: "Ultra-conservative for absolute beginners." },
+  { pct: "1%", label: "Conservative", risk: "Low", desc: "Our most popular tier for long-term growth." },
+  { pct: "5%", label: "Moderate", risk: "Medium", desc: "Balanced approach for measured risk appetite." },
+  { pct: "20%", label: "Maximum", risk: "Very High", desc: "For experienced traders only." },
 ];
 
-// --- Reusable Components ---
-function AnimatedSection({ children, className = "", delay = 0 }) {
-  const ref = useRef(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) setInView(true);
-    }, { threshold: 0.15 });
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <div ref={ref} className={className} style={{
-      opacity: inView ? 1 : 0,
-      transform: inView ? "translateY(0)" : "translateY(40px)",
-      transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`,
-    }}>
-      {children}
-    </div>
-  );
-}
-
-// --- Main Application Structure ---
+// --- Main Application ---
 export default function App() {
   return (
-    <div style={{ fontFamily: "'DM Sans', sans-serif", background: "#050814", color: "#f0e8d0", minHeight: "100vh" }}>
+    <div style={{ backgroundColor: "#050814", color: "#f0e8d0", fontFamily: "system-ui" }}>
       <Navbar />
       <Hero />
       <About />
@@ -55,7 +27,6 @@ export default function App() {
       <RiskTiers />
       <Fees />
       <Referral />
-      <Register />
       <Footer />
       <WhatsAppButton />
     </div>
@@ -63,32 +34,11 @@ export default function App() {
 }
 
 function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <nav style={{
-      position: "fixed", top: 0, width: "100%", zIndex: 100,
-      background: scrolled ? "rgba(5,8,20,0.97)" : "transparent",
-      backdropFilter: scrolled ? "blur(18px)" : "none",
-      borderBottom: scrolled ? "1px solid rgba(196,160,80,0.15)" : "none",
-      transition: "all 0.4s ease", padding: "0 2rem"
-    }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 70 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 36, height: 36, background: "linear-gradient(135deg,#c4a050,#f0d080)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, color: "#050814" }}>P</div>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 18 }}>PPG Trading Club</span>
-        </div>
-        <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-          {NAV_LINKS.map(link => (
-            <a key={link.label} href={link.href} style={{ color: "#b0a080", fontSize: 14, textDecoration: "none", fontWeight: 500 }}>{link.label}</a>
-          ))}
-          <a href="#register" style={{ background: "linear-gradient(135deg,#c4a050,#f0d080)", color: "#050814", fontWeight: 700, fontSize: 13, padding: "10px 22px", borderRadius: 6, textDecoration: "none" }}>Join Now</a>
-        </div>
+    <nav style={{ position: "sticky", top: 0, padding: "20px 40px", display: "flex", justifyContent: "space-between", background: "rgba(5,8,20,0.95)", backdropFilter: "blur(10px)", zIndex: 100 }}>
+      <h1 style={{ fontSize: "1.2rem", margin: 0 }}>PPG Trading Club</h1>
+      <div style={{ display: "flex", gap: "20px" }}>
+        {NAV_LINKS.map(link => <a key={link.label} href={link.href} style={{ color: "#c4a050", textDecoration: "none" }}>{link.label}</a>)}
       </div>
     </nav>
   );
@@ -96,37 +46,62 @@ function Navbar() {
 
 function Hero() {
   return (
-    <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-      {/* Background Orbs and Grid omitted for brevity in display, but you can retain your original CSS layers here */}
-      <div style={{ textAlign: "center", maxWidth: 900, padding: "0 2rem", zIndex: 2 }}>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.8rem, 7vw, 5.5rem)", fontWeight: 900, lineHeight: 1.1, marginBottom: 28 }}>
-          Trade with Purpose.<br />
-          <span style={{ background: "linear-gradient(135deg,#c4a050,#f0d080)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Grow with Community.</span>
-        </h1>
-        <p style={{ fontSize: "1.2rem", color: "#8080a0", maxWidth: 640, margin: "0 auto 48px" }}>
-          PPG Trading Club is an exclusive, members-only forex trading community. Your capital stays in your own broker account. You watch every trade live.
-        </p>
-        <a href="#register" style={{ background: "linear-gradient(135deg,#c4a050,#f0d080)", color: "#050814", fontWeight: 700, padding: "16px 36px", borderRadius: 8, textDecoration: "none" }}>Join the Club - $4.99/Mo</a>
+    <section style={{ height: "80vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "0 20px" }}>
+      <h1 style={{ fontSize: "3.5rem", marginBottom: "20px" }}>Trade with Purpose.<br/>Grow with Community.</h1>
+      <p style={{ maxWidth: "600px", fontSize: "1.2rem", color: "#a0a0c0" }}>An exclusive, members-only forex community. Your capital stays in your own broker account. You watch every trade live.</p>
+    </section>
+  );
+}
+
+function About() {
+  return <section id="about" style={{ padding: "80px 20px", maxWidth: "800px", margin: "auto" }}><h2>About</h2><p>PPG Trading Club provides professional signals and market insights, allowing members to mirror trades directly in their own personal brokerage accounts.</p></section>;
+}
+
+function HowItWorks() {
+  return (
+    <section id="how" style={{ padding: "80px 20px", maxWidth: "800px", margin: "auto" }}>
+      <h2>How It Works</h2>
+      <ol style={{ paddingLeft: "20px" }}>
+        <li><strong>Register:</strong> Complete registration with a valid referral ID.</li>
+        <li><strong>Subscription:</strong> Pay the $4.99/month activation fee.</li>
+        <li><strong>KYC:</strong> Upload ID for 24-48 hour verification.</li>
+        <li><strong>Referral:</strong> Refer one member to activate trading.</li>
+        <li><strong>Broker Account:</strong> Link your personal $100+ broker account.</li>
+        <li><strong>Trade:</strong> Select your risk tier and monitor trades live.</li>
+      </ol>
+    </section>
+  );
+}
+
+function RiskTiers() {
+  return (
+    <section id="risk" style={{ padding: "80px 20px", maxWidth: "1000px", margin: "auto" }}>
+      <h2>Risk Tiers</h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px" }}>
+        {RISK_TIERS.map(tier => (
+          <div key={tier.label} style={{ padding: "20px", border: "1px solid #333", borderRadius: "8px" }}>
+            <h3>{tier.pct} - {tier.label}</h3>
+            <p style={{ color: "#c4a050" }}>{tier.risk} Risk</p>
+            <p style={{ fontSize: "0.9rem" }}>{tier.desc}</p>
+          </div>
+        ))}
       </div>
     </section>
   );
 }
 
-function WhatsAppButton() {
-  return (
-    <a href="https://wa.me/2348130500659" target="_blank" rel="noreferrer" style={{ 
-      position: "fixed", bottom: 28, right: 28, width: 54, height: 54, background: "#25D366", 
-      borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, zIndex: 200 
-    }}>💬</a>
-  );
+function Fees() {
+  return <section id="fees" style={{ padding: "80px 20px", maxWidth: "800px", margin: "auto" }}><h2>Fees</h2><p>A flat $4.99/month subscription fee is required for full access to the trading ecosystem.</p></section>;
+}
+
+function Referral() {
+  return <section id="referral" style={{ padding: "80px 20px", maxWidth: "800px", margin: "auto" }}><h2>Referral</h2><p>Our community grows through trust. Every member is required to refer at least one active user to maintain access to trade signals.</p></section>;
 }
 
 function Footer() {
-  return (
-    <footer style={{ background: "#030610", borderTop: "1px solid rgba(196,160,80,0.1)", padding: "64px 2rem 32px" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", textAlign: "center" }}>
-        <p style={{ color: "#505070", fontSize: 13 }}>2026 Penny Partners Group (PPG Solutions). CAC Registered. All rights reserved.</p>
-      </div>
-    </footer>
-  );
+  return <footer style={{ padding: "40px", textAlign: "center", borderTop: "1px solid #333", marginTop: "40px" }}><p>© 2026 Penny Partners Group. All rights reserved.</p></footer>;
+}
+
+function WhatsAppButton() {
+  return <a href="https://wa.me/2348130500659" style={{ position: "fixed", bottom: "30px", right: "30px", background: "#25D366", padding: "15px 25px", borderRadius: "30px", color: "white", textDecoration: "none", fontWeight: "bold" }}>Chat with Support</a>;
 }
