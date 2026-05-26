@@ -79,10 +79,9 @@ function Navbar() {
       padding: "0 2rem",
     }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 70 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 36, height: 36, background: "linear-gradient(135deg,#c4a050,#f0d080)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 16, color: "#050814" }}>P</div>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 18, color: "#f0e8d0", letterSpacing: "0.02em" }}>PPG Trading Club</span>
-        </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+  <img src="/ppg-logo-text.svg" alt="PPG Trading Club" style={{ height: 60, width: "auto" }} />
+</div>
         <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
           {NAV_LINKS.map(function(l) {
             return (
