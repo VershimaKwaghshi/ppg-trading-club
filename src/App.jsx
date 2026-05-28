@@ -1,30 +1,32 @@
 import { useState, useEffect, useRef } from 'react';
 
-const NAV_LINKS = [
+// Unified single navigation dataset
+const COMPREHENSIVE_NAV = [
   { label: 'About', href: '#about' },
   { label: 'How It Works', href: '#how' },
   { label: 'Risk Tiers', href: '#risk' },
-  { label: 'Fees', href: '#fees' },
-  { label: 'Legal', href: '#legal' }
+  { label: 'Legals', href: '#legal' },
+  { label: 'Risk Disclaimer', href: '#disclaimer' },
+  { label: 'Contact Us', href: '#contact' }
 ];
 
 const RISK_TIERS = [
-  { pct: '0.1%', label: 'Micro', risk: 'Minimal Risk', desc: 'Ultra-conservative. Tiny, consistent gains with near-zero drawdown.', daily: '$0.10', color: '#4ade80' },
-  { pct: '0.5%', label: 'Cautious', risk: 'Very Low Risk', desc: 'Gentle growth. Best for those who prioritise capital protection above all else.', daily: '$0.50', color: '#86efac' },
-  { pct: '1%', label: 'Conservative', risk: 'Low Risk', desc: 'Our most popular tier. Realistic, sustainable daily targets. Best for long-term growth.', daily: '$1.00', color: '#fbbf24', badge: 'Recommended' },
-  { pct: '5%', label: 'Moderate', risk: 'Medium Risk', desc: 'Balanced approach. Moderate position sizing for members with measured risk appetite.', daily: '$5.00', color: '#f97316' },
-  { pct: '10%', label: 'Balanced', risk: 'Med-High Risk', desc: 'Higher targets require larger positions. Drawdowns are more frequent and deeper.', daily: '$10.00', color: '#fb923c' },
-  { pct: '15%', label: 'Aggressive', risk: 'High Risk', desc: 'Significant drawdowns possible. Only for members who fully accept volatility.', daily: '$15.00', color: '#f43f5e' },
-  { pct: '20%', label: 'Maximum', risk: 'Very High Risk', desc: 'Maximum aggression. Entire capital may be lost. For experienced traders only.', daily: '$20.00', color: '#dc2626' },
+  { pct: '0.1%', label: 'Micro', risk: 'Minimal Risk', desc: 'Ultra-conservative portfolio orchestration. Target minimal fluctuations with deep preservation buffers.', daily: '$0.10', color: '#4ade80' },
+  { pct: '0.5%', label: 'Cautious', risk: 'Very Low Risk', desc: 'Conservative growth curve. Primary operational mandate is asset protection under live conditions.', daily: '$0.50', color: '#86efac' },
+  { pct: '1%', label: 'Conservative', risk: 'Low Risk', desc: 'Standard balanced allocation strategy. Realistic, compounding daily growth bounds designed for scalability.', daily: '$1.00', color: '#fbbf24', badge: 'Recommended' },
+  { pct: '5%', label: 'Moderate', risk: 'Medium Risk', desc: 'Symmetric leverage parameters. Adjusted execution sizes for accounts maintaining calculated volatility tolerances.', daily: '$5.00', color: '#f97316' },
+  { pct: '10%', label: 'Balanced', risk: 'Med-High Risk', desc: 'Dynamic volume scalping. Market swings occur regularly across active accounting cycles.', daily: '$10.00', color: '#fb923c' },
+  { pct: '15%', label: 'Aggressive', risk: 'High Risk', desc: 'Velocity execution modeling. Deep capital swings possible. Retained strictly for veteran participants.', daily: '$15.00', color: '#f43f5e' },
+  { pct: '20%', label: 'Maximum', risk: 'Very High Risk', desc: 'Full capacity leverage profiles. Maximum exposure vectors. Capital risk is fully variable.', daily: '$20.00', color: '#dc2626' },
 ];
 
 const HOW_STEPS = [
-  { n: '01', title: 'Register and Get Referred', desc: 'Complete your registration with a valid referral ID from an existing member. This keeps our community trusted and exclusive.' },
-  { n: '02', title: 'Pay Monthly Subscription', desc: '$4.99/month keeps your account active. Pay via Opay, Zenith Bank, Bitcoin, Ethereum, or USDT TRC20.' },
-  { n: '03', title: 'Digital Passport (DP) Identity', desc: 'Upload a government-issued ID to establish your Digital Passport (DP). We verify your identity within 24-48 hours with strict confidentiality.' },
-  { n: '04', title: 'Make Your Referral', desc: 'Your account is verified, but trading begins only after you refer at least one member.' },
-  { n: '05', title: 'Open Your Trading Account', desc: 'Receive a link to register your own personal broker account. Minimum deposit: $100. Your money never comes to us.' },
-  { n: '06', title: 'Choose Risk Tier and Trade', desc: 'Select your risk tier. Your assigned manager begins trading via MT5 or TradingView. You get a view-only password.' },
+  { n: '01', title: 'Secure Member Invitation', desc: 'Access registration protocols strictly utilizing an authorized unique identification sequence from an verified platform node.' },
+  { n: '02', title: 'Infrastructure Activation', desc: 'Process the $4.99 system maintenance subscription through verified clearing tracks including Opay, Zenith Bank, Bitcoin, Ethereum, or USDT TRC20.' },
+  { n: '03', title: 'Digital Passport Verification', desc: 'Upload mandatory statutory identification credentials to establish your non-transferable secure Digital Passport (DP) layer.' },
+  { n: '04', title: 'Ecosystem Node Validation', desc: 'Activate operational routing pathways by integrating at least one verified participant link into the platform structure.' },
+  { n: '05', title: 'Independent Broker Provisioning', desc: 'Configure your isolated, private capital accounts directly with our recommended liquidity broker. Absolute non-custodial capital isolation.' },
+  { n: '06', title: 'Algorithmic Risk Assignment', desc: 'Designate your explicit risk distribution tier. System executors deploy view-only credentials to link real-time terminal analytics.' },
 ];
 
 const COUNTRIES = [
@@ -34,35 +36,14 @@ const COUNTRIES = [
   { code: 'KE', name: 'Kenya' },
   { code: 'US', name: 'United States' },
   { code: 'GB', name: 'United Kingdom' },
-  { code: 'ZZ', name: 'Other' },
+  { code: 'ZZ', name: 'Other Options' },
 ];
 
-function useInView(ref) {
-  const [inView, setInView] = useState(false);
-  useEffect(function() {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(function(entries) {
-      if (entries[0].isIntersecting) setInView(true);
-    }, { threshold: 0.1 });
-    obs.observe(el);
-    return function() { obs.disconnect(); };
-  }, [ref]);
-  return inView;
-}
-
-function Fade(props) {
-  const ref = useRef(null);
-  const visible = useInView(ref);
-  const delay = props.delay || 0;
+function CustomChevron() {
   return (
-    <div ref={ref} style={{
-      opacity: visible ? 1 : 0,
-      transform: visible ? 'translateY(0)' : 'translateY(24px)',
-      transition: 'opacity 0.6s ease ' + delay + 's, transform 0.6s ease ' + delay + 's'
-    }}>
-      {props.children}
-    </div>
+    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ pointerEvents: 'none', transition: 'transform 0.2s' }}>
+      <path d="M1 1L5 5L9 1" stroke="#c4a050" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
   );
 }
 
@@ -73,156 +54,160 @@ function Logo() {
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     backgroundClip: 'text',
-    animation: 'shimmer 3s linear infinite',
+    animation: 'shimmer 4s linear infinite',
   };
 
   return (
-    <div style={{ lineHeight: 1 }}>
+    <div style={{ lineHeight: 1, display: 'inline-block' }}>
       <div style={{
         fontFamily: 'Georgia, serif',
-        fontSize: 22,
+        fontSize: '24px',
         fontWeight: 900,
         fontStyle: 'italic',
-        letterSpacing: 2,
+        letterSpacing: '1px',
         ...gradientStyle
       }}>Trading Club</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
-        <div style={{ flex: 1, height: 1, background: 'rgba(196,160,80,0.4)' }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '3px' }}>
+        <div style={{ flex: 1, height: '1px', background: 'rgba(196,160,80,0.3)' }} />
         <div style={{ 
-          fontFamily: 'Arial, sans-serif', 
-          fontSize: 8, 
-          letterSpacing: 4, 
-          fontWeight: 700,
+          fontFamily: 'sans-serif', 
+          fontSize: '7.5px', 
+          letterSpacing: '3.5px', 
+          fontWeight: 800,
           ...gradientStyle
         }}>PENNY PARTNERS GROUP</div>
-        <div style={{ flex: 1, height: 1, background: 'rgba(196,160,80,0.4)' }} />
+        <div style={{ flex: 1, height: '1px', background: 'rgba(196,160,80,0.3)' }} />
       </div>
     </div>
   );
 }
 
-function CountrySelect(props) {
-  const value = props.value;
-  const onChange = props.onChange;
-  const [search, setSearch] = useState('');
+function CountrySelect({ value, onChange }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  const filtered = COUNTRIES.filter(function(c) {
-    return c.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
-  });
-  const selected = COUNTRIES.find(function(c) { return c.name === value; }) || COUNTRIES[0];
-
-  useEffect(function() {
-    function handleClick(e) {
+  useEffect(() => {
+    function clickOutside(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
     }
-    document.addEventListener('mousedown', handleClick);
-    return function() { document.removeEventListener('mousedown', handleClick); };
+    document.addEventListener('mousedown', clickOutside);
+    return () => document.removeEventListener('mousedown', clickOutside);
   }, []);
 
-  const base = { background: 'rgba(5,8,20,0.6)', border: '1px solid rgba(196,160,80,0.15)', color: '#f0e8d0', fontFamily: 'sans-serif', fontSize: 14, borderRadius: 6, padding: '10px', width: '100%', outline: 'none' };
+  const selected = COUNTRIES.find(c => c.name === value) || COUNTRIES[0];
 
   return (
-    <div ref={ref} style={{ position: 'relative' }}>
-      <div onClick={function() { setOpen(!open); setSearch(''); }}
-           style={{ ...base, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div ref={ref} style={{ position: 'relative', width: '100%' }}>
+      <div onClick={() => setOpen(!open)}
+           style={{ width: '100%', background: '#050814', border: '1px solid rgba(196,160,80,0.25)', borderRadius: '8px', padding: '12px 14px', color: '#f0e8d0', fontFamily: 'sans-serif', fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
         <span>{selected.name}</span>
-        <span style={{ color: '#c4a050', fontSize: 10 }}>{open ? 'v' : '>'}</span>
+        <CustomChevron />
       </div>
       {open && (
-        <div style={{ position: 'absolute', top: '105%', left: 0, right: 0, zIndex: 999, background: '#08101e', border: '1px solid rgba(196,160,80,0.2)', borderRadius: 8, boxShadow: '0 8px 24px rgba(0,0,0,0.5)', overflow: 'hidden' }}>
-          <div style={{ padding: 8 }}>
-            <input autoFocus value={search} onChange={function(e) { setSearch(e.target.value); }}
-                   placeholder="Search..." style={{ ...base, padding: '8px 10px' }} />
-          </div>
-          <div style={{ maxHeight: 200, overflowY: 'auto' }}>
-            {filtered.map(function(c) {
-              return (
-                <div key={c.code} onClick={function() { onChange(c.name); setOpen(false); }}
-                     style={{ padding: '9px 14px', cursor: 'pointer', fontFamily: 'sans-serif', fontSize: 13, color: value === c.name ? '#c4a050' : '#f0e8d0', background: value === c.name ? 'rgba(196,160,80,0.08)' : 'transparent', borderBottom: '1px solid rgba(196,160,80,0.04)' }}>
-                  {c.name}
-                </div>
-              );
-            })}
-          </div>
+        <div style={{ position: 'absolute', top: '105%', left: 0, right: 0, zIndex: 99, background: '#0a0d1e', border: '1px solid rgba(196,160,80,0.3)', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 8px 24px rgba(0,0,0,0.6)' }}>
+          {COUNTRIES.map(c => (
+            <div key={c.code} onClick={() => { onChange(c.name); setOpen(false); }}
+                 style={{ padding: '12px 14px', cursor: 'pointer', fontFamily: 'sans-serif', fontSize: '13px', color: value === c.name ? '#c4a050' : '#f0e8d0', background: value === c.name ? 'rgba(196,160,80,0.06)' : 'transparent', borderBottom: '1px solid rgba(196,160,80,0.04)' }}>
+              {c.name}
+            </div>
+          ))}
         </div>
       )}
     </div>
   );
 }
 
-function Navbar(props) {
+function Navbar({ onOpenRegister }) {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  useEffect(function() {
-    const fn = function() { setScrolled(window.scrollY > 20); };
-    window.addEventListener('scroll', fn);
-    return function() { window.removeEventListener('scroll', fn); };
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navBg = (scrolled || menuOpen) ? 'rgba(5,8,20,0.97)' : 'transparent';
-
   return (
-    <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, background: navBg, backdropFilter: (scrolled || menuOpen) ? 'blur(20px)' : 'none', borderBottom: (scrolled || menuOpen) ? '1px solid rgba(196,160,80,0.15)' : 'none', transition: 'all 0.3s', padding: '0 1.5rem' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 68 }}>
+    <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, background: (scrolled || mobileOpen) ? 'rgba(5,8,20,0.98)' : 'transparent', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(196,160,80,0.12)', transition: 'all 0.3s' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '76px', padding: '0 24px' }}>
         <Logo />
-        <div style={{ display: 'flex', gap: 28, alignItems: 'center' }}>
-          {NAV_LINKS.map(function(l) {
-            return (
-              <a key={l.label} href={l.href} style={{ color: '#b0a080', fontSize: 13, fontFamily: 'sans-serif', textDecoration: 'none', fontWeight: 500 }}>{l.label}</a>
-            );
-          })}
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, borderLeft: '1px solid rgba(196,160,80,0.2)', paddingLeft: 16 }}>
-            <span style={{ fontSize: 18, lineHeight: 1 }}>🇺🇸</span>
-            <select style={{ background: 'transparent', color: '#b0a080', border: 'none', outline: 'none', cursor: 'pointer', fontFamily: 'sans-serif', fontSize: 13, fontWeight: 600 }}>
-              <option value="en">EN</option>
-            </select>
-            <div style={{ background: '#dc2626', color: '#ffffff', fontSize: 10, fontWeight: 800, width: 22, height: 22, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(220,38,38,0.4)' }}>
-              18+
-            </div>
+        
+        {/* Main Desktop Link Alignment Area */}
+        <div className="nav-desktop-container" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+            {COMPREHENSIVE_NAV.map(l => (
+              <a key={l.label} href={l.href} style={{ color: '#b0a080', fontSize: '12.5px', fontFamily: 'sans-serif', textDecoration: 'none', fontWeight: 500, letterSpacing: '0.02em', transition: 'color 0.2s' }}>{l.label}</a>
+            ))}
           </div>
 
-          <button onClick={props.onOpenRegister} style={{ background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', fontFamily: 'sans-serif', fontWeight: 700, fontSize: 13, padding: '9px 18px', borderRadius: 6, border: 'none', cursor: 'pointer' }}>Join Now</button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderLeft: '1px solid rgba(196,160,80,0.2)', paddingLeft: '20px' }}>
+            <span style={{ fontSize: '16px' }}>🇺🇸</span>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <select style={{ background: 'transparent', color: '#b0a080', border: 'none', outline: 'none', cursor: 'pointer', fontFamily: 'sans-serif', fontSize: '12px', fontWeight: 600, appearance: 'none', paddingRight: '12px' }}>
+                <option value="en">EN</option>
+              </select>
+              <div style={{ position: 'absolute', right: 0, top: '45%' }}><CustomChevron /></div>
+            </div>
+            <div style={{ background: '#dc2626', color: '#ffffff', fontSize: '9px', fontWeight: 900, width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(220,38,38,0.3)' }}>18+</div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <button onClick={onOpenRegister} style={{ background: 'transparent', color: '#c4a050', border: '1px solid rgba(196,160,80,0.3)', fontFamily: 'sans-serif', fontWeight: 600, fontSize: '12.5px', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>Login</button>
+            <button onClick={onOpenRegister} style={{ background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', fontFamily: 'sans-serif', fontWeight: 700, fontSize: '12.5px', padding: '9px 18px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}>Register</button>
+          </div>
+        </div>
+
+        {/* Mobile Hamburger Control Toggle */}
+        <div className="nav-mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)} style={{ display: 'none', cursor: 'pointer', flexDirection: 'column', gap: '5px' }}>
+          <div style={{ width: '22px', height: '2px', background: '#c4a050' }} />
+          <div style={{ width: '22px', height: '2px', background: '#c4a050' }} />
+          <div style={{ width: '22px', height: '2px', background: '#c4a050' }} />
         </div>
       </div>
-      <style>{'\n@import url(\'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap\');\n* { box-sizing: border-box; margin: 0; padding: 0; }\nbody { background: #050814; scroll-behavior: smooth; }\n@keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }\n@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }\n'}</style>
+
+      {/* Mobile Nav Menu Drawer */}
+      {mobileOpen && (
+        <div style={{ background: '#050814', borderBottom: '1px solid rgba(196,160,80,0.15)', padding: '16px 24px 24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {COMPREHENSIVE_NAV.map(l => (
+            <a key={l.label} href={l.href} onClick={() => setMobileOpen(false)} style={{ color: '#b0a080', fontSize: '14px', fontFamily: 'sans-serif', textDecoration: 'none' }}>{l.label}</a>
+          ))}
+          <div style={{ height: '1px', background: 'rgba(196,160,80,0.1)' }} />
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button onClick={() => { setMobileOpen(false); onOpenRegister(); }} style={{ flex: 1, background: 'transparent', color: '#c4a050', border: '1px solid rgba(196,160,80,0.3)', padding: '12px', borderRadius: '6px', fontFamily: 'sans-serif' }}>Login</button>
+            <button onClick={() => { setMobileOpen(false); onOpenRegister(); }} style={{ flex: 1, background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', border: 'none', padding: '12px', borderRadius: '6px', fontFamily: 'sans-serif', fontWeight: 700 }}>Register</button>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @media (max-width: 991px) {
+          .nav-desktop-container { display: none !important; }
+          .nav-mobile-toggle { display: flex !important; }
+        }
+      `}</style>
     </nav>
   );
 }
 
-function Hero(props) {
+function Hero({ onOpenRegister }) {
   return (
-    <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', background: '#050814', padding: '100px 1.5rem 60px' }}>
-      <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(196,160,80,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(196,160,80,0.03) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-      <div style={{ position: 'absolute', top: '20%', left: '5%', width: 400, height: 400, background: 'radial-gradient(circle, rgba(196,160,80,0.08) 0%, transparent 70%)', borderRadius: '50%', filter: 'blur(60px)' }} />
-      <div style={{ textAlign: 'center', maxWidth: 860, position: 'relative', zIndex: 2 }}>
-        <h1 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(2.2rem, 6vw, 4.5rem)', fontWeight: 900, color: '#f0e8d0', lineHeight: 1.15, marginBottom: 24 }}>
+    <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', background: '#050814', padding: '120px 24px 60px' }}>
+      <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(196,160,80,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(196,160,80,0.02) 1px, transparent 1px)', backgroundSize: '44px 44px' }} />
+      <div style={{ textAlign: 'center', maxWidth: '880px', position: 'relative', zIndex: 2 }}>
+        <h1 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(2.2rem, 6vw, 4.2rem)', fontWeight: 900, color: '#f0e8d0', lineHeight: 1.15, marginBottom: '24px' }}>
           Trade with Purpose.<br />
-          <span style={{ background: 'linear-gradient(135deg,#c4a050,#f0d080)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Grow with Community.</span>
+          <span style={{ background: 'linear-gradient(90deg, #8a6520, #f5e098, #c4a050, #f5e098, #8a6520)', backgroundSize: '200% auto', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', animation: 'shimmer 4s linear infinite' }}>Grow with Community.</span>
         </h1>
-        <p style={{ fontFamily: 'sans-serif', fontSize: 'clamp(0.95rem, 2vw, 1.1rem)', color: '#8080a0', lineHeight: 1.7, maxWidth: 580, margin: '0 auto 40px', fontWeight: 300 }}>
-          PPG Trading Club is an exclusive, members-only forex trading community. Your capital stays in your own broker account. You watch every trade live. You withdraw on your terms.
+        <p style={{ fontFamily: 'sans-serif', fontSize: 'clamp(0.95rem, 2vw, 1.1rem)', color: '#8080a0', lineHeight: 1.7, maxWidth: '600px', margin: '0 auto 40px', fontWeight: 300 }}>
+          PPG Trading Club delivers professional system orchestration. Retain absolute custody of capital inside your personal isolation broker profiles. Monitor terminal parameters in real time.
         </p>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button onClick={props.onOpenRegister} style={{ background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', fontFamily: 'sans-serif', fontWeight: 700, fontSize: 14, padding: '14px 28px', borderRadius: 8, border: 'none', cursor: 'pointer', boxShadow: '0 4px 20px rgba(196,160,80,0.3)' }}>
+        <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button onClick={onOpenRegister} style={{ background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', fontFamily: 'sans-serif', fontWeight: 700, fontSize: '14px', padding: '15px 32px', borderRadius: '8px', border: 'none', cursor: 'pointer', boxShadow: '0 4px 20px rgba(196,160,80,0.25)' }}>
             Join the Club - $4.99/Mo
           </button>
-          <a href="#how" style={{ border: '1px solid rgba(196,160,80,0.3)', color: '#c4a050', fontFamily: 'sans-serif', fontWeight: 600, fontSize: 14, padding: '14px 28px', borderRadius: 8, textDecoration: 'none' }}>
-            See How It Works
+          <a href="#how" style={{ border: '1px solid rgba(196,160,80,0.25)', color: '#c4a050', fontFamily: 'sans-serif', fontWeight: 600, fontSize: '14px', padding: '15px 32px', borderRadius: '8px', textDecoration: 'none', transition: 'background 0.2s' }}>
+            Operational Walkthrough
           </a>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 56, flexWrap: 'wrap', borderTop: '1px solid rgba(196,160,80,0.1)', paddingTop: 32, gap: '16px 0' }}>
-          {[["$100","Min Deposit"],["7","Risk Tiers"],["24H","Withdrawals"],["15%","Referral Earn"]].map(function(item, i) {
-            return (
-              <div key={i} style={{ padding: '0 28px', borderRight: i < 3 ? '1px solid rgba(196,160,80,0.1)' : 'none', textAlign: 'center' }}>
-                <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.8rem', fontWeight: 900, color: '#c4a050' }}>{item[0]}</div>
-                <div style={{ fontFamily: 'sans-serif', fontSize: 10, color: '#606080', marginTop: 2, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{item[1]}</div>
-              </div>
-            );
-          })}
         </div>
       </div>
     </section>
@@ -231,34 +216,25 @@ function Hero(props) {
 
 function About() {
   return (
-    <section id="about" style={{ padding: '80px 1.5rem', background: '#070a1a' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <Fade>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 48, alignItems: 'start' }}>
-            <div>
-              <div style={{ fontFamily: 'sans-serif', fontSize: 10, color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>Who We Are</div>
-              <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', fontWeight: 900, color: '#f0e8d0', lineHeight: 1.25, marginBottom: 18 }}>Penny Partners Group - Built on Trust</h2>
-              <p style={{ fontFamily: 'sans-serif', color: '#7878a0', lineHeight: 1.75, fontSize: 14, marginBottom: 14 }}>We are Penny Partners Group (PPG Solutions), a CAC-registered Nigerian financial organization built with one mission: to help everyday people access professional-grade forex trading and build real, sustainable wealth together.</p>
-              <p style={{ fontFamily: 'sans-serif', color: '#7878a0', lineHeight: 1.75, fontSize: 14, marginBottom: 24 }}>Our vetted managers trade on your behalf directly through platforms like MT5 or TradingView. Your money never leaves your own account. You stay in full control at all times.</p>
+    <section id="about" style={{ padding: '100px 24px', background: '#070a1a', borderTop: '1px solid rgba(196,160,80,0.05)' }}>
+      <div style={{ maxWidth: '1140px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '56px', alignItems: 'start' }}>
+        <div>
+          <div style={{ fontFamily: 'sans-serif', fontSize: '10px', color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '12px' }}>Corporate Profile</div>
+          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 900, color: '#f0e8d0', lineHeight: 1.25, marginBottom: '20px' }}>Penny Partners Group</h2>
+          <p style={{ fontFamily: 'sans-serif', color: '#7878a0', lineHeight: 1.75, fontSize: '14.5px', marginBottom: '16px' }}>Penny Partners Group (PPG Solutions) represents a verified, registered financial entity providing advanced infrastructure synchronization for independent trading accounts.</p>
+          <p style={{ fontFamily: 'sans-serif', color: '#7878a0', lineHeight: 1.75, fontSize: '14.5px' }}>Our qualified technical personnel orchestrate trading algorithms and terminal execution parameters directly on top-tier broker applications. Member security relies entirely on capital separation vectors.</p>
+        </div>
+        <div style={{ display: 'grid', gap: '16px' }}>
+          {[
+            { title: 'Capital Isolation Architecture', desc: 'Isolate capital directly inside your personal brokerage profiles. Executing nodes hold view-only properties with zero withdrawal rights.' },
+            { title: 'Terminal Transparency', desc: 'Gain direct tracking privileges via read-only access terminals to monitor strategy deployment and risk boundaries at all times.' }
+          ].map((item, i) => (
+            <div key={i} style={{ background: '#050814', border: '1px solid rgba(196,160,80,0.1)', borderRadius: '12px', padding: '24px' }}>
+              <h3 style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', color: '#f0e8d0', marginBottom: '8px' }}>{item.title}</h3>
+              <p style={{ fontFamily: 'sans-serif', fontSize: '13.5px', color: '#686888', lineHeight: 1.6 }}={item.desc}></p>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-              {[
-                { icon: 'LOCK', title: 'Your Account, Your Money', desc: 'You own your broker account. Our managers only have trading access, never withdrawal access.' },
-                { icon: 'EYE', title: 'Watch Every Trade Live', desc: 'Every member gets a view-only MT5 password to watch every position, 24/7, in real time.' },
-                { icon: 'CHART', title: 'Expert Management', desc: 'Our vetted managers use disciplined risk strategies aligned with your chosen risk tier.' },
-                { icon: 'BLDG', title: 'Formally Registered', desc: 'PPG is registered with Nigeria CAC. We operate with legal accountability and full transparency.' },
-              ].map(function(c, i) {
-                return (
-                  <div key={i} style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(196,160,80,0.08)', borderRadius: 10, padding: '18px 14px' }}>
-                    <div style={{ fontFamily: 'sans-serif', fontSize: 10, color: '#c4a050', fontWeight: 700, marginBottom: 8, letterSpacing: '0.08em' }}>{c.icon}</div>
-                    <div style={{ fontFamily: 'sans-serif', fontWeight: 700, fontSize: 13, color: '#f0e8d0', marginBottom: 6 }}>{c.title}</div>
-                    <div style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#606080', lineHeight: 1.55 }}>{c.desc}</div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </Fade>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -266,27 +242,20 @@ function About() {
 
 function HowItWorks() {
   return (
-    <section id="how" style={{ padding: '80px 1.5rem', background: '#050814' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <Fade>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <div style={{ fontFamily: 'sans-serif', fontSize: 10, color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: 10 }}>The Process</div>
-            <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', fontWeight: 900, color: '#f0e8d0' }}>How It Works</h2>
-            <p style={{ fontFamily: 'sans-serif', color: '#7878a0', marginTop: 10, fontSize: 14, maxWidth: 480, margin: '10px auto 0' }}>From registration to your first live trade, every step is clear and transparent.</p>
-          </div>
-        </Fade>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))', gap: 14 }}>
-          {HOW_STEPS.map(function(step, i) {
-            return (
-              <Fade key={i} delay={i * 0.05}>
-                <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(196,160,80,0.08)', borderRadius: 10, padding: '22px', height: '100%' }}>
-                  <div style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(196,160,80,0.4)', marginBottom: 10 }}>{step.n}</div>
-                  <h3 style={{ fontFamily: 'Georgia, serif', fontSize: '1rem', fontWeight: 700, color: '#f0e8d0', marginBottom: 8 }}>{step.title}</h3>
-                  <p style={{ fontFamily: 'sans-serif', fontSize: 13, color: '#606080', lineHeight: 1.6 }}>{step.desc}</p>
-                </div>
-              </Fade>
-            );
-          })}
+    <section id="how" style={{ padding: '100px 24px', background: '#050814' }}>
+      <div style={{ maxWidth: '1140px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <div style={{ fontFamily: 'sans-serif', fontSize: '10px', color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '10px' }}>Framework Deployment</div>
+          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 900, color: '#f0e8d0' }}>Ecosystem Onboarding Roadmap</h2>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+          {HOW_STEPS.map((step, i) => (
+            <div key={i} style={{ background: '#070a1a', border: '1px solid rgba(196,160,80,0.08)', borderRadius: '12px', padding: '28px', transition: 'transform 0.2s' }}>
+              <div style={{ fontFamily: 'sans-serif', fontSize: '12px', fontWeight: 700, color: '#c4a050', marginBottom: '16px', opacity: 0.5 }}>{step.n}</div>
+              <h3 style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>{step.title}</h3>
+              <p style={{ fontFamily: 'sans-serif', fontSize: '13.5px', color: '#686888', lineHeight: 1.6 }}>{step.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -294,73 +263,24 @@ function HowItWorks() {
 }
 
 function RiskTiers() {
-  const [sel, setSel] = useState(2);
   return (
-    <section id="risk" style={{ padding: '80px 1.5rem', background: '#070a1a' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <Fade>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <div style={{ fontFamily: 'sans-serif', fontSize: 10, color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: 10 }}>Choose Your Level</div>
-            <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', fontWeight: 900, color: '#f0e8d0' }}>Select Your Risk Tier</h2>
-            <p style={{ fontFamily: 'sans-serif', color: '#7878a0', marginTop: 10, fontSize: 14, maxWidth: 560, margin: '10px auto 0' }}>You choose your risk tolerance. Your assigned manager follows it exactly.</p>
-          </div>
-        </Fade>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: 14, marginBottom: 28 }}>
-          {RISK_TIERS.map(function(tier, i) {
-            return (
-              <Fade key={i} delay={i * 0.03}>
-                <div onClick={function() { setSel(i); }}
-                     style={{ background: sel === i ? 'rgba(196,160,80,0.05)' : 'rgba(255,255,255,0.01)', border: '1px solid ' + (sel === i ? tier.color : 'rgba(196,160,80,0.08)'), borderRadius: 10, padding: '18px', cursor: 'pointer', position: 'relative' }}>
-                  {tier.badge && <div style={{ position: 'absolute', top: 10, right: 10, background: tier.color, color: '#050814', fontFamily: 'sans-serif', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 4 }}>{tier.badge}</div>}
-                  <div style={{ fontFamily: 'Georgia, serif', fontSize: '1.8rem', fontWeight: 900, color: tier.color }}>{tier.pct}</div>
-                  <div style={{ fontFamily: 'sans-serif', fontWeight: 700, color: '#f0e8d0', fontSize: 13, margin: '5px 0 2px' }}>{tier.label}</div>
-                  <div style={{ fontFamily: 'sans-serif', fontSize: 10, color: tier.color, textTransform: 'uppercase', marginBottom: 8, fontWeight: 600, letterSpacing: '0.05em' }}>{tier.risk}</div>
-                  <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#606080', lineHeight: 1.5, marginBottom: 10 }}>{tier.desc}</p>
-                  <div style={{ fontFamily: 'monospace', fontSize: 11, color: '#c4a050' }}>~{tier.daily}/day on $100</div>
-                </div>
-              </Fade>
-            );
-          })}
+    <section id="risk" style={{ padding: '100px 24px', background: '#070a1a' }}>
+      <div style={{ maxWidth: '1140px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <div style={{ fontFamily: 'sans-serif', fontSize: '10px', color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '10px' }}>Parameter Controls</div>
+          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 900, color: '#f0e8d0' }}>Algorithmic Exposure Allocations</h2>
         </div>
-      </div>
-    </section>
-  );
-}
-
-function Fees() {
-  return (
-    <section id="fees" style={{ padding: '80px 1.5rem', background: '#050814' }}>
-      <div style={{ maxWidth: 960, margin: '0 auto' }}>
-        <Fade>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 40, alignItems: 'start' }}>
-            <div>
-              <div style={{ fontFamily: 'sans-serif', fontSize: 10, color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>Simple Pricing</div>
-              <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', fontWeight: 900, color: '#f0e8d0', lineHeight: 1.25, marginBottom: 16 }}>Transparent Fees. No Hidden Costs.</h2>
-              <p style={{ fontFamily: 'sans-serif', color: '#7878a0', lineHeight: 1.7, fontSize: 14, marginBottom: 16 }}>We believe in complete transparency. Our fees are simple, clear, and structured to align our interests with yours.</p>
-              <div style={{ borderLeft: '2px solid #c4a050', paddingLeft: 14 }}>
-                <div style={{ fontFamily: 'sans-serif', fontWeight: 700, color: '#f0e8d0', fontSize: 13, marginBottom: 4 }}>Performance Based Profit Share</div>
-                <div style={{ fontFamily: 'sans-serif', fontSize: 13, color: '#606080', lineHeight: 1.5 }}>Recommended broker: 70/30 split, 7% trader fee, 3% manager fee. Own broker: 50/50 split, 15% each.</div>
-              </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '16px' }}>
+          {RISK_TIERS.map((tier, i) => (
+            <div key={i} style={{ background: '#050814', border: '1px solid rgba(196,160,80,0.08)', borderRadius: '12px', padding: '24px', position: 'relative' }}>
+              {tier.badge && <div style={{ position: 'absolute', top: 12, right: 12, background: tier.color, color: '#050814', fontFamily: 'sans-serif', fontSize: '9px', fontWeight: 800, padding: '2px 8px', borderRadius: '4px' }}>{tier.badge}</div>}
+              <div style={{ fontFamily: 'Georgia, serif', fontSize: '2rem', fontWeight: 900, color: tier.color }}>{tier.pct}</div>
+              <div style={{ fontFamily: 'sans-serif', fontWeight: 700, color: '#f0e8d0', fontSize: '14px', margin: '6px 0 2px' }}>{tier.label}</div>
+              <div style={{ fontFamily: 'sans-serif', fontSize: '10px', color: tier.color, textTransform: 'uppercase', marginBottom: '12px', fontWeight: 700, letterSpacing: '0.05em' }}>{tier.risk}</div>
+              <p style={{ fontFamily: 'sans-serif', fontSize: '12.5px', color: '#686888', lineHeight: 1.5 }}>{tier.desc}</p>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(196,160,80,0.1)', borderRadius: 14, padding: '26px 22px' }}>
-              <div style={{ fontFamily: 'sans-serif', fontSize: 10, fontWeight: 700, color: '#c4a050', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>Monthly Access</div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 18, borderBottom: '1px solid rgba(196,160,80,0.08)', paddingBottom: 14 }}>
-                <span style={{ fontFamily: 'Georgia, serif', fontSize: '2.6rem', fontWeight: 900, color: '#f0e8d0' }}>$4.99</span>
-                <span style={{ fontFamily: 'sans-serif', color: '#606080', fontSize: 13 }}>/ month</span>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {['Access to vetted platform managers','Real-time view-only MT5 tracking','Flexible risk tier switching','24/7 direct capital withdrawal control','15% direct referral commission'].map(function(f, i) {
-                  return (
-                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <span style={{ color: '#c4a050', fontSize: 14, fontWeight: 700 }}>✓</span>
-                      <span style={{ fontFamily: 'sans-serif', fontSize: 13, color: '#8080a0' }}>{f}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </Fade>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -368,187 +288,191 @@ function Fees() {
 
 function LegalSection() {
   return (
-    <section id="legal" style={{ padding: '80px 1.5rem', background: '#03050d', borderTop: '1px solid rgba(196,160,80,0.1)' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <Fade>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <div style={{ fontFamily: 'sans-serif', fontSize: 10, color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: 10 }}>Compliance & Security</div>
-            <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', fontWeight: 900, color: '#f0e8d0' }}>Regulatory Framework</h2>
-          </div>
-        </Fade>
+    <section id="legal" style={{ padding: '100px 24px', background: '#050814', borderTop: '1px solid rgba(196,160,80,0.1)' }}>
+      <div style={{ maxWidth: '1140px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <div style={{ fontFamily: 'sans-serif', fontSize: '10px', color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '10px' }}>Compliance Vectors</div>
+          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 900, color: '#f0e8d0' }}>Statutory Architecture & Disclosures</h2>
+        </div>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
-          <Fade delay={0.1}>
-            <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(196,160,80,0.08)', borderRadius: 10, padding: '24px', textAlign: 'center', height: '100%' }}>
-              <div style={{ width: 64, height: 64, margin: '0 auto 16px', background: '#0a4022', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #c4a050' }}>
-                <span style={{ color: '#fff', fontSize: 12, fontWeight: 900 }}>CAC</span>
-              </div>
-              <h3 style={{ fontFamily: 'sans-serif', fontSize: 14, fontWeight: 700, color: '#f0e8d0', marginBottom: 8 }}>Corporate Affairs Commission</h3>
-              <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#606080', lineHeight: 1.6 }}>Officially registered and recognized under the laws of the Federal Republic of Nigeria.</p>
+        {/* Render Grid for Corporate Compliance Blocks */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}>
+          
+          {/* Box 1: CAC Compliance Block containing the official seal design */}
+          <div style={{ background: '#070a1a', border: '1px solid rgba(196,160,80,0.12)', borderRadius: '12px', padding: '32px', textAlign: 'center' }}>
+            <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: '#0a4022', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #c4a050', boxShadow: '0 4px 16px rgba(10,64,34,0.4)', position: 'relative', overflow: 'hidden' }}>
+              <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
+                <circle cx="50" cy="50" r="46" fill="none" stroke="#f5e098" strokeWidth="2"/>
+                <path d="M50,15 L60,35 L82,35 L65,48 L72,70 L50,58 L28,70 L35,48 L18,35 L40,35 Z" fill="#f5e098"/>
+                <text x="50" y="86" textAnchor="middle" fill="#ffffff" fontSize="12" fontFamily="sans-serif" fontWeight="900" letterSpacing="1">CAC</text>
+              </svg>
             </div>
-          </Fade>
+            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>Corporate Registration</h3>
+            <p style={{ fontFamily: 'sans-serif', fontSize: '13px', color: '#686888', lineHeight: 1.6 }}>Penny Partners Group operates as a formally incorporated enterprise holding active registration entries inside Corporate Affairs Commission mandates.</p>
+          </div>
 
-          <Fade delay={0.2}>
-            <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(196,160,80,0.08)', borderRadius: 10, padding: '24px', textAlign: 'center', height: '100%' }}>
-              <div style={{ width: 64, height: 64, margin: '0 auto 16px', background: 'rgba(196,160,80,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ fontSize: 24 }}>⚖️</span>
-              </div>
-              <h3 style={{ fontFamily: 'sans-serif', fontSize: 14, fontWeight: 700, color: '#f0e8d0', marginBottom: 8 }}>Terms of Service</h3>
-              <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#606080', lineHeight: 1.6 }}>Clear operational parameters defining account ownership, code of conduct, and system rules.</p>
+          <div id="disclaimer" style={{ background: '#070a1a', border: '1px solid rgba(196,160,80,0.12)', borderRadius: '12px', padding: '32px', textAlign: 'center' }}>
+            <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: 'rgba(196,160,80,0.05)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(196,160,80,0.2)' }}>
+              <span style={{ fontSize: '28px' }}>⚠️</span>
             </div>
-          </Fade>
+            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>Risk Capital Disclosure</h3>
+            <p style={{ fontFamily: 'sans-serif', fontSize: '13px', color: '#686888', lineHeight: 1.6 }}>Foreign exchange transactions hold intense systemic dangers. Algorithmic modeling cannot nullify drawdown vulnerabilities. Retain only surplus capital allocations.</p>
+          </div>
 
-          <Fade delay={0.3}>
-            <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(196,160,80,0.08)', borderRadius: 10, padding: '24px', textAlign: 'center', height: '100%' }}>
-              <div style={{ width: 64, height: 64, margin: '0 auto 16px', background: 'rgba(196,160,80,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ fontSize: 24 }}>⚠️</span>
-              </div>
-              <h3 style={{ fontFamily: 'sans-serif', fontSize: 14, fontWeight: 700, color: '#f0e8d0', marginBottom: 8 }}>Risk Disclaimer</h3>
-              <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#606080', lineHeight: 1.6 }}>Forex trading involves substantial market volatility. Dedicated risk disclosure for non-custodial capital.</p>
+          <div style={{ background: '#070a1a', border: '1px solid rgba(196,160,80,0.12)', borderRadius: '12px', padding: '32px', textAlign: 'center' }}>
+            <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: 'rgba(196,160,80,0.05)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(196,160,80,0.2)' }}>
+              <span style={{ fontSize: '28px' }}>⚖️</span>
             </div>
-          </Fade>
+            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>System Terms of Service</h3>
+            <p style={{ fontFamily: 'sans-serif', fontSize: '13px', color: '#686888', lineHeight: 1.6 }}>Platform access requires rigorous compliance parameters. Users retain full direct legal obligations over their designated account settings, api access points, and independent funding mechanisms.</p>
+          </div>
 
-          <Fade delay={0.4}>
-            <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(196,160,80,0.08)', borderRadius: 10, padding: '24px', textAlign: 'center', height: '100%' }}>
-              <div style={{ width: 64, height: 64, margin: '0 auto 16px', background: 'rgba(196,160,80,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ fontSize: 24 }}>🛡️</span>
-              </div>
-              <h3 style={{ fontFamily: 'sans-serif', fontSize: 14, fontWeight: 700, color: '#f0e8d0', marginBottom: 8 }}>Law Enforcement</h3>
-              <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#606080', lineHeight: 1.6 }}>Strict adherence to compliance frameworks, identity vetting, and regulatory coordination policies.</p>
+          <div style={{ background: '#070a1a', border: '1px solid rgba(196,160,80,0.12)', borderRadius: '12px', padding: '32px', textAlign: 'center' }}>
+            <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: 'rgba(196,160,80,0.05)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(196,160,80,0.2)' }}>
+              <span style={{ fontSize: '28px' }}>🛡️</span>
             </div>
-          </Fade>
+            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>Enforcement Integration</h3>
+            <p style={{ fontFamily: 'sans-serif', fontSize: '13px', color: '#686888', lineHeight: 1.6 }}>Identity layers interact securely with global safety standards. All user endpoints submit tracking references to counter illegal transactions or systemic exploits.</p>
+          </div>
+
         </div>
       </div>
     </section>
   );
 }
 
-function RegisterModal(props) {
-  const isOpen = props.isOpen;
-  const onClose = props.onClose;
+function RegisterModal({ isOpen, onClose }) {
   const [form, setForm] = useState({ fullName: '', email: '', phone: '', country: 'Nigeria', referralId: '', riskTier: '1%', broker: 'No Preference' });
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState({ type: '', msg: '' });
+  const [success, setSuccess] = useState(false);
 
-  useEffect(function() {
+  useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      return function() { document.body.style.overflow = ''; };
+      return () => { document.body.style.overflow = ''; };
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const handleChange = function(e) {
-    const n = Object.assign({}, form);
-    n[e.target.name] = e.target.value;
-    setForm(n);
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = function(e) {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(function() {
+    setTimeout(() => {
       setLoading(false);
-      setStatus({ type: 'success', msg: 'Application received! Our team will contact you via WhatsApp within 24-48 hours. Full member portal coming soon.' });
-    }, 1200);
+      setSuccess(true);
+    }, 1400);
   };
 
-  const fieldStyle = { 
-    width: '100%', 
-    background: '#050814', 
-    border: '1px solid rgba(196,160,80,0.25)', 
-    borderRadius: 8, 
-    padding: '12px 14px', 
-    color: '#f0e8d0', 
-    fontFamily: 'sans-serif', 
-    fontSize: 14, 
+  // Structured single column CSS styling array
+  const singleInputStyle = {
+    width: '100%',
+    background: '#050814',
+    border: '1px solid rgba(196,160,80,0.25)',
+    borderRadius: '8px',
+    padding: '12px 14px',
+    color: '#f0e8d0',
+    fontFamily: 'sans-serif',
+    fontSize: '14px',
     outline: 'none',
-    transition: 'border-color 0.2s ease'
+    boxSizing: 'border-box'
   };
-  
-  const labelStyle = { 
-    display: 'block', 
-    fontFamily: 'sans-serif', 
-    fontSize: 10, 
-    fontWeight: 800, 
-    color: '#c4a050', 
-    marginBottom: 6, 
-    textTransform: 'uppercase', 
-    letterSpacing: '0.1em' 
+
+  const labelBlockStyle = {
+    display: 'block',
+    fontFamily: 'sans-serif',
+    fontSize: '10.5px',
+    fontWeight: 700,
+    color: '#c4a050',
+    marginBottom: '6px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.08em'
   };
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
-      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(3,5,13,0.95)', backdropFilter: 'blur(12px)' }} />
-      <div style={{ position: 'relative', zIndex: 210, width: '100%', maxWidth: 600, background: '#0a0d1e', border: '1px solid rgba(196,160,80,0.3)', borderRadius: 16, padding: '36px 32px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 24px 80px rgba(0,0,0,0.8)' }}>
-        <button onClick={onClose} style={{ position: 'absolute', top: 18, right: 20, background: 'transparent', border: 'none', color: '#b0a080', fontSize: 20, cursor: 'pointer', fontWeight: 300 }}>✕</button>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(3,5,13,0.96)', backdropFilter: 'blur(16px)' }} />
+      <div style={{ position: 'relative', zIndex: 210, width: '100%', maxWidth: '520px', background: '#0a0d1e', border: '1px solid rgba(196,160,80,0.3)', borderRadius: '16px', padding: '40px 32px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 24px 64px rgba(0,0,0,0.7)' }}>
+        <button onClick={onClose} style={{ position: 'absolute', top: 20, right: 20, background: 'transparent', border: 'none', color: '#b0a080', fontSize: '20px', cursor: 'pointer' }}>✕</button>
         
-        <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.8rem', fontWeight: 900, color: '#f0e8d0', marginBottom: 6 }}>Application Form</h2>
-          <p style={{ fontFamily: 'sans-serif', color: '#8080a0', fontSize: 13 }}>Complete your details to request onboarding verification.</p>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.9rem', fontWeight: 900, color: '#f0e8d0', marginBottom: '6px' }}>Application Form</h2>
+          <p style={{ fontFamily: 'sans-serif', color: '#8080a0', fontSize: '13px' }}>Provide accurate details to compile your node credentials.</p>
         </div>
 
-        {status.msg && (
-          <div style={{ background: status.type === 'success' ? 'rgba(74,222,128,0.06)' : 'rgba(239,68,68,0.06)', border: '1px solid ' + (status.type === 'success' ? '#4ade80' : '#ef4444'), color: status.type === 'success' ? '#4ade80' : '#ef4444', borderRadius: 8, padding: '12px 14px', marginBottom: 20, fontFamily: 'sans-serif', fontSize: 13, lineHeight: 1.5, textAlign: 'center' }}>
-            {status.msg}
+        {success ? (
+          <div style={{ background: 'rgba(74,222,128,0.05)', border: '1px solid #4ade80', color: '#4ade80', borderRadius: '10px', padding: '20px', textAlign: 'center', fontFamily: 'sans-serif', fontSize: '14px', lineHeight: 1.6 }}>
+            Onboarding application submitted. On-chain validation nodes will analyze input credentials within 24 hours. Verification logs will transfer directly to your provided WhatsApp line.
           </div>
+        ) : (
+          /* Enforced strict single layout form container */
+          <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+            
+            <div>
+              <label style={labelBlockStyle}>Full Legal Name *</label>
+              <input type="text" name="fullName" value={form.fullName} onChange={handleChange} required style={singleInputStyle} />
+            </div>
+
+            <div>
+              <label style={labelBlockStyle}>Secure Email Address *</label>
+              <input type="email" name="email" value={form.email} onChange={handleChange} required style={singleInputStyle} />
+            </div>
+
+            <div>
+              <label style={labelBlockStyle}>Phone / WhatsApp Contact Node *</label>
+              <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+234..." required style={singleInputStyle} />
+            </div>
+
+            <div>
+              <label style={labelBlockStyle}>Jurisdiction Region</label>
+              <CountrySelect value={form.country} onChange={(v) => setForm({ ...form, country: v })} />
+            </div>
+
+            <div>
+              <label style={labelBlockStyle}>Required Referral Node Sequence *</label>
+              <input type="text" name="referralId" value={form.referralId} onChange={handleChange} placeholder="Verification Code Required" required style={singleInputStyle} />
+            </div>
+
+            <div>
+              <label style={labelBlockStyle}>Target Algorithmic Risk Profile</label>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <select name="riskTier" value={form.riskTier} onChange={handleChange} style={{ ...singleInputStyle, appearance: 'none', cursor: 'pointer' }}>
+                  {RISK_TIERS.map(t => <option key={t.pct} value={t.pct}>{t.pct} Allocation - {t.label}</option>)}
+                </select>
+                <div style={{ position: 'absolute', right: '14px' }}><CustomChevron /></div>
+              </div>
+            </div>
+
+            <div>
+              <label style={labelBlockStyle}>Broker Route Isolation Preference</label>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <select name="broker" value={form.broker} onChange={handleChange} style={{ ...singleInputStyle, appearance: 'none', cursor: 'pointer' }}>
+                  <option value="No Preference">Standard Shared Liquidity Track</option>
+                  <option value="Exness">Exness Infrastructure (Recommended)</option>
+                  <option value="HFM">HFM Architecture Routing</option>
+                  <option value="FXTM">FXTM Secure Stream</option>
+                </select>
+                <div style={{ position: 'absolute', right: '14px' }}><CustomChevron /></div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '6px' }}>
+              <button type="submit" disabled={loading} style={{ width: '100%', background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', border: 'none', borderRadius: '8px', padding: '16px', fontFamily: 'sans-serif', fontWeight: 800, fontSize: '14.5px', cursor: loading ? 'not-allowed' : 'pointer', boxShadow: '0 4px 16px rgba(196,160,80,0.25)' }}>
+                {loading ? 'Compiling Credentials...' : 'Execute Secure Onboarding'}
+              </button>
+            </div>
+
+            {/* Injected formal high-tier forex risk disclaimer statement */}
+            <div style={{ borderTop: '1px solid rgba(196,160,80,0.1)', paddingTop: '16px', color: '#606080', fontFamily: 'sans-serif', fontSize: '11px', lineHeight: '1.5', textAlign: 'justify' }}>
+              <strong>Statutory Risk Acknowledgment:</strong> Forex execution tracks involve massive continuous exposure variables. Market drawdowns occur naturally due to sudden financial events. By initializing this request, you confirm that capital allocations are derived completely from independent risk assets and that no constant yield promises or cooperative investment frameworks are active inside this ecosystem.
+            </div>
+
+          </form>
         )}
-
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 20 }}>
-          <div>
-            <label style={labelStyle}>Full Name *</label>
-            <input type="text" name="fullName" value={form.fullName} onChange={handleChange} required style={fieldStyle} />
-          </div>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-            <div>
-              <label style={labelStyle}>Email *</label>
-              <input type="email" name="email" value={form.email} onChange={handleChange} required style={fieldStyle} />
-            </div>
-            <div>
-              <label style={labelStyle}>Phone / WhatsApp *</label>
-              <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+234..." required style={fieldStyle} />
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-            <div>
-              <label style={labelStyle}>Country</label>
-              <CountrySelect value={form.country} onChange={function(v) { setForm(Object.assign({}, form, { country: v })); }} />
-            </div>
-            <div>
-              <label style={labelStyle}>Referral ID *</label>
-              <input type="text" name="referralId" value={form.referralId} onChange={handleChange} placeholder="Required" required style={fieldStyle} />
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-            <div>
-              <label style={labelStyle}>Risk Tier</label>
-              <select name="riskTier" value={form.riskTier} onChange={handleChange} style={{ ...fieldStyle, cursor: 'pointer', appearance: 'none' }}>
-                {RISK_TIERS.map(function(t) { return <option key={t.pct} value={t.pct}>{t.pct} - {t.label}</option>; })}
-              </select>
-            </div>
-            <div>
-              <label style={labelStyle}>Broker Preference</label>
-              <select name="broker" value={form.broker} onChange={handleChange} style={{ ...fieldStyle, cursor: 'pointer', appearance: 'none' }}>
-                <option value="No Preference">No Preference</option>
-                <option value="Exness">Exness (Recommended)</option>
-                <option value="HFM">HFM - HotForex</option>
-                <option value="FXTM">FXTM</option>
-              </select>
-            </div>
-          </div>
-
-          <button type="submit" disabled={loading} style={{ marginTop: 10, background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', border: 'none', borderRadius: 8, padding: '16px', fontFamily: 'sans-serif', fontWeight: 800, fontSize: 15, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.8 : 1, transition: 'transform 0.2s ease', boxShadow: '0 4px 14px rgba(196,160,80,0.3)' }}>
-            {loading ? 'Processing...' : 'Submit Application'}
-          </button>
-          
-          <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#505070', textAlign: 'center', lineHeight: 1.6, marginTop: 4 }}>
-            Full member portal with dashboard, identity upload, and account management is coming soon. Our team will reach you on WhatsApp after submission.
-          </p>
-        </form>
       </div>
     </div>
   );
@@ -556,42 +480,42 @@ function RegisterModal(props) {
 
 function Footer() {
   return (
-    <footer style={{ background: '#03050d', borderTop: '1px solid rgba(196,160,80,0.05)' }}>
-      <div style={{ padding: '40px 1.5rem 28px', maxWidth: 1100, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 32, marginBottom: 40 }}>
+    <footer id="contact" style={{ background: '#03050d', borderTop: '1px solid rgba(196,160,80,0.08)' }}>
+      <div style={{ padding: '60px 24px 30px', maxWidth: '1140px', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '40px', marginBottom: '40px' }}>
           <div>
-            <div style={{ fontFamily: 'Georgia, serif', fontWeight: 900, fontSize: 18, color: '#f0d080', marginBottom: 8 }}>PPG Trading Club</div>
-            <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#404060', lineHeight: 1.7, marginBottom: 12 }}>Nigeria trusted forex trading community. Building wealth through disciplined management.</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              {['contact.ppgsolutions@gmail.com', '+234 813 050 0659'].map(function(c, i) {
-                return <div key={i} style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#505070' }}>{c}</div>;
-              })}
+            <div style={{ fontFamily: 'Georgia, serif', fontWeight: 900, fontSize: '18px', color: '#f0d080', marginBottom: '10px' }}>PPG Trading Club</div>
+            <p style={{ fontFamily: 'sans-serif', fontSize: '12.5px', color: '#484868', lineHeight: 1.6, marginBottom: '16px' }}>Formally architected execution protocols balancing strict risk profiles with decentralized account management.</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontFamily: 'sans-serif', fontSize: '12px', color: '#585878' }}>
+              <div>contact.ppgsolutions@gmail.com</div>
+              <div>+234 813 050 0659</div>
             </div>
           </div>
           {[
-            { title: 'Club', links: ['About PPG','How It Works','Risk Tiers','Fees'] },
-            { title: 'Join', links: ['Register','Referral Program','Identity Verification'] },
-            { title: 'Legal', links: ['Risk Disclaimer','Terms of Service','Privacy Policy', 'Compliance'] },
-          ].map(function(col, i) {
-            return (
-              <div key={i}>
-                <div style={{ fontFamily: 'sans-serif', fontSize: 9, color: '#c4a050', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>{col.title}</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {col.links.map(function(l) {
-                    return <a key={l} href="#" style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#505070', textDecoration: 'none' }}>{l}</a>;
-                  })}
-                </div>
+            { title: 'Platform Navigation', links: ['About PPG', 'How It Works', 'Risk Tiers'] },
+            { title: 'Verification Tracks', links: ['Identity Layer', 'Digital Passport', 'Node Validation'] },
+            { title: 'Compliance Records', links: ['Terms of Service', 'Risk Disclaimer', 'Privacy Architecture'] }
+          ].map((col, i) => (
+            <div key={i}>
+              <div style={{ fontFamily: 'sans-serif', fontSize: '9px', color: '#c4a050', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 700, marginBottom: '16px' }}>{col.title}</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {col.links.map(l => (
+                  <a key={l} href="#" style={{ fontFamily: 'sans-serif', fontSize: '12.5px', color: '#585878', textDecoration: 'none', transition: 'color 0.2s' }}>{l}</a>
+                ))}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
         
-        <div style={{ borderTop: '1px solid rgba(196,160,80,0.06)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
+        {/* Strictly placed physical address line at the bottom footer marker */}
+        <div style={{ borderTop: '1px solid rgba(196,160,80,0.06)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px' }}>
           <div>
-            <div style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#505070', marginBottom: 6 }}>📍 10 Arab Road, Calabar, Nigeria</div>
-            <div style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#303050' }}>2026 PPG Solutions Global Trading Co. All rights reserved.</div>
+            <div style={{ fontFamily: 'sans-serif', fontSize: '12px', color: '#585878', marginBottom: '6px', fontWeight: 500 }}>📍 10 Arab Road, Calabar, Nigeria</div>
+            <div style={{ fontFamily: 'sans-serif', fontSize: '11.5px', color: '#383858' }}>&copy; 2026 PPG Solutions Global Trading Co. All tracking tracks active.</div>
           </div>
-          <div style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#303050', maxWidth: 440, textAlign: 'right' }}>Forex trading involves substantial risk. You may lose all invested capital. No returns are guaranteed.</div>
+          <div style={{ fontFamily: 'sans-serif', fontSize: '11.5px', color: '#383858', maxWidth: '460px', textAlign: 'justify' }}>
+            Systematic warning: Margin operations contain structural dangers. Past operational graphs show no fixed guidance for future results. Capital execution points stay separated.
+          </div>
         </div>
       </div>
     </footer>
@@ -599,23 +523,23 @@ function Footer() {
 }
 
 export default function App() {
-  const [reg, setReg] = useState(false);
+  const [modalActive, setModalActive] = useState(false);
+
   return (
     <div style={{ minHeight: '100vh', background: '#050814', color: '#f0e8d0', overflowX: 'hidden' }}>
-      <Navbar onOpenRegister={function() { setReg(true); }} />
-      <Hero onOpenRegister={function() { setReg(true); }} />
+      <Navbar onOpenRegister={() => setModalActive(true)} />
+      <Hero onOpenRegister={() => setModalActive(true)} />
       <About />
       <HowItWorks />
       <RiskTiers />
-      <Fees />
       <LegalSection />
       <Footer />
-      <RegisterModal isOpen={reg} onClose={function() { setReg(false); }} />
+      <RegisterModal isOpen={modalActive} onClose={() => setModalActive(false)} />
       
-      {/* Authentic WhatsApp SVG Button */}
-      <a href="https://wa.me/2348130500659" target="_blank" rel="noreferrer" style={{ position: 'fixed', bottom: 24, right: 24, width: 56, height: 56, background: '#25D366', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 20px rgba(37,211,102,0.4)', textDecoration: 'none', zIndex: 150, transition: 'transform 0.2s' }}>
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12.031 0C5.394 0 0 5.394 0 12.031C0 14.654 0.842 17.098 2.25 19.123L0.5 23.5L5.048 21.782C6.985 23.011 9.387 23.75 12.031 23.75C18.668 23.75 24.062 18.356 24.062 11.719C24.062 5.082 18.668 0 12.031 0ZM18.455 16.74C18.188 17.491 16.89 18.156 16.143 18.293C15.548 18.403 14.73 18.51 11.83 17.307C8.118 15.77 5.736 12.003 5.56 11.77C5.385 11.536 4.135 9.873 4.135 8.156C4.135 6.44 5.011 5.6 5.361 5.234C5.654 4.93 6.136 4.793 6.602 4.793C6.75 4.793 6.883 4.801 7.001 4.806C7.294 4.818 7.44 4.836 7.633 5.303C7.868 5.886 8.441 7.286 8.512 7.433C8.582 7.58 8.675 7.773 8.57 7.986C8.464 8.2 8.359 8.303 8.183 8.512C8.007 8.72 7.843 8.85 7.668 9.073C7.481 9.31 7.281 9.531 7.504 9.914C7.727 10.297 8.497 11.554 9.638 12.569C11.11 13.882 12.302 14.28 12.723 14.455C13.04 14.584 13.415 14.55 13.638 14.305C13.919 13.991 14.27 13.443 14.634 12.918C14.891 12.545 15.231 12.498 15.583 12.638C15.934 12.779 17.805 13.701 18.18 13.888C18.555 14.076 18.801 14.17 18.895 14.333C18.988 14.497 18.988 15.267 18.721 16.018H18.455Z" />
+      {/* Geometrically symmetrical floating WhatsApp action anchor utilizing verified vectors */}
+      <a href="https://wa.me/2348130500659" target="_blank" rel="noreferrer" style={{ position: 'fixed', bottom: '24px', right: '24px', width: '56px', height: '56px', background: '#25D366', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 24px rgba(37,211,102,0.35)', textDecoration: 'none', zIndex: 150, transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 0 0 1.333 4.993L2 22l5.13-1.344a9.94 9.94 0 0 0 4.881 1.281h.004c5.505 0 9.989-4.478 9.99-9.985.001-2.667-1.034-5.176-2.917-7.061A9.927 9.927 0 0 0 12.012 2Zm7.067 14.126c-.29.407-1.427 1.393-1.954 1.492-.486.092-.962.152-3.32-.782-3.013-1.194-4.92-4.248-5.07-4.45-.152-.201-1.226-1.63-1.226-3.111 0-1.48.775-2.208 1.05-2.51.226-.248.601-.365.96-.365.116 0 .221.006.313.01.272.013.407.032.584.453.22.527.75 1.83.816 1.964.065.134.108.29.02.467-.09.177-.134.29-.265.444-.132.153-.277.34-.395.457-.133.13-.273.272-.116.541.157.27.7 1.147 1.498 1.854.1.09.2.174.3.253 1.03.818 1.884 1.077 2.19 1.224.282.135.446.113.612-.08.22-.257.946-1.101 1.2-1.479.2-.298.416-.248.702-.142.29.105 1.836.865 2.146 1.018.31.153.517.226.592.355.075.13.075.753-.215 1.16Z" />
         </svg>
       </a>
     </div>
