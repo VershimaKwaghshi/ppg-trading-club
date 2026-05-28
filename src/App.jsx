@@ -5,7 +5,7 @@ const NAV_LINKS = [
   { label: 'How It Works', href: '#how' },
   { label: 'Risk Tiers', href: '#risk' },
   { label: 'Fees', href: '#fees' },
-  { label: 'Referral', href: '#referral' },
+  { label: 'Legal', href: '#legal' }
 ];
 
 const RISK_TIERS = [
@@ -21,39 +21,20 @@ const RISK_TIERS = [
 const HOW_STEPS = [
   { n: '01', title: 'Register and Get Referred', desc: 'Complete your registration with a valid referral ID from an existing member. This keeps our community trusted and exclusive.' },
   { n: '02', title: 'Pay Monthly Subscription', desc: '$4.99/month keeps your account active. Pay via Opay, Zenith Bank, Bitcoin, Ethereum, or USDT TRC20.' },
-  { n: '03', title: 'KYC Verification', desc: 'Upload a government-issued ID. We verify your identity within 24-48 hours with strict confidentiality.' },
+  { n: '03', title: 'Digital Passport (DP) Identity', desc: 'Upload a government-issued ID to establish your Digital Passport (DP). We verify your identity within 24-48 hours with strict confidentiality.' },
   { n: '04', title: 'Make Your Referral', desc: 'Your account is verified, but trading begins only after you refer at least one member.' },
   { n: '05', title: 'Open Your Trading Account', desc: 'Receive a link to register your own personal broker account. Minimum deposit: $100. Your money never comes to us.' },
   { n: '06', title: 'Choose Risk Tier and Trade', desc: 'Select your risk tier. Your assigned manager begins trading via MT5 or TradingView. You get a view-only password.' },
 ];
 
 const COUNTRIES = [
-  { code: 'NG', name: 'Nigeria', flag: 'NG' },
-  { code: 'GH', name: 'Ghana', flag: 'GH' },
-  { code: 'ZA', name: 'South Africa', flag: 'ZA' },
-  { code: 'KE', name: 'Kenya', flag: 'KE' },
-  { code: 'ET', name: 'Ethiopia', flag: 'ET' },
-  { code: 'EG', name: 'Egypt', flag: 'EG' },
-  { code: 'TZ', name: 'Tanzania', flag: 'TZ' },
-  { code: 'UG', name: 'Uganda', flag: 'UG' },
-  { code: 'CM', name: 'Cameroon', flag: 'CM' },
-  { code: 'CI', name: 'Ivory Coast', flag: 'CI' },
-  { code: 'SN', name: 'Senegal', flag: 'SN' },
-  { code: 'RW', name: 'Rwanda', flag: 'RW' },
-  { code: 'ZW', name: 'Zimbabwe', flag: 'ZW' },
-  { code: 'ZM', name: 'Zambia', flag: 'ZM' },
-  { code: 'US', name: 'United States', flag: 'US' },
-  { code: 'GB', name: 'United Kingdom', flag: 'GB' },
-  { code: 'CA', name: 'Canada', flag: 'CA' },
-  { code: 'AU', name: 'Australia', flag: 'AU' },
-  { code: 'DE', name: 'Germany', flag: 'DE' },
-  { code: 'FR', name: 'France', flag: 'FR' },
-  { code: 'AE', name: 'UAE', flag: 'AE' },
-  { code: 'SA', name: 'Saudi Arabia', flag: 'SA' },
-  { code: 'IN', name: 'India', flag: 'IN' },
-  { code: 'BR', name: 'Brazil', flag: 'BR' },
-  { code: 'MX', name: 'Mexico', flag: 'MX' },
-  { code: 'ZZ', name: 'Other', flag: 'ZZ' },
+  { code: 'NG', name: 'Nigeria' },
+  { code: 'GH', name: 'Ghana' },
+  { code: 'ZA', name: 'South Africa' },
+  { code: 'KE', name: 'Kenya' },
+  { code: 'US', name: 'United States' },
+  { code: 'GB', name: 'United Kingdom' },
+  { code: 'ZZ', name: 'Other' },
 ];
 
 function useInView(ref) {
@@ -86,6 +67,15 @@ function Fade(props) {
 }
 
 function Logo() {
+  const gradientStyle = {
+    background: 'linear-gradient(90deg, #8a6520, #f5e098, #c4a050, #f5e098, #8a6520)',
+    backgroundSize: '200% auto',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    animation: 'shimmer 3s linear infinite',
+  };
+
   return (
     <div style={{ lineHeight: 1 }}>
       <div style={{
@@ -93,17 +83,18 @@ function Logo() {
         fontSize: 22,
         fontWeight: 900,
         fontStyle: 'italic',
-        background: 'linear-gradient(90deg, #8a6520, #f5e098, #c4a050, #f5e098, #8a6520)',
-        backgroundSize: '200% auto',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
-        animation: 'shimmer 3s linear infinite',
         letterSpacing: 2,
+        ...gradientStyle
       }}>Trading Club</div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
         <div style={{ flex: 1, height: 1, background: 'rgba(196,160,80,0.4)' }} />
-        <div style={{ fontFamily: 'Arial, sans-serif', fontSize: 8, color: '#c4a050', letterSpacing: 4, fontWeight: 700 }}>PENNY PARTNERS GROUP</div>
+        <div style={{ 
+          fontFamily: 'Arial, sans-serif', 
+          fontSize: 8, 
+          letterSpacing: 4, 
+          fontWeight: 700,
+          ...gradientStyle
+        }}>PENNY PARTNERS GROUP</div>
         <div style={{ flex: 1, height: 1, background: 'rgba(196,160,80,0.4)' }} />
       </div>
     </div>
@@ -183,10 +174,21 @@ function Navbar(props) {
               <a key={l.label} href={l.href} style={{ color: '#b0a080', fontSize: 13, fontFamily: 'sans-serif', textDecoration: 'none', fontWeight: 500 }}>{l.label}</a>
             );
           })}
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, borderLeft: '1px solid rgba(196,160,80,0.2)', paddingLeft: 16 }}>
+            <span style={{ fontSize: 18, lineHeight: 1 }}>🇺🇸</span>
+            <select style={{ background: 'transparent', color: '#b0a080', border: 'none', outline: 'none', cursor: 'pointer', fontFamily: 'sans-serif', fontSize: 13, fontWeight: 600 }}>
+              <option value="en">EN</option>
+            </select>
+            <div style={{ background: '#dc2626', color: '#ffffff', fontSize: 10, fontWeight: 800, width: 22, height: 22, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(220,38,38,0.4)' }}>
+              18+
+            </div>
+          </div>
+
           <button onClick={props.onOpenRegister} style={{ background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', fontFamily: 'sans-serif', fontWeight: 700, fontSize: 13, padding: '9px 18px', borderRadius: 6, border: 'none', cursor: 'pointer' }}>Join Now</button>
         </div>
       </div>
-      <style>{'\n@import url(\'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap\');\n* { box-sizing: border-box; margin: 0; padding: 0; }\nbody { background: #050814; }\n@keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }\n@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }\n'}</style>
+      <style>{'\n@import url(\'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap\');\n* { box-sizing: border-box; margin: 0; padding: 0; }\nbody { background: #050814; scroll-behavior: smooth; }\n@keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }\n@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }\n'}</style>
     </nav>
   );
 }
@@ -197,10 +199,6 @@ function Hero(props) {
       <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(196,160,80,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(196,160,80,0.03) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
       <div style={{ position: 'absolute', top: '20%', left: '5%', width: 400, height: 400, background: 'radial-gradient(circle, rgba(196,160,80,0.08) 0%, transparent 70%)', borderRadius: '50%', filter: 'blur(60px)' }} />
       <div style={{ textAlign: 'center', maxWidth: 860, position: 'relative', zIndex: 2 }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(196,160,80,0.08)', border: '1px solid rgba(196,160,80,0.25)', borderRadius: 100, padding: '6px 16px', marginBottom: 24 }}>
-          <div style={{ width: 6, height: 6, background: '#4ade80', borderRadius: '50%', animation: 'pulse 2s infinite' }} />
-          <span style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#c4a050', fontWeight: 600, letterSpacing: '0.06em' }}>NOW ACCEPTING MEMBERS - 18+ ONLY</span>
-        </div>
         <h1 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(2.2rem, 6vw, 4.5rem)', fontWeight: 900, color: '#f0e8d0', lineHeight: 1.15, marginBottom: 24 }}>
           Trade with Purpose.<br />
           <span style={{ background: 'linear-gradient(135deg,#c4a050,#f0d080)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Grow with Community.</span>
@@ -240,17 +238,8 @@ function About() {
             <div>
               <div style={{ fontFamily: 'sans-serif', fontSize: 10, color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>Who We Are</div>
               <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', fontWeight: 900, color: '#f0e8d0', lineHeight: 1.25, marginBottom: 18 }}>Penny Partners Group - Built on Trust</h2>
-              <p style={{ fontFamily: 'sans-serif', color: '#7878a0', lineHeight: 1.75, fontSize: 14, marginBottom: 14 }}>We are Penny Partners Group (PPG Solutions), a CAC-registered Nigerian financial cooperative built with one mission: to help everyday people access professional-grade forex trading and build real, sustainable wealth together.</p>
+              <p style={{ fontFamily: 'sans-serif', color: '#7878a0', lineHeight: 1.75, fontSize: 14, marginBottom: 14 }}>We are Penny Partners Group (PPG Solutions), a CAC-registered Nigerian financial organization built with one mission: to help everyday people access professional-grade forex trading and build real, sustainable wealth together.</p>
               <p style={{ fontFamily: 'sans-serif', color: '#7878a0', lineHeight: 1.75, fontSize: 14, marginBottom: 24 }}>Our vetted managers trade on your behalf directly through platforms like MT5 or TradingView. Your money never leaves your own account. You stay in full control at all times.</p>
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                {['CAC Registered - Nigeria Corporate Affairs Commission', 'HQ - 10 Arab Road, Calabar, Nigeria'].map(function(t, i) {
-                  return (
-                    <div key={i} style={{ background: 'rgba(196,160,80,0.05)', border: '1px solid rgba(196,160,80,0.15)', borderRadius: 8, padding: '8px 14px' }}>
-                      <div style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#c4a050' }}>{t}</div>
-                    </div>
-                  );
-                })}
-              </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               {[
@@ -333,10 +322,6 @@ function RiskTiers() {
             );
           })}
         </div>
-        <div style={{ background: 'rgba(255,200,50,0.02)', border: '1px solid rgba(255,200,50,0.1)', borderRadius: 8, padding: '14px 18px', display: 'flex', gap: 10 }}>
-          <span style={{ fontSize: 16 }}>⚠️</span>
-          <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#9090b0', lineHeight: 1.6 }}>Risk Warning: All percentage figures are potential daily targets, not guaranteed returns. Forex trading involves substantial risk. You may lose all invested capital.</p>
-        </div>
       </div>
     </section>
   );
@@ -351,7 +336,7 @@ function Fees() {
             <div>
               <div style={{ fontFamily: 'sans-serif', fontSize: 10, color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>Simple Pricing</div>
               <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', fontWeight: 900, color: '#f0e8d0', lineHeight: 1.25, marginBottom: 16 }}>Transparent Fees. No Hidden Costs.</h2>
-              <p style={{ fontFamily: 'sans-serif', color: '#7878a0', lineHeight: 1.7, fontSize: 14, marginBottom: 16 }}> We believe in complete transparency. Our fees are simple, clear, and structured to align our interests with yours.</p>
+              <p style={{ fontFamily: 'sans-serif', color: '#7878a0', lineHeight: 1.7, fontSize: 14, marginBottom: 16 }}>We believe in complete transparency. Our fees are simple, clear, and structured to align our interests with yours.</p>
               <div style={{ borderLeft: '2px solid #c4a050', paddingLeft: 14 }}>
                 <div style={{ fontFamily: 'sans-serif', fontWeight: 700, color: '#f0e8d0', fontSize: 13, marginBottom: 4 }}>Performance Based Profit Share</div>
                 <div style={{ fontFamily: 'sans-serif', fontSize: 13, color: '#606080', lineHeight: 1.5 }}>Recommended broker: 70/30 split, 7% trader fee, 3% manager fee. Own broker: 50/50 split, 15% each.</div>
@@ -381,32 +366,58 @@ function Fees() {
   );
 }
 
-function Referral() {
+function LegalSection() {
   return (
-    <section id="referral" style={{ padding: '80px 1.5rem', background: '#070a1a' }}>
+    <section id="legal" style={{ padding: '80px 1.5rem', background: '#03050d', borderTop: '1px solid rgba(196,160,80,0.1)' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <Fade>
-          <div style={{ background: 'rgba(196,160,80,0.02)', border: '1px solid rgba(196,160,80,0.1)', borderRadius: 14, padding: '32px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 32 }}>
-            <div>
-              <div style={{ fontFamily: 'sans-serif', fontSize: 10, color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: 12 }}>Grow Together</div>
-              <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.6rem, 3.5vw, 2.2rem)', fontWeight: 900, color: '#f0e8d0', lineHeight: 1.25, marginBottom: 14 }}>Our 15% Mutual Referral System</h2>
-              <p style={{ fontFamily: 'sans-serif', color: '#7878a0', lineHeight: 1.7, fontSize: 14, marginBottom: 12 }}>PPG Trading Club operates exclusively on invitation. Every active member receives a unique referral code.</p>
-              <p style={{ fontFamily: 'sans-serif', color: '#7878a0', lineHeight: 1.7, fontSize: 14 }}>When someone registers using your link, you instantly earn a 15% direct referral reward on their monthly subscription fees - a recurring income tied to community growth.</p>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ background: 'rgba(5,8,20,0.4)', border: '1px solid rgba(196,160,80,0.08)', borderRadius: 10, padding: '16px' }}>
-                <div style={{ fontFamily: 'monospace', fontSize: 20, fontWeight: 700, color: '#c4a050', marginBottom: 4 }}>15%</div>
-                <div style={{ fontFamily: 'sans-serif', fontSize: 13, fontWeight: 600, color: '#f0e8d0', marginBottom: 4 }}>Recurring Commission</div>
-                <div style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#606080' }}>Earn every month your referred member stays active.</div>
-              </div>
-              <div style={{ background: 'rgba(5,8,20,0.4)', border: '1px solid rgba(196,160,80,0.08)', borderRadius: 10, padding: '16px' }}>
-                <div style={{ fontFamily: 'monospace', fontSize: 20, fontWeight: 700, color: '#60a5fa', marginBottom: 4 }}>Instant</div>
-                <div style={{ fontFamily: 'sans-serif', fontSize: 13, fontWeight: 600, color: '#f0e8d0', marginBottom: 4 }}>Balance Settlements</div>
-                <div style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#606080' }}>Earnings reflect inside your digital wallet immediately.</div>
-              </div>
-            </div>
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <div style={{ fontFamily: 'sans-serif', fontSize: 10, color: '#c4a050', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 700, marginBottom: 10 }}>Compliance & Security</div>
+            <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.6rem, 4vw, 2.4rem)', fontWeight: 900, color: '#f0e8d0' }}>Regulatory Framework</h2>
           </div>
         </Fade>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
+          <Fade delay={0.1}>
+            <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(196,160,80,0.08)', borderRadius: 10, padding: '24px', textAlign: 'center', height: '100%' }}>
+              <div style={{ width: 64, height: 64, margin: '0 auto 16px', background: '#0a4022', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #c4a050' }}>
+                <span style={{ color: '#fff', fontSize: 12, fontWeight: 900 }}>CAC</span>
+              </div>
+              <h3 style={{ fontFamily: 'sans-serif', fontSize: 14, fontWeight: 700, color: '#f0e8d0', marginBottom: 8 }}>Corporate Affairs Commission</h3>
+              <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#606080', lineHeight: 1.6 }}>Officially registered and recognized under the laws of the Federal Republic of Nigeria.</p>
+            </div>
+          </Fade>
+
+          <Fade delay={0.2}>
+            <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(196,160,80,0.08)', borderRadius: 10, padding: '24px', textAlign: 'center', height: '100%' }}>
+              <div style={{ width: 64, height: 64, margin: '0 auto 16px', background: 'rgba(196,160,80,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: 24 }}>⚖️</span>
+              </div>
+              <h3 style={{ fontFamily: 'sans-serif', fontSize: 14, fontWeight: 700, color: '#f0e8d0', marginBottom: 8 }}>Terms of Service</h3>
+              <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#606080', lineHeight: 1.6 }}>Clear operational parameters defining account ownership, code of conduct, and system rules.</p>
+            </div>
+          </Fade>
+
+          <Fade delay={0.3}>
+            <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(196,160,80,0.08)', borderRadius: 10, padding: '24px', textAlign: 'center', height: '100%' }}>
+              <div style={{ width: 64, height: 64, margin: '0 auto 16px', background: 'rgba(196,160,80,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: 24 }}>⚠️</span>
+              </div>
+              <h3 style={{ fontFamily: 'sans-serif', fontSize: 14, fontWeight: 700, color: '#f0e8d0', marginBottom: 8 }}>Risk Disclaimer</h3>
+              <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#606080', lineHeight: 1.6 }}>Forex trading involves substantial market volatility. Dedicated risk disclosure for non-custodial capital.</p>
+            </div>
+          </Fade>
+
+          <Fade delay={0.4}>
+            <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(196,160,80,0.08)', borderRadius: 10, padding: '24px', textAlign: 'center', height: '100%' }}>
+              <div style={{ width: 64, height: 64, margin: '0 auto 16px', background: 'rgba(196,160,80,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: 24 }}>🛡️</span>
+              </div>
+              <h3 style={{ fontFamily: 'sans-serif', fontSize: 14, fontWeight: 700, color: '#f0e8d0', marginBottom: 8 }}>Law Enforcement</h3>
+              <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#606080', lineHeight: 1.6 }}>Strict adherence to compliance frameworks, identity vetting, and regulatory coordination policies.</p>
+            </div>
+          </Fade>
+        </div>
       </div>
     </section>
   );
@@ -443,58 +454,85 @@ function RegisterModal(props) {
     }, 1200);
   };
 
-  const field = { width: '100%', background: 'rgba(5,8,20,0.7)', border: '1px solid rgba(196,160,80,0.15)', borderRadius: 6, padding: '10px 12px', color: '#f0e8d0', fontFamily: 'sans-serif', fontSize: 14, outline: 'none' };
-  const label = { display: 'block', fontFamily: 'sans-serif', fontSize: 10, fontWeight: 700, color: '#b0a080', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.08em' };
+  const fieldStyle = { 
+    width: '100%', 
+    background: '#050814', 
+    border: '1px solid rgba(196,160,80,0.25)', 
+    borderRadius: 8, 
+    padding: '12px 14px', 
+    color: '#f0e8d0', 
+    fontFamily: 'sans-serif', 
+    fontSize: 14, 
+    outline: 'none',
+    transition: 'border-color 0.2s ease'
+  };
+  
+  const labelStyle = { 
+    display: 'block', 
+    fontFamily: 'sans-serif', 
+    fontSize: 10, 
+    fontWeight: 800, 
+    color: '#c4a050', 
+    marginBottom: 6, 
+    textTransform: 'uppercase', 
+    letterSpacing: '0.1em' 
+  };
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
-      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(3,5,13,0.9)', backdropFilter: 'blur(10px)' }} />
-      <div style={{ position: 'relative', zIndex: 210, width: '100%', maxWidth: 560, background: '#050814', border: '1px solid rgba(196,160,80,0.2)', borderRadius: 14, padding: '28px 22px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.7)' }}>
-        <button onClick={onClose} style={{ position: 'absolute', top: 14, right: 14, background: 'transparent', border: 'none', color: '#b0a080', fontSize: 18, cursor: 'pointer' }}>X</button>
-        <div style={{ textAlign: 'center', marginBottom: 22 }}>
-          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.6rem', fontWeight: 900, color: '#f0e8d0', marginBottom: 4 }}>Application Form</h2>
-          <p style={{ fontFamily: 'sans-serif', color: '#606080', fontSize: 12 }}>Complete your details to request onboarding verification.</p>
+      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(3,5,13,0.95)', backdropFilter: 'blur(12px)' }} />
+      <div style={{ position: 'relative', zIndex: 210, width: '100%', maxWidth: 600, background: '#0a0d1e', border: '1px solid rgba(196,160,80,0.3)', borderRadius: 16, padding: '36px 32px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 24px 80px rgba(0,0,0,0.8)' }}>
+        <button onClick={onClose} style={{ position: 'absolute', top: 18, right: 20, background: 'transparent', border: 'none', color: '#b0a080', fontSize: 20, cursor: 'pointer', fontWeight: 300 }}>✕</button>
+        
+        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.8rem', fontWeight: 900, color: '#f0e8d0', marginBottom: 6 }}>Application Form</h2>
+          <p style={{ fontFamily: 'sans-serif', color: '#8080a0', fontSize: 13 }}>Complete your details to request onboarding verification.</p>
         </div>
+
         {status.msg && (
-          <div style={{ background: status.type === 'success' ? 'rgba(74,222,128,0.06)' : 'rgba(239,68,68,0.06)', border: '1px solid ' + (status.type === 'success' ? '#4ade80' : '#ef4444'), color: status.type === 'success' ? '#4ade80' : '#ef4444', borderRadius: 8, padding: '12px 14px', marginBottom: 16, fontFamily: 'sans-serif', fontSize: 13, lineHeight: 1.5 }}>
+          <div style={{ background: status.type === 'success' ? 'rgba(74,222,128,0.06)' : 'rgba(239,68,68,0.06)', border: '1px solid ' + (status.type === 'success' ? '#4ade80' : '#ef4444'), color: status.type === 'success' ? '#4ade80' : '#ef4444', borderRadius: 8, padding: '12px 14px', marginBottom: 20, fontFamily: 'sans-serif', fontSize: 13, lineHeight: 1.5, textAlign: 'center' }}>
             {status.msg}
           </div>
         )}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+
+        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 20 }}>
           <div>
-            <label style={label}>Full Name *</label>
-            <input type="text" name="fullName" value={form.fullName} onChange={handleChange} required style={field} />
+            <label style={labelStyle}>Full Name *</label>
+            <input type="text" name="fullName" value={form.fullName} onChange={handleChange} required style={fieldStyle} />
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             <div>
-              <label style={label}>Email *</label>
-              <input type="email" name="email" value={form.email} onChange={handleChange} required style={field} />
+              <label style={labelStyle}>Email *</label>
+              <input type="email" name="email" value={form.email} onChange={handleChange} required style={fieldStyle} />
             </div>
             <div>
-              <label style={label}>Phone / WhatsApp *</label>
-              <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+234..." required style={field} />
+              <label style={labelStyle}>Phone / WhatsApp *</label>
+              <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+234..." required style={fieldStyle} />
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             <div>
-              <label style={label}>Country</label>
+              <label style={labelStyle}>Country</label>
               <CountrySelect value={form.country} onChange={function(v) { setForm(Object.assign({}, form, { country: v })); }} />
             </div>
             <div>
-              <label style={label}>Referral ID *</label>
-              <input type="text" name="referralId" value={form.referralId} onChange={handleChange} placeholder="Required" required style={field} />
+              <label style={labelStyle}>Referral ID *</label>
+              <input type="text" name="referralId" value={form.referralId} onChange={handleChange} placeholder="Required" required style={fieldStyle} />
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             <div>
-              <label style={label}>Risk Tier</label>
-              <select name="riskTier" value={form.riskTier} onChange={handleChange} style={{ ...field, cursor: 'pointer' }}>
+              <label style={labelStyle}>Risk Tier</label>
+              <select name="riskTier" value={form.riskTier} onChange={handleChange} style={{ ...fieldStyle, cursor: 'pointer', appearance: 'none' }}>
                 {RISK_TIERS.map(function(t) { return <option key={t.pct} value={t.pct}>{t.pct} - {t.label}</option>; })}
               </select>
             </div>
             <div>
-              <label style={label}>Broker Preference</label>
-              <select name="broker" value={form.broker} onChange={handleChange} style={{ ...field, cursor: 'pointer' }}>
+              <label style={labelStyle}>Broker Preference</label>
+              <select name="broker" value={form.broker} onChange={handleChange} style={{ ...fieldStyle, cursor: 'pointer', appearance: 'none' }}>
                 <option value="No Preference">No Preference</option>
                 <option value="Exness">Exness (Recommended)</option>
                 <option value="HFM">HFM - HotForex</option>
@@ -502,36 +540,15 @@ function RegisterModal(props) {
               </select>
             </div>
           </div>
-          <button type="submit" disabled={loading} style={{ marginTop: 6, background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', border: 'none', borderRadius: 6, padding: '13px', fontFamily: 'sans-serif', fontWeight: 700, fontSize: 14, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1 }}>
+
+          <button type="submit" disabled={loading} style={{ marginTop: 10, background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', border: 'none', borderRadius: 8, padding: '16px', fontFamily: 'sans-serif', fontWeight: 800, fontSize: 15, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.8 : 1, transition: 'transform 0.2s ease', boxShadow: '0 4px 14px rgba(196,160,80,0.3)' }}>
             {loading ? 'Processing...' : 'Submit Application'}
           </button>
-          <p style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#404060', textAlign: 'center', lineHeight: 1.5 }}>
-            Full member portal with dashboard, KYC upload, and account management is coming soon. Our team will reach you on WhatsApp after submission.
+          
+          <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#505070', textAlign: 'center', lineHeight: 1.6, marginTop: 4 }}>
+            Full member portal with dashboard, identity upload, and account management is coming soon. Our team will reach you on WhatsApp after submission.
           </p>
         </form>
-      </div>
-    </div>
-  );
-}
-
-function CacBanner() {
-  return (
-    <div style={{ background: 'linear-gradient(90deg,#03050d,#0a0f20,#03050d)', borderTop: '1px solid rgba(196,160,80,0.2)', borderBottom: '1px solid rgba(196,160,80,0.2)', padding: '16px 1.5rem' }}>
-      <div style={{ maxWidth: 960, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 34, height: 34, background: 'linear-gradient(135deg,#c4a050,#f0d080)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'sans-serif', fontSize: 16, flexShrink: 0 }}>*</div>
-          <div>
-            <div style={{ fontFamily: 'sans-serif', fontSize: 9, color: '#c4a050', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 700 }}>Officially Registered</div>
-            <div style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#f0e8d0', fontWeight: 600 }}>Corporate Affairs Commission - Federal Republic of Nigeria</div>
-          </div>
-        </div>
-        <div style={{ width: 1, height: 28, background: 'rgba(196,160,80,0.2)' }} />
-        <div style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#7878a0' }}>PPG Solutions Global Trading Co. - Est. Nigeria</div>
-        <div style={{ width: 1, height: 28, background: 'rgba(196,160,80,0.2)' }} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <div style={{ width: 6, height: 6, background: '#4ade80', borderRadius: '50%', animation: 'pulse 2s infinite' }} />
-          <span style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#4ade80', fontWeight: 600 }}>Verified and Active</span>
-        </div>
       </div>
     </div>
   );
@@ -540,22 +557,21 @@ function CacBanner() {
 function Footer() {
   return (
     <footer style={{ background: '#03050d', borderTop: '1px solid rgba(196,160,80,0.05)' }}>
-      <CacBanner />
       <div style={{ padding: '40px 1.5rem 28px', maxWidth: 1100, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 32, marginBottom: 28 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 32, marginBottom: 40 }}>
           <div>
             <div style={{ fontFamily: 'Georgia, serif', fontWeight: 900, fontSize: 18, color: '#f0d080', marginBottom: 8 }}>PPG Trading Club</div>
-            <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#404060', lineHeight: 1.7, marginBottom: 12 }}>Nigeria trusted forex trading cooperative. Building wealth through community and professional management.</p>
+            <p style={{ fontFamily: 'sans-serif', fontSize: 12, color: '#404060', lineHeight: 1.7, marginBottom: 12 }}>Nigeria trusted forex trading community. Building wealth through disciplined management.</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              {['contact.ppgsolutions@gmail.com', '+234 813 050 0659', '10 Arab Road, Calabar, Nigeria'].map(function(c, i) {
+              {['contact.ppgsolutions@gmail.com', '+234 813 050 0659'].map(function(c, i) {
                 return <div key={i} style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#505070' }}>{c}</div>;
               })}
             </div>
           </div>
           {[
             { title: 'Club', links: ['About PPG','How It Works','Risk Tiers','Fees'] },
-            { title: 'Join', links: ['Register','Referral Program','KYC Verification'] },
-            { title: 'Legal', links: ['Risk Disclaimer','Terms of Service','Privacy Policy'] },
+            { title: 'Join', links: ['Register','Referral Program','Identity Verification'] },
+            { title: 'Legal', links: ['Risk Disclaimer','Terms of Service','Privacy Policy', 'Compliance'] },
           ].map(function(col, i) {
             return (
               <div key={i}>
@@ -569,8 +585,12 @@ function Footer() {
             );
           })}
         </div>
-        <div style={{ borderTop: '1px solid rgba(196,160,80,0.06)', paddingTop: 18, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
-          <div style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#303050' }}>2026 PPG Solutions Global Trading Co. All rights reserved.</div>
+        
+        <div style={{ borderTop: '1px solid rgba(196,160,80,0.06)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
+          <div>
+            <div style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#505070', marginBottom: 6 }}>📍 10 Arab Road, Calabar, Nigeria</div>
+            <div style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#303050' }}>2026 PPG Solutions Global Trading Co. All rights reserved.</div>
+          </div>
           <div style={{ fontFamily: 'sans-serif', fontSize: 11, color: '#303050', maxWidth: 440, textAlign: 'right' }}>Forex trading involves substantial risk. You may lose all invested capital. No returns are guaranteed.</div>
         </div>
       </div>
@@ -588,10 +608,16 @@ export default function App() {
       <HowItWorks />
       <RiskTiers />
       <Fees />
-      <Referral />
+      <LegalSection />
       <Footer />
       <RegisterModal isOpen={reg} onClose={function() { setReg(false); }} />
-      <a href="https://wa.me/2348130500659" target="_blank" rel="noreferrer" style={{ position: 'fixed', bottom: 24, right: 24, width: 50, height: 50, background: '#25D366', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, boxShadow: '0 4px 16px rgba(37,211,102,0.4)', textDecoration: 'none', zIndex: 150 }}>W</a>
+      
+      {/* Authentic WhatsApp SVG Button */}
+      <a href="https://wa.me/2348130500659" target="_blank" rel="noreferrer" style={{ position: 'fixed', bottom: 24, right: 24, width: 56, height: 56, background: '#25D366', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 20px rgba(37,211,102,0.4)', textDecoration: 'none', zIndex: 150, transition: 'transform 0.2s' }}>
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.031 0C5.394 0 0 5.394 0 12.031C0 14.654 0.842 17.098 2.25 19.123L0.5 23.5L5.048 21.782C6.985 23.011 9.387 23.75 12.031 23.75C18.668 23.75 24.062 18.356 24.062 11.719C24.062 5.082 18.668 0 12.031 0ZM18.455 16.74C18.188 17.491 16.89 18.156 16.143 18.293C15.548 18.403 14.73 18.51 11.83 17.307C8.118 15.77 5.736 12.003 5.56 11.77C5.385 11.536 4.135 9.873 4.135 8.156C4.135 6.44 5.011 5.6 5.361 5.234C5.654 4.93 6.136 4.793 6.602 4.793C6.75 4.793 6.883 4.801 7.001 4.806C7.294 4.818 7.44 4.836 7.633 5.303C7.868 5.886 8.441 7.286 8.512 7.433C8.582 7.58 8.675 7.773 8.57 7.986C8.464 8.2 8.359 8.303 8.183 8.512C8.007 8.72 7.843 8.85 7.668 9.073C7.481 9.31 7.281 9.531 7.504 9.914C7.727 10.297 8.497 11.554 9.638 12.569C11.11 13.882 12.302 14.28 12.723 14.455C13.04 14.584 13.415 14.55 13.638 14.305C13.919 13.991 14.27 13.443 14.634 12.918C14.891 12.545 15.231 12.498 15.583 12.638C15.934 12.779 17.805 13.701 18.18 13.888C18.555 14.076 18.801 14.17 18.895 14.333C18.988 14.497 18.988 15.267 18.721 16.018H18.455Z" />
+        </svg>
+      </a>
     </div>
   );
 }
