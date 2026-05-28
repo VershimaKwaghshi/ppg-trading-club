@@ -1,4 +1,31 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from ‘react’;
+import React from ‘react’;
+
+class ErrorBoundary extends React.Component {
+constructor(props) {
+super(props);
+this.state = { hasError: false, error: null };
+}
+static getDerivedStateFromError(error) {
+return { hasError: true, error };
+}
+render() {
+if (this.state.hasError) {
+return (
+<div style={{ minHeight: ‘100vh’, background: ‘#050814’, display: ‘flex’, alignItems: ‘center’, justifyContent: ‘center’, padding: ‘2rem’ }}>
+<div style={{ textAlign: ‘center’, maxWidth: 500 }}>
+<div style={{ fontFamily: ‘serif’, fontSize: ‘3rem’, color: ‘#c4a050’, marginBottom: ‘1rem’ }}>PPG</div>
+<div style={{ fontFamily: ‘sans-serif’, fontSize: ‘1rem’, color: ‘#7878a0’, marginBottom: ‘2rem’ }}>Trading Club</div>
+<div style={{ fontFamily: ‘sans-serif’, fontSize: ‘0.8rem’, color: ‘#404060’ }}>
+{String(this.state.error)}
+</div>
+</div>
+</div>
+);
+}
+return this.props.children;
+}
+}
 
 const NAV_LINKS = [
 { label: ‘About’, href: ‘#about’ },
@@ -716,7 +743,7 @@ Forex trading involves substantial risk. You may lose all invested capital. PPG 
 );
 }
 
-export default function App() {
+function AppInner() {
 var _a = useState(false), isRegisterOpen = _a[0], setIsRegisterOpen = _a[1];
 return (
 <div style={{ minHeight: ‘100vh’, background: ‘#050814’, color: ‘#f0e8d0’, overflowX: ‘hidden’ }}>
@@ -731,5 +758,13 @@ return (
 <RegisterModal isOpen={isRegisterOpen} onClose={function() { setIsRegisterOpen(false); }} />
 <a href=‘https://wa.me/2348130500659’ target=’_blank’ rel=‘noreferrer’ style={{ position: ‘fixed’, bottom: 24, right: 24, width: 52, height: 52, background: ‘#25D366’, borderRadius: ‘50%’, display: ‘flex’, alignItems: ‘center’, justifyContent: ‘center’, fontSize: 24, boxShadow: ‘0 4px 16px rgba(37,211,102,0.4)’, textDecoration: ‘none’, zIndex: 150 }}>💬</a>
 </div>
+);
+}
+
+export default function App() {
+return (
+<ErrorBoundary>
+<AppInner />
+</ErrorBoundary>
 );
 }
