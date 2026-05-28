@@ -29,6 +29,14 @@ const COUNTRIES = [
   { code: 'ZZ', name: 'Other Options' },
 ];
 
+function AgeRestrictionBadge() {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: '#dc2626', color: '#ffffff', fontSize: '10px', fontWeight: 900, height: '18px', padding: '0 6px', borderRadius: '4px', marginLeft: '8px', verticalAlign: 'middle', boxShadow: '0 2px 4px rgba(220,38,38,0.3)' }}>
+      18+
+    </span>
+  );
+}
+
 function Logo() {
   const gradientStyle = {
     background: 'linear-gradient(90deg, #8a6520, #f5e098, #c4a050, #f5e098, #8a6520)',
@@ -89,20 +97,22 @@ function Navbar({ onOpenRegister }) {
     <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, background: (scrolled || menuOpen) ? 'rgba(5,8,20,0.98)' : 'transparent', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(196,160,80,0.12)', transition: 'all 0.3s' }}>
       <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '76px', padding: '0 24px' }}>
         
-        {/* Clickable Logo returning home */}
         <a href="#" style={{ textDecoration: 'none' }}>
           <Logo />
         </a>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           
-          {/* Compliance and Language Flags */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderRight: '1px solid rgba(196,160,80,0.2)', paddingRight: '20px' }}>
             <span style={{ fontSize: '18px' }}>🇺🇸</span>
-            <div style={{ background: '#dc2626', color: '#ffffff', fontSize: '10px', fontWeight: 900, width: '22px', height: '22px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(220,38,38,0.3)' }}>18+</div>
+            <select style={{ background: 'transparent', color: '#b0a080', border: 'none', outline: 'none', cursor: 'pointer', fontFamily: 'sans-serif', fontSize: '13px', fontWeight: 600, appearance: 'none' }}>
+              <option value="en">English</option>
+              <option value="fr">French</option>
+              <option value="es">Spanish</option>
+            </select>
+            <AgeRestrictionBadge />
           </div>
 
-          {/* Unified Dropdown Menu */}
           <div ref={dropdownRef} style={{ position: 'relative' }}>
             <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', border: 'none', padding: '10px 18px', borderRadius: '6px', fontFamily: 'sans-serif', fontSize: '14px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
               Menu {menuOpen ? '✕' : '☰'}
@@ -226,6 +236,13 @@ function RiskTiers() {
             </div>
           ))}
         </div>
+        
+        <div style={{ background: 'rgba(255,200,50,0.02)', border: '1px solid rgba(255,200,50,0.1)', borderRadius: '8px', padding: '16px 20px', display: 'flex', gap: '12px', marginTop: '32px', alignItems: 'center' }}>
+          <span style={{ fontSize: '18px' }}>⚠️</span>
+          <p style={{ fontFamily: 'sans-serif', fontSize: '12.5px', color: '#9090b0', lineHeight: 1.6, flex: 1 }}>
+            Risk Disclosure: Percentage parameters define maximum daily execution boundaries, not assured yields. Trading foreign exchange contains substantial operational risks. <AgeRestrictionBadge />
+          </p>
+        </div>
       </div>
     </section>
   );
@@ -244,7 +261,7 @@ function LegalSection() {
           
           <div style={{ background: '#070a1a', border: '1px solid rgba(196,160,80,0.12)', borderRadius: '12px', padding: '32px', textAlign: 'center' }}>
             <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: '#ffffff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #c4a050', overflow: 'hidden', padding: '6px' }}>
-              <img src="/cac-logo.png" alt="Corporate Affairs Commission" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <img src="/cac-logo.png" alt="Corporate Affairs Commission Seal" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>Corporate Registration</h3>
             <p style={{ fontFamily: 'sans-serif', fontSize: '13.5px', color: '#686888', lineHeight: 1.6 }}>Penny Partners Group operates as a formally incorporated enterprise, holding active and verified registration entries strictly adhering to the mandates of the Corporate Affairs Commission.</p>
@@ -262,7 +279,9 @@ function LegalSection() {
             <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: 'rgba(196,160,80,0.05)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(196,160,80,0.2)' }}>
               <span style={{ fontSize: '28px' }}>⚠️</span>
             </div>
-            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>Risk Disclaimer</h3>
+            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>
+              Risk Disclaimer <AgeRestrictionBadge />
+            </h3>
             <p style={{ fontFamily: 'sans-serif', fontSize: '13.5px', color: '#686888', lineHeight: 1.6 }}>Foreign exchange markets are subject to severe systemic volatility. The algorithmic execution parameters provided do not guarantee profit or protect against loss. Participants must strictly utilize surplus risk capital. We hold no liability for market-driven depreciation.</p>
           </div>
 
@@ -400,7 +419,7 @@ function RegisterModal({ isOpen, onClose }) {
             </div>
 
             <div style={{ borderTop: '1px solid rgba(196,160,80,0.1)', paddingTop: '16px', color: '#606080', fontFamily: 'sans-serif', fontSize: '11px', lineHeight: '1.5', textAlign: 'justify' }}>
-              <strong>Risk Disclaimer:</strong> Forex execution tracks involve massive continuous exposure variables. Market drawdowns occur naturally due to sudden financial events. By initializing this request, you confirm that capital allocations are derived completely from independent risk assets and that no fixed yields are active inside this ecosystem.
+              <strong>Risk Disclaimer:</strong> Forex execution tracks involve massive continuous exposure variables. Market drawdowns occur naturally due to sudden financial events. By initializing this request, you confirm that capital allocations are derived completely from independent risk assets and that no fixed yields are active inside this ecosystem. <AgeRestrictionBadge />
             </div>
 
           </form>
@@ -445,7 +464,7 @@ function Footer() {
             <div style={{ fontFamily: 'sans-serif', fontSize: '11.5px', color: '#383858' }}>&copy; 2026 PPG Solutions Global Trading Co. All tracking tracks active.</div>
           </div>
           <div style={{ fontFamily: 'sans-serif', fontSize: '11.5px', color: '#383858', maxWidth: '460px', textAlign: 'justify' }}>
-            Systematic warning: Margin operations contain structural dangers. Past operational graphs show no fixed guidance for future results. Capital execution points stay separated.
+            Systematic warning: Margin operations contain structural dangers. Past operational graphs show no fixed guidance for future results. Capital execution points stay separated. <AgeRestrictionBadge />
           </div>
         </div>
       </div>
