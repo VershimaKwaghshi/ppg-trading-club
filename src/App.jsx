@@ -1,15 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 
-// Unified single navigation dataset
-const COMPREHENSIVE_NAV = [
-  { label: 'About', href: '#about' },
-  { label: 'How It Works', href: '#how' },
-  { label: 'Risk Tiers', href: '#risk' },
-  { label: 'Legals', href: '#legal' },
-  { label: 'Risk Disclaimer', href: '#disclaimer' },
-  { label: 'Contact Us', href: '#contact' }
-];
-
 const RISK_TIERS = [
   { pct: '0.1%', label: 'Micro', risk: 'Minimal Risk', desc: 'Ultra-conservative portfolio orchestration. Target minimal fluctuations with deep preservation buffers.', daily: '$0.10', color: '#4ade80' },
   { pct: '0.5%', label: 'Cautious', risk: 'Very Low Risk', desc: 'Conservative growth curve. Primary operational mandate is asset protection under live conditions.', daily: '$0.50', color: '#86efac' },
@@ -21,7 +11,7 @@ const RISK_TIERS = [
 ];
 
 const HOW_STEPS = [
-  { n: '01', title: 'Secure Member Invitation', desc: 'Access registration protocols strictly utilizing an authorized unique identification sequence from an verified platform node.' },
+  { n: '01', title: 'Secure Member Invitation', desc: 'Access registration protocols strictly utilizing an authorized unique identification sequence from a verified platform node.' },
   { n: '02', title: 'Infrastructure Activation', desc: 'Process the $4.99 system maintenance subscription through verified clearing tracks including Opay, Zenith Bank, Bitcoin, Ethereum, or USDT TRC20.' },
   { n: '03', title: 'Digital Passport Verification', desc: 'Upload mandatory statutory identification credentials to establish your non-transferable secure Digital Passport (DP) layer.' },
   { n: '04', title: 'Ecosystem Node Validation', desc: 'Activate operational routing pathways by integrating at least one verified participant link into the platform structure.' },
@@ -38,14 +28,6 @@ const COUNTRIES = [
   { code: 'GB', name: 'United Kingdom' },
   { code: 'ZZ', name: 'Other Options' },
 ];
-
-function CustomChevron() {
-  return (
-    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ pointerEvents: 'none', transition: 'transform 0.2s' }}>
-      <path d="M1 1L5 5L9 1" stroke="#c4a050" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
 
 function Logo() {
   const gradientStyle = {
@@ -82,44 +64,10 @@ function Logo() {
   );
 }
 
-function CountrySelect({ value, onChange }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    function clickOutside(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    }
-    document.addEventListener('mousedown', clickOutside);
-    return () => document.removeEventListener('mousedown', clickOutside);
-  }, []);
-
-  const selected = COUNTRIES.find(c => c.name === value) || COUNTRIES[0];
-
-  return (
-    <div ref={ref} style={{ position: 'relative', width: '100%' }}>
-      <div onClick={() => setOpen(!open)}
-           style={{ width: '100%', background: '#050814', border: '1px solid rgba(196,160,80,0.25)', borderRadius: '8px', padding: '12px 14px', color: '#f0e8d0', fontFamily: 'sans-serif', fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
-        <span>{selected.name}</span>
-        <CustomChevron />
-      </div>
-      {open && (
-        <div style={{ position: 'absolute', top: '105%', left: 0, right: 0, zIndex: 99, background: '#0a0d1e', border: '1px solid rgba(196,160,80,0.3)', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 8px 24px rgba(0,0,0,0.6)' }}>
-          {COUNTRIES.map(c => (
-            <div key={c.code} onClick={() => { onChange(c.name); setOpen(false); }}
-                 style={{ padding: '12px 14px', cursor: 'pointer', fontFamily: 'sans-serif', fontSize: '13px', color: value === c.name ? '#c4a050' : '#f0e8d0', background: value === c.name ? 'rgba(196,160,80,0.06)' : 'transparent', borderBottom: '1px solid rgba(196,160,80,0.04)' }}>
-              {c.name}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 function Navbar({ onOpenRegister }) {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -127,63 +75,60 @@ function Navbar({ onOpenRegister }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
-    <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, background: (scrolled || mobileOpen) ? 'rgba(5,8,20,0.98)' : 'transparent', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(196,160,80,0.12)', transition: 'all 0.3s' }}>
+    <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, background: (scrolled || menuOpen) ? 'rgba(5,8,20,0.98)' : 'transparent', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(196,160,80,0.12)', transition: 'all 0.3s' }}>
       <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '76px', padding: '0 24px' }}>
-        <Logo />
         
-        {/* Main Desktop Link Alignment Area */}
-        <div className="nav-desktop-container" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-            {COMPREHENSIVE_NAV.map(l => (
-              <a key={l.label} href={l.href} style={{ color: '#b0a080', fontSize: '12.5px', fontFamily: 'sans-serif', textDecoration: 'none', fontWeight: 500, letterSpacing: '0.02em', transition: 'color 0.2s' }}>{l.label}</a>
-            ))}
+        {/* Clickable Logo returning home */}
+        <a href="#" style={{ textDecoration: 'none' }}>
+          <Logo />
+        </a>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          
+          {/* Compliance and Language Flags */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderRight: '1px solid rgba(196,160,80,0.2)', paddingRight: '20px' }}>
+            <span style={{ fontSize: '18px' }}>🇺🇸</span>
+            <div style={{ background: '#dc2626', color: '#ffffff', fontSize: '10px', fontWeight: 900, width: '22px', height: '22px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(220,38,38,0.3)' }}>18+</div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderLeft: '1px solid rgba(196,160,80,0.2)', paddingLeft: '20px' }}>
-            <span style={{ fontSize: '16px' }}>🇺🇸</span>
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <select style={{ background: 'transparent', color: '#b0a080', border: 'none', outline: 'none', cursor: 'pointer', fontFamily: 'sans-serif', fontSize: '12px', fontWeight: 600, appearance: 'none', paddingRight: '12px' }}>
-                <option value="en">EN</option>
-              </select>
-              <div style={{ position: 'absolute', right: 0, top: '45%' }}><CustomChevron /></div>
-            </div>
-            <div style={{ background: '#dc2626', color: '#ffffff', fontSize: '9px', fontWeight: 900, width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(220,38,38,0.3)' }}>18+</div>
+          {/* Unified Dropdown Menu */}
+          <div ref={dropdownRef} style={{ position: 'relative' }}>
+            <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', border: 'none', padding: '10px 18px', borderRadius: '6px', fontFamily: 'sans-serif', fontSize: '14px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              Menu {menuOpen ? '✕' : '☰'}
+            </button>
+            
+            {menuOpen && (
+              <div style={{ position: 'absolute', top: '130%', right: 0, width: '220px', background: '#0a0d1e', border: '1px solid rgba(196,160,80,0.3)', borderRadius: '8px', boxShadow: '0 12px 40px rgba(0,0,0,0.8)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onOpenRegister(); }} style={{ padding: '14px 20px', color: '#c4a050', textDecoration: 'none', fontFamily: 'sans-serif', fontSize: '14px', fontWeight: 700, borderBottom: '1px solid rgba(196,160,80,0.1)' }}>Register</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); onOpenRegister(); }} style={{ padding: '14px 20px', color: '#f0e8d0', textDecoration: 'none', fontFamily: 'sans-serif', fontSize: '13px', borderBottom: '1px solid rgba(196,160,80,0.1)' }}>Login</a>
+                <a href="#how" onClick={() => setMenuOpen(false)} style={{ padding: '14px 20px', color: '#f0e8d0', textDecoration: 'none', fontFamily: 'sans-serif', fontSize: '13px', borderBottom: '1px solid rgba(196,160,80,0.1)' }}>How It Works</a>
+                <a href="#about" onClick={() => setMenuOpen(false)} style={{ padding: '14px 20px', color: '#f0e8d0', textDecoration: 'none', fontFamily: 'sans-serif', fontSize: '13px', borderBottom: '1px solid rgba(196,160,80,0.1)' }}>About</a>
+                <a href="#risk" onClick={() => setMenuOpen(false)} style={{ padding: '14px 20px', color: '#f0e8d0', textDecoration: 'none', fontFamily: 'sans-serif', fontSize: '13px', borderBottom: '1px solid rgba(196,160,80,0.1)' }}>Risk Tiers</a>
+                <a href="#legal" onClick={() => setMenuOpen(false)} style={{ padding: '14px 20px', color: '#f0e8d0', textDecoration: 'none', fontFamily: 'sans-serif', fontSize: '13px', borderBottom: '1px solid rgba(196,160,80,0.1)' }}>Legals</a>
+                <a href="#disclaimer" onClick={() => setMenuOpen(false)} style={{ padding: '14px 20px', color: '#f0e8d0', textDecoration: 'none', fontFamily: 'sans-serif', fontSize: '13px', borderBottom: '1px solid rgba(196,160,80,0.1)' }}>Risk Disclaimer</a>
+                <a href="#contact" onClick={() => setMenuOpen(false)} style={{ padding: '14px 20px', color: '#f0e8d0', textDecoration: 'none', fontFamily: 'sans-serif', fontSize: '13px' }}>Contact Us</a>
+              </div>
+            )}
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <button onClick={onOpenRegister} style={{ background: 'transparent', color: '#c4a050', border: '1px solid rgba(196,160,80,0.3)', fontFamily: 'sans-serif', fontWeight: 600, fontSize: '12.5px', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>Login</button>
-            <button onClick={onOpenRegister} style={{ background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', fontFamily: 'sans-serif', fontWeight: 700, fontSize: '12.5px', padding: '9px 18px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}>Register</button>
-          </div>
-        </div>
-
-        {/* Mobile Hamburger Control Toggle */}
-        <div className="nav-mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)} style={{ display: 'none', cursor: 'pointer', flexDirection: 'column', gap: '5px' }}>
-          <div style={{ width: '22px', height: '2px', background: '#c4a050' }} />
-          <div style={{ width: '22px', height: '2px', background: '#c4a050' }} />
-          <div style={{ width: '22px', height: '2px', background: '#c4a050' }} />
         </div>
       </div>
-
-      {/* Mobile Nav Menu Drawer */}
-      {mobileOpen && (
-        <div style={{ background: '#050814', borderBottom: '1px solid rgba(196,160,80,0.15)', padding: '16px 24px 24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {COMPREHENSIVE_NAV.map(l => (
-            <a key={l.label} href={l.href} onClick={() => setMobileOpen(false)} style={{ color: '#b0a080', fontSize: '14px', fontFamily: 'sans-serif', textDecoration: 'none' }}>{l.label}</a>
-          ))}
-          <div style={{ height: '1px', background: 'rgba(196,160,80,0.1)' }} />
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button onClick={() => { setMobileOpen(false); onOpenRegister(); }} style={{ flex: 1, background: 'transparent', color: '#c4a050', border: '1px solid rgba(196,160,80,0.3)', padding: '12px', borderRadius: '6px', fontFamily: 'sans-serif' }}>Login</button>
-            <button onClick={() => { setMobileOpen(false); onOpenRegister(); }} style={{ flex: 1, background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', border: 'none', padding: '12px', borderRadius: '6px', fontFamily: 'sans-serif', fontWeight: 700 }}>Register</button>
-          </div>
-        </div>
-      )}
-
       <style>{`
-        @media (max-width: 991px) {
-          .nav-desktop-container { display: none !important; }
-          .nav-mobile-toggle { display: flex !important; }
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #050814; scroll-behavior: smooth; }
+        @keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
       `}</style>
     </nav>
   );
@@ -231,7 +176,7 @@ function About() {
           ].map((item, i) => (
             <div key={i} style={{ background: '#050814', border: '1px solid rgba(196,160,80,0.1)', borderRadius: '12px', padding: '24px' }}>
               <h3 style={{ fontFamily: 'Georgia, serif', fontSize: '1.1rem', color: '#f0e8d0', marginBottom: '8px' }}>{item.title}</h3>
-              <p style={{ fontFamily: 'sans-serif', fontSize: '13.5px', color: '#686888', lineHeight: 1.6 }}={item.desc}></p>
+              <p style={{ fontFamily: 'sans-serif', fontSize: '13.5px', color: '#686888', lineHeight: 1.6 }}>{item.desc}</p>
             </div>
           ))}
         </div>
@@ -295,44 +240,38 @@ function LegalSection() {
           <h2 style={{ fontFamily: 'Georgia, serif', fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 900, color: '#f0e8d0' }}>Statutory Architecture & Disclosures</h2>
         </div>
         
-        {/* Render Grid for Corporate Compliance Blocks */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}>
           
-          {/* Box 1: CAC Compliance Block containing the official seal design */}
           <div style={{ background: '#070a1a', border: '1px solid rgba(196,160,80,0.12)', borderRadius: '12px', padding: '32px', textAlign: 'center' }}>
-            <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: '#0a4022', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #c4a050', boxShadow: '0 4px 16px rgba(10,64,34,0.4)', position: 'relative', overflow: 'hidden' }}>
-              <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-                <circle cx="50" cy="50" r="46" fill="none" stroke="#f5e098" strokeWidth="2"/>
-                <path d="M50,15 L60,35 L82,35 L65,48 L72,70 L50,58 L28,70 L35,48 L18,35 L40,35 Z" fill="#f5e098"/>
-                <text x="50" y="86" textAnchor="middle" fill="#ffffff" fontSize="12" fontFamily="sans-serif" fontWeight="900" letterSpacing="1">CAC</text>
-              </svg>
+            <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: '#ffffff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #c4a050', overflow: 'hidden', padding: '6px' }}>
+              <img src="/cac-logo.png" alt="Corporate Affairs Commission" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>Corporate Registration</h3>
-            <p style={{ fontFamily: 'sans-serif', fontSize: '13px', color: '#686888', lineHeight: 1.6 }}>Penny Partners Group operates as a formally incorporated enterprise holding active registration entries inside Corporate Affairs Commission mandates.</p>
-          </div>
-
-          <div id="disclaimer" style={{ background: '#070a1a', border: '1px solid rgba(196,160,80,0.12)', borderRadius: '12px', padding: '32px', textAlign: 'center' }}>
-            <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: 'rgba(196,160,80,0.05)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(196,160,80,0.2)' }}>
-              <span style={{ fontSize: '28px' }}>⚠️</span>
-            </div>
-            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>Risk Capital Disclosure</h3>
-            <p style={{ fontFamily: 'sans-serif', fontSize: '13px', color: '#686888', lineHeight: 1.6 }}>Foreign exchange transactions hold intense systemic dangers. Algorithmic modeling cannot nullify drawdown vulnerabilities. Retain only surplus capital allocations.</p>
+            <p style={{ fontFamily: 'sans-serif', fontSize: '13.5px', color: '#686888', lineHeight: 1.6 }}>Penny Partners Group operates as a formally incorporated enterprise, holding active and verified registration entries strictly adhering to the mandates of the Corporate Affairs Commission.</p>
           </div>
 
           <div style={{ background: '#070a1a', border: '1px solid rgba(196,160,80,0.12)', borderRadius: '12px', padding: '32px', textAlign: 'center' }}>
             <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: 'rgba(196,160,80,0.05)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(196,160,80,0.2)' }}>
               <span style={{ fontSize: '28px' }}>⚖️</span>
             </div>
-            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>System Terms of Service</h3>
-            <p style={{ fontFamily: 'sans-serif', fontSize: '13px', color: '#686888', lineHeight: 1.6 }}>Platform access requires rigorous compliance parameters. Users retain full direct legal obligations over their designated account settings, api access points, and independent funding mechanisms.</p>
+            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>Terms of Service</h3>
+            <p style={{ fontFamily: 'sans-serif', fontSize: '13.5px', color: '#686888', lineHeight: 1.6 }}>Access to the PPG Trading Club infrastructure is strictly governed by our operational mandate. Participants maintain absolute custody of their capital. Users agree to our non-custodial framework, acknowledging that PPG functions solely as an execution routing layer.</p>
+          </div>
+
+          <div id="disclaimer" style={{ background: '#070a1a', border: '1px solid rgba(196,160,80,0.12)', borderRadius: '12px', padding: '32px', textAlign: 'center' }}>
+            <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: 'rgba(196,160,80,0.05)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(196,160,80,0.2)' }}>
+              <span style={{ fontSize: '28px' }}>⚠️</span>
+            </div>
+            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>Risk Disclaimer</h3>
+            <p style={{ fontFamily: 'sans-serif', fontSize: '13.5px', color: '#686888', lineHeight: 1.6 }}>Foreign exchange markets are subject to severe systemic volatility. The algorithmic execution parameters provided do not guarantee profit or protect against loss. Participants must strictly utilize surplus risk capital. We hold no liability for market-driven depreciation.</p>
           </div>
 
           <div style={{ background: '#070a1a', border: '1px solid rgba(196,160,80,0.12)', borderRadius: '12px', padding: '32px', textAlign: 'center' }}>
             <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: 'rgba(196,160,80,0.05)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(196,160,80,0.2)' }}>
               <span style={{ fontSize: '28px' }}>🛡️</span>
             </div>
-            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>Enforcement Integration</h3>
-            <p style={{ fontFamily: 'sans-serif', fontSize: '13px', color: '#686888', lineHeight: 1.6 }}>Identity layers interact securely with global safety standards. All user endpoints submit tracking references to counter illegal transactions or systemic exploits.</p>
+            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>Law Enforcement</h3>
+            <p style={{ fontFamily: 'sans-serif', fontSize: '13.5px', color: '#686888', lineHeight: 1.6 }}>We enforce strict compliance utilizing our Digital Passport (DP) identity architecture. Every participant undergoes comprehensive vetting to prevent unauthorized exploitation. We actively coordinate with regulatory bodies to ensure the ecosystem remains entirely secure.</p>
           </div>
 
         </div>
@@ -368,7 +307,6 @@ function RegisterModal({ isOpen, onClose }) {
     }, 1400);
   };
 
-  // Structured single column CSS styling array
   const singleInputStyle = {
     width: '100%',
     background: '#050814',
@@ -396,7 +334,7 @@ function RegisterModal({ isOpen, onClose }) {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
       <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(3,5,13,0.96)', backdropFilter: 'blur(16px)' }} />
-      <div style={{ position: 'relative', zIndex: 210, width: '100%', maxWidth: '520px', background: '#0a0d1e', border: '1px solid rgba(196,160,80,0.3)', borderRadius: '16px', padding: '40px 32px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 24px 64px rgba(0,0,0,0.7)' }}>
+      <div style={{ position: 'relative', zIndex: 210, width: '100%', maxWidth: '480px', background: '#0a0d1e', border: '1px solid rgba(196,160,80,0.3)', borderRadius: '16px', padding: '40px 32px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 24px 64px rgba(0,0,0,0.7)' }}>
         <button onClick={onClose} style={{ position: 'absolute', top: 20, right: 20, background: 'transparent', border: 'none', color: '#b0a080', fontSize: '20px', cursor: 'pointer' }}>✕</button>
         
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
@@ -409,7 +347,6 @@ function RegisterModal({ isOpen, onClose }) {
             Onboarding application submitted. On-chain validation nodes will analyze input credentials within 24 hours. Verification logs will transfer directly to your provided WhatsApp line.
           </div>
         ) : (
-          /* Enforced strict single layout form container */
           <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
             
             <div>
@@ -429,7 +366,9 @@ function RegisterModal({ isOpen, onClose }) {
 
             <div>
               <label style={labelBlockStyle}>Jurisdiction Region</label>
-              <CountrySelect value={form.country} onChange={(v) => setForm({ ...form, country: v })} />
+              <select name="country" value={form.country} onChange={handleChange} style={singleInputStyle}>
+                {COUNTRIES.map(c => <option key={c.code} value={c.name}>{c.name}</option>)}
+              </select>
             </div>
 
             <div>
@@ -439,25 +378,19 @@ function RegisterModal({ isOpen, onClose }) {
 
             <div>
               <label style={labelBlockStyle}>Target Algorithmic Risk Profile</label>
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                <select name="riskTier" value={form.riskTier} onChange={handleChange} style={{ ...singleInputStyle, appearance: 'none', cursor: 'pointer' }}>
-                  {RISK_TIERS.map(t => <option key={t.pct} value={t.pct}>{t.pct} Allocation - {t.label}</option>)}
-                </select>
-                <div style={{ position: 'absolute', right: '14px' }}><CustomChevron /></div>
-              </div>
+              <select name="riskTier" value={form.riskTier} onChange={handleChange} style={singleInputStyle}>
+                {RISK_TIERS.map(t => <option key={t.pct} value={t.pct}>{t.pct} Allocation - {t.label}</option>)}
+              </select>
             </div>
 
             <div>
               <label style={labelBlockStyle}>Broker Route Isolation Preference</label>
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                <select name="broker" value={form.broker} onChange={handleChange} style={{ ...singleInputStyle, appearance: 'none', cursor: 'pointer' }}>
-                  <option value="No Preference">Standard Shared Liquidity Track</option>
-                  <option value="Exness">Exness Infrastructure (Recommended)</option>
-                  <option value="HFM">HFM Architecture Routing</option>
-                  <option value="FXTM">FXTM Secure Stream</option>
-                </select>
-                <div style={{ position: 'absolute', right: '14px' }}><CustomChevron /></div>
-              </div>
+              <select name="broker" value={form.broker} onChange={handleChange} style={singleInputStyle}>
+                <option value="No Preference">Standard Shared Liquidity Track</option>
+                <option value="Exness">Exness Infrastructure (Recommended)</option>
+                <option value="HFM">HFM Architecture Routing</option>
+                <option value="FXTM">FXTM Secure Stream</option>
+              </select>
             </div>
 
             <div style={{ marginTop: '6px' }}>
@@ -466,9 +399,8 @@ function RegisterModal({ isOpen, onClose }) {
               </button>
             </div>
 
-            {/* Injected formal high-tier forex risk disclaimer statement */}
             <div style={{ borderTop: '1px solid rgba(196,160,80,0.1)', paddingTop: '16px', color: '#606080', fontFamily: 'sans-serif', fontSize: '11px', lineHeight: '1.5', textAlign: 'justify' }}>
-              <strong>Statutory Risk Acknowledgment:</strong> Forex execution tracks involve massive continuous exposure variables. Market drawdowns occur naturally due to sudden financial events. By initializing this request, you confirm that capital allocations are derived completely from independent risk assets and that no constant yield promises or cooperative investment frameworks are active inside this ecosystem.
+              <strong>Risk Disclaimer:</strong> Forex execution tracks involve massive continuous exposure variables. Market drawdowns occur naturally due to sudden financial events. By initializing this request, you confirm that capital allocations are derived completely from independent risk assets and that no fixed yields are active inside this ecosystem.
             </div>
 
           </form>
@@ -507,7 +439,6 @@ function Footer() {
           ))}
         </div>
         
-        {/* Strictly placed physical address line at the bottom footer marker */}
         <div style={{ borderTop: '1px solid rgba(196,160,80,0.06)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px' }}>
           <div>
             <div style={{ fontFamily: 'sans-serif', fontSize: '12px', color: '#585878', marginBottom: '6px', fontWeight: 500 }}>📍 10 Arab Road, Calabar, Nigeria</div>
@@ -536,7 +467,6 @@ export default function App() {
       <Footer />
       <RegisterModal isOpen={modalActive} onClose={() => setModalActive(false)} />
       
-      {/* Geometrically symmetrical floating WhatsApp action anchor utilizing verified vectors */}
       <a href="https://wa.me/2348130500659" target="_blank" rel="noreferrer" style={{ position: 'fixed', bottom: '24px', right: '24px', width: '56px', height: '56px', background: '#25D366', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 24px rgba(37,211,102,0.35)', textDecoration: 'none', zIndex: 150, transition: 'transform 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.06)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
         <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
           <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 0 0 1.333 4.993L2 22l5.13-1.344a9.94 9.94 0 0 0 4.881 1.281h.004c5.505 0 9.989-4.478 9.99-9.985.001-2.667-1.034-5.176-2.917-7.061A9.927 9.927 0 0 0 12.012 2Zm7.067 14.126c-.29.407-1.427 1.393-1.954 1.492-.486.092-.962.152-3.32-.782-3.013-1.194-4.92-4.248-5.07-4.45-.152-.201-1.226-1.63-1.226-3.111 0-1.48.775-2.208 1.05-2.51.226-.248.601-.365.96-.365.116 0 .221.006.313.01.272.013.407.032.584.453.22.527.75 1.83.816 1.964.065.134.108.29.02.467-.09.177-.134.29-.265.444-.132.153-.277.34-.395.457-.133.13-.273.272-.116.541.157.27.7 1.147 1.498 1.854.1.09.2.174.3.253 1.03.818 1.884 1.077 2.19 1.224.282.135.446.113.612-.08.22-.257.946-1.101 1.2-1.479.2-.298.416-.248.702-.142.29.105 1.836.865 2.146 1.018.31.153.517.226.592.355.075.13.075.753-.215 1.16Z" />
