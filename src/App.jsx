@@ -30,9 +30,30 @@ const COUNTRIES = [
 ];
 
 function AgeRestrictionBadge() {
+  const gradientStyle = {
+    background: 'linear-gradient(90deg, #8a6520, #f5e098, #c4a050, #f5e098, #8a6520)',
+    backgroundSize: '200% auto',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    animation: 'shimmer 4s linear infinite',
+  };
+
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: '#dc2626', color: '#ffffff', fontSize: '10px', fontWeight: 900, height: '18px', padding: '0 6px', borderRadius: '4px', marginLeft: '8px', verticalAlign: 'middle', boxShadow: '0 2px 4px rgba(220,38,38,0.3)' }}>
-      18+
+    <span style={{ 
+      display: 'inline-flex', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      background: '#03050d', 
+      border: '1px solid rgba(196,160,80,0.4)',
+      height: '16px', 
+      padding: '0 5px', 
+      borderRadius: '4px', 
+      marginLeft: '6px', 
+      verticalAlign: 'middle', 
+      boxShadow: '0 2px 6px rgba(196,160,80,0.15)' 
+    }}>
+      <span style={{ ...gradientStyle, fontSize: '9px', fontWeight: 900, letterSpacing: '0.05em' }}>18+</span>
     </span>
   );
 }
@@ -103,7 +124,7 @@ function Navbar({ onOpenRegister }) {
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderRight: '1px solid rgba(196,160,80,0.2)', paddingRight: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderRight: '1px solid rgba(196,160,80,0.2)', paddingRight: '20px' }}>
             <span style={{ fontSize: '18px' }}>🇺🇸</span>
             <select style={{ background: 'transparent', color: '#b0a080', border: 'none', outline: 'none', cursor: 'pointer', fontFamily: 'sans-serif', fontSize: '13px', fontWeight: 600, appearance: 'none' }}>
               <option value="en">English</option>
@@ -279,7 +300,7 @@ function LegalSection() {
             <div style={{ width: '84px', height: '84px', margin: '0 auto 20px', background: 'rgba(196,160,80,0.05)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(196,160,80,0.2)' }}>
               <span style={{ fontSize: '28px' }}>⚠️</span>
             </div>
-            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px' }}>
+            <h3 style={{ fontFamily: 'sans-serif', fontSize: '15px', fontWeight: 700, color: '#f0e8d0', marginBottom: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               Risk Disclaimer <AgeRestrictionBadge />
             </h3>
             <p style={{ fontFamily: 'sans-serif', fontSize: '13.5px', color: '#686888', lineHeight: 1.6 }}>Foreign exchange markets are subject to severe systemic volatility. The algorithmic execution parameters provided do not guarantee profit or protect against loss. Participants must strictly utilize surplus risk capital. We hold no liability for market-driven depreciation.</p>
@@ -357,13 +378,13 @@ function RegisterModal({ isOpen, onClose }) {
         <button onClick={onClose} style={{ position: 'absolute', top: 20, right: 20, background: 'transparent', border: 'none', color: '#b0a080', fontSize: '20px', cursor: 'pointer' }}>✕</button>
         
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.9rem', fontWeight: 900, color: '#f0e8d0', marginBottom: '6px' }}>Application Form</h2>
-          <p style={{ fontFamily: 'sans-serif', color: '#8080a0', fontSize: '13px' }}>Provide accurate details to compile your node credentials.</p>
+          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.9rem', fontWeight: 900, color: '#f0e8d0', marginBottom: '6px' }}>Membership Application</h2>
+          <p style={{ fontFamily: 'sans-serif', color: '#8080a0', fontSize: '13px' }}>Please provide accurate details so we can verify and set up your account.</p>
         </div>
 
         {success ? (
           <div style={{ background: 'rgba(74,222,128,0.05)', border: '1px solid #4ade80', color: '#4ade80', borderRadius: '10px', padding: '20px', textAlign: 'center', fontFamily: 'sans-serif', fontSize: '14px', lineHeight: 1.6 }}>
-            Onboarding application submitted. On-chain validation nodes will analyze input credentials within 24 hours. Verification logs will transfer directly to your provided WhatsApp line.
+            Application received successfully. Our team will review your details and contact you directly on WhatsApp within 24 hours to complete your setup.
           </div>
         ) : (
           <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
@@ -374,36 +395,36 @@ function RegisterModal({ isOpen, onClose }) {
             </div>
 
             <div>
-              <label style={labelBlockStyle}>Secure Email Address *</label>
+              <label style={labelBlockStyle}>Email Address *</label>
               <input type="email" name="email" value={form.email} onChange={handleChange} required style={singleInputStyle} />
             </div>
 
             <div>
-              <label style={labelBlockStyle}>Phone / WhatsApp Contact Node *</label>
+              <label style={labelBlockStyle}>Phone / WhatsApp Number *</label>
               <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+234..." required style={singleInputStyle} />
             </div>
 
             <div>
-              <label style={labelBlockStyle}>Jurisdiction Region</label>
+              <label style={labelBlockStyle}>Country of Residence</label>
               <select name="country" value={form.country} onChange={handleChange} style={singleInputStyle}>
                 {COUNTRIES.map(c => <option key={c.code} value={c.name}>{c.name}</option>)}
               </select>
             </div>
 
             <div>
-              <label style={labelBlockStyle}>Required Referral Node Sequence *</label>
-              <input type="text" name="referralId" value={form.referralId} onChange={handleChange} placeholder="Verification Code Required" required style={singleInputStyle} />
+              <label style={labelBlockStyle}>Referral ID *</label>
+              <input type="text" name="referralId" value={form.referralId} onChange={handleChange} placeholder="Required to join" required style={singleInputStyle} />
             </div>
 
             <div>
-              <label style={labelBlockStyle}>Target Algorithmic Risk Profile</label>
+              <label style={labelBlockStyle}>Preferred Risk Tier</label>
               <select name="riskTier" value={form.riskTier} onChange={handleChange} style={singleInputStyle}>
                 {RISK_TIERS.map(t => <option key={t.pct} value={t.pct}>{t.pct} Allocation - {t.label}</option>)}
               </select>
             </div>
 
             <div>
-              <label style={labelBlockStyle}>Broker Route Isolation Preference</label>
+              <label style={labelBlockStyle}>Broker Preference</label>
               <select name="broker" value={form.broker} onChange={handleChange} style={singleInputStyle}>
                 <option value="No Preference">Standard Shared Liquidity Track</option>
                 <option value="Exness">Exness Infrastructure (Recommended)</option>
@@ -414,7 +435,7 @@ function RegisterModal({ isOpen, onClose }) {
 
             <div style={{ marginTop: '6px' }}>
               <button type="submit" disabled={loading} style={{ width: '100%', background: 'linear-gradient(135deg,#c4a050,#f0d080)', color: '#050814', border: 'none', borderRadius: '8px', padding: '16px', fontFamily: 'sans-serif', fontWeight: 800, fontSize: '14.5px', cursor: loading ? 'not-allowed' : 'pointer', boxShadow: '0 4px 16px rgba(196,160,80,0.25)' }}>
-                {loading ? 'Compiling Credentials...' : 'Execute Secure Onboarding'}
+                {loading ? 'Processing Application...' : 'Submit Application'}
               </button>
             </div>
 
