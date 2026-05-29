@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { supabase } from './supabase';
 
 // ─── TRANSLATIONS ────────────────────────────────────────────────────────────
 const T = {
@@ -87,9 +88,7 @@ const T = {
       { n: '05', title: 'Open Your Broker Account', desc: 'Create your own private trading account directly with one of our recommended brokers. Your funds stay in your name at all times — PPG never holds or touches your money.' },
       { n: '06', title: 'Choose Your Earnings Target', desc: 'Select a daily earnings target tier based on how much risk you are willing to take. Your assigned manager will trade on MT5 using view-only access to your account — they cannot withdraw your funds.' },
     ],
-    countries: ['Nigeria','Ghana','South Africa','Kenya','United States','United Kingdom','Other'],
   },
-
   fr: {
     flag: '🇫🇷', langLabel: 'Français',
     nav: {
@@ -144,7 +143,7 @@ const T = {
       phonePlaceholder: '+234...', country: 'Pays de résidence',
       referral: 'ID de parrainage', referralPlaceholder: 'Requis pour rejoindre',
       earningsTarget: 'Objectif de gains quotidien', broker: 'Préférence de courtier',
-      brokerOptions: ['Aucune préférence', 'Exness (Recommandé)', 'HFM', 'FXTM'],
+      brokerOptions: ['Aucune préférence', 'Exness (Le Recommandé)', 'HFM', 'FXTM'],
       submit: 'Soumettre la demande', submitting: 'Envoi en cours...',
       disclaimer: 'Avertissement de risque : Le trading forex implique un risque significatif de perte. En soumettant cette demande, vous confirmez que les fonds que vous déposez sont des fonds que vous pouvez vous permettre de perdre.',
     },
@@ -175,14 +174,12 @@ const T = {
       { n: '05', title: 'Ouvrez votre compte courtier', desc: 'Créez votre propre compte de trading privé directement avec l\'un de nos courtiers recommandés. Vos fonds restent en votre nom à tout moment.' },
       { n: '06', title: 'Choisissez votre objectif de gains', desc: 'Sélectionnez un niveau d\'objectif de gains quotidien selon votre tolérance au risque. Votre gestionnaire tradent sur MT5 avec un accès lecture seule.' },
     ],
-    countries: ['Nigéria','Ghana','Afrique du Sud','Kenya','États-Unis','Royaume-Uni','Autre'],
   },
-
   es: {
     flag: '🇪🇸', langLabel: 'Español',
     nav: {
       register: 'Registrarse', login: 'Iniciar sesión', howItWorks: 'Cómo funciona',
-      about: 'Acerca de', earningsTiers: 'Niveles de ganancias', legals: 'Legal',
+      about: 'Acerca de', earningsTiers: 'Nivel de ganancias', legals: 'Legal',
       riskDisclaimer: 'Aviso de riesgo', contactUs: 'Contáctenos',
     },
     hero: {
@@ -263,9 +260,35 @@ const T = {
       { n: '05', title: 'Abre tu cuenta de broker', desc: 'Crea tu propia cuenta de trading privada directamente con uno de nuestros brokers recomendados. Tus fondos siempre permanecen a tu nombre.' },
       { n: '06', title: 'Elige tu objetivo de ganancias', desc: 'Selecciona un nivel de objetivo de ganancias diarias según cuánto riesgo estás dispuesto a asumir. Tu gestor operará en MT5 con acceso de solo lectura.' },
     ],
-    countries: ['Nigeria','Ghana','Sudáfrica','Kenia','Estados Unidos','Reino Unido','Otro'],
   },
 };
+
+const WORLD_COUNTRIES = [
+  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua & Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
+  "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+  "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Côte d'Ivoire", "Croatia", "Cuba", "Cyprus", "Czech Republic",
+  "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+  "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia",
+  "Fiji", "Finland", "France",
+  "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
+  "Haiti", "Honduras", "Hungary",
+  "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy",
+  "Jamaica", "Japan", "Jordan",
+  "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan",
+  "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg",
+  "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar",
+  "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway",
+  "Oman",
+  "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal",
+  "Qatar",
+  "Romania", "Russia", "Rwanda",
+  "Saint Kitts & Nevis", "Saint Lucia", "Saint Vincent", "Samoa", "San Marino", "Sao Tome & Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria",
+  "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad & Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
+  "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan",
+  "Vanuatu", "Vatican City", "Venezuela", "Vietnam",
+  "Yemen",
+  "Zambia", "Zimbabwe"
+];
 
 // ─── ANIMATION HOOK ───────────────────────────────────────────────────────────
 function useScrollReveal(options = {}) {
@@ -336,7 +359,9 @@ function Logo() {
 function Navbar({ onOpenRegister, lang, setLang, t }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const langRef = useRef(null);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20);
@@ -345,16 +370,21 @@ function Navbar({ onOpenRegister, lang, setLang, t }) {
   }, []);
 
   useEffect(() => {
-    const fn = (e) => { if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setMenuOpen(false); };
+    const fn = (e) => { 
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setMenuOpen(false); 
+      if (langRef.current && !langRef.current.contains(e.target)) setLangDropdownOpen(false);
+    };
     document.addEventListener('mousedown', fn);
     return () => document.removeEventListener('mousedown', fn);
   }, []);
 
   const LANGS = [
-    { code: 'en', flag: '🇺🇸', label: 'EN' },
-    { code: 'fr', flag: '🇫🇷', label: 'FR' },
-    { code: 'es', flag: '🇪🇸', label: 'ES' },
+    { code: 'en', flag: '🇺🇸', label: 'English' },
+    { code: 'fr', flag: '🇫🇷', label: 'Français' },
+    { code: 'es', flag: '🇪🇸', label: 'Español' },
   ];
+
+  const currentLangObj = LANGS.find(l => l.code === lang) || LANGS[0];
 
   return (
     <nav style={{ position:'fixed', top:0, left:0, right:0, zIndex:100, background:(scrolled||menuOpen)?'rgba(5,8,20,0.98)':'transparent', backdropFilter:'blur(16px)', borderBottom:'1px solid rgba(196,160,80,0.12)', transition:'all 0.3s' }}>
@@ -362,20 +392,35 @@ function Navbar({ onOpenRegister, lang, setLang, t }) {
         <a href="#" style={{ textDecoration:'none' }}><Logo /></a>
         <div style={{ display:'flex', alignItems:'center', gap:'20px' }}>
 
-          {/* Language switcher */}
-          <div style={{ display:'flex', alignItems:'center', gap:'4px', borderRight:'1px solid rgba(196,160,80,0.2)', paddingRight:'20px' }}>
-            {LANGS.map(l => (
-              <button key={l.code} onClick={() => setLang(l.code)} style={{
-                background: lang === l.code ? 'rgba(196,160,80,0.15)' : 'transparent',
-                border: lang === l.code ? '1px solid rgba(196,160,80,0.4)' : '1px solid transparent',
-                borderRadius: '5px', padding: '4px 8px', cursor: 'pointer',
-                color: lang === l.code ? '#c4a050' : '#7878a0',
-                fontFamily: 'sans-serif', fontSize: '12px', fontWeight: 700,
-                transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '4px',
-              }}>
-                <span style={{ fontSize: '14px' }}>{l.flag}</span> {l.label}
-              </button>
-            ))}
+          {/* Unified Global Dropdown Selector */}
+          <div ref={langRef} style={{ position:'relative', borderRight:'1px solid rgba(196,160,80,0.2)', paddingRight:'20px', display:'flex', alignItems:'center' }}>
+            <button onClick={() => setLangDropdownOpen(!langDropdownOpen)} style={{
+              background: 'rgba(196,160,80,0.1)',
+              border: '1px solid rgba(196,160,80,0.3)',
+              borderRadius: '6px', padding: '6px 12px', cursor: 'pointer',
+              color: '#c4a050', fontFamily: 'sans-serif', fontSize: '13px', fontWeight: 700,
+              display: 'flex', alignItems: 'center', gap: '6px', transition: 'all 0.2s'
+            }}>
+              <span style={{ fontSize: '16px' }}>{currentLangObj.flag}</span>
+              <span>{currentLangObj.label}</span>
+              <span style={{ fontSize: '10px' }}>▼</span>
+            </button>
+            
+            {langDropdownOpen && (
+              <div style={{ position:'absolute', top:'130%', left:0, width:'140px', background:'#0a0d1e', border:'1px solid rgba(196,160,80,0.3)', borderRadius:'8px', boxShadow:'0 8px 32px rgba(0,0,0,0.8)', overflow:'hidden', display:'flex', flexDirection:'column', zIndex:110 }}>
+                {LANGS.map(l => (
+                  <button key={l.code} onClick={() => { setLang(l.code); setLangDropdownOpen(false); }} style={{
+                    background: lang === l.code ? 'rgba(196,160,80,0.15)' : 'transparent',
+                    border: 'none', padding: '10px 14px', cursor: 'pointer',
+                    color: lang === l.code ? '#c4a050' : '#b0b0d0',
+                    fontFamily: 'sans-serif', fontSize: '13px', textAlign: 'left',
+                    display: 'flex', alignItems: 'center', gap: '8px', width: '100%', transition: 'background 0.15s'
+                  }} onMouseEnter={e => e.currentTarget.style.background='rgba(196,160,80,0.05)'} onMouseLeave={e => e.currentTarget.style.background=lang===l.code?'rgba(196,160,80,0.15)':'transparent'}>
+                    <span>{l.flag}</span> {l.label}
+                  </button>
+                ))}
+              </div>
+            )}
             <AgeRestrictionBadge />
           </div>
 
@@ -604,13 +649,10 @@ function LegalSection({ t }) {
 
 // ─── REGISTER MODAL ───────────────────────────────────────────────────────────
 function RegisterModal({ isOpen, onClose, t, lang }) {
-  const [form, setForm] = useState({ fullName:'', email:'', phone:'', country:'', referralId:'', riskTier:'1%', broker:'0' });
+  const [form, setForm] = useState({ fullName:'', email:'', password:'', phone:'', country: WORLD_COUNTRIES[0], referralId:'', riskTier:'1%', broker:'0' });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
-  useEffect(() => {
-    setForm(f => ({ ...f, country: t.countries[0] }));
-  }, [lang]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (isOpen) {
@@ -623,10 +665,45 @@ function RegisterModal({ isOpen, onClose, t, lang }) {
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => { setLoading(false); setSuccess(true); }, 1400);
+    setErrorMessage('');
+
+    try {
+      // 1. Sign up user via Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: form.email,
+        password: form.password,
+      });
+
+      if (authError) throw authError;
+
+      if (authData?.user) {
+        // 2. Insert complementary profile data mapping into public profiles
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              id: authData.user.id,
+              full_name: form.fullName,
+              email: form.email,
+              referral_code: form.referralId,
+              status: 'pending',
+              role: 'trader',
+              kyc_status: 'pending'
+            }
+          ]);
+
+        if (profileError) throw profileError;
+      }
+
+      setSuccess(true);
+    } catch (err) {
+      setErrorMessage(err.message || 'An error occurred during submission.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inp = { width:'100%', background:'#050814', border:'1px solid rgba(196,160,80,0.25)', borderRadius:'8px', padding:'12px 14px', color:'#f0e8d0', fontFamily:'sans-serif', fontSize:'14px', outline:'none', boxSizing:'border-box', transition:'border-color 0.2s' };
@@ -646,9 +723,15 @@ function RegisterModal({ isOpen, onClose, t, lang }) {
           <div style={{ background:'rgba(74,222,128,0.05)', border:'1px solid #4ade80', color:'#4ade80', borderRadius:'10px', padding:'20px', textAlign:'center', fontFamily:'sans-serif', fontSize:'14px', lineHeight:1.6 }}>{t.modal.success}</div>
         ) : (
           <form onSubmit={handleSubmit} style={{ display:'flex', flexDirection:'column', gap:'22px' }}>
+            {errorMessage && (
+              <div style={{ background:'rgba(220,38,38,0.1)', border:'1px solid #dc2626', color:'#f43f5e', padding:'12px', borderRadius:'8px', fontSize:'13px', fontFamily:'sans-serif' }}>
+                {errorMessage}
+              </div>
+            )}
             {[
               { label: t.modal.name, name: 'fullName', type: 'text', required: true },
               { label: t.modal.email, name: 'email', type: 'email', required: true },
+              { label: 'Account Password', name: 'password', type: 'password', required: true },
               { label: t.modal.phone, name: 'phone', type: 'tel', placeholder: t.modal.phonePlaceholder, required: true },
             ].map(f => (
               <div key={f.name}>
@@ -660,7 +743,7 @@ function RegisterModal({ isOpen, onClose, t, lang }) {
             <div>
               <label style={lbl}>{t.modal.country}</label>
               <select name="country" value={form.country} onChange={handleChange} style={inp}>
-                {t.countries.map(c => <option key={c} value={c}>{c}</option>)}
+                {WORLD_COUNTRIES.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
