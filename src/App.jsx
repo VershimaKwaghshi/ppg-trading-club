@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from './supabase';
 import { BrowserRouter, Routes, Route, useNavigate, Link } from 'react-router-dom';
 
@@ -47,8 +47,8 @@ const T = {
       card2Desc: 'By joining PPG Trading Club, you confirm that you understand the risks involved in forex trading, that your funds remain in your own broker account, and that PPG managers operate strictly on a view-only, trade-execution basis with no withdrawal access.',
       card3Title: 'Risk Disclaimer',
       card3Desc: 'Forex trading carries a high level of risk and may not be suitable for all investors. You can lose some or all of your invested capital. Daily earnings targets are not guaranteed — markets are unpredictable. Only participate with money you can afford to lose entirely.',
-      card4Title: 'Identity & Compliance',
-      card4Desc: 'All members — both traders and managers — must complete identity verification through our Digital Passport (DP) system. This vetting process protects the community and ensures every participant is accountable. We cooperate with regulatory authorities as required.',
+      card4Title: 'Account & Compliance',
+      card4Desc: 'All members — both traders and managers — participate within a structured referral network. This internal vetting process protects the community and ensures accountability across our platform infrastructure.',
     },
     modal: {
       heading: 'Membership Application',
@@ -66,7 +66,7 @@ const T = {
       desc: 'A private, referral-gated network connecting traders with vetted professional managers for managed MT5 forex trading.',
       col1: 'Platform', col2: 'Account', col3: 'Legal',
       col1Links: ['About PPG', 'How It Works', 'Earnings Tiers'],
-      col2Links: ['Identity Verification', 'Digital Passport', 'Referral System'],
+      col2Links: ['Referral System', 'Member Dashboard', 'Support Channels'],
       col3Links: ['Terms of Service', 'Risk Disclaimer', 'Privacy Policy'],
       address: '10 Arab Road, Calabar, Nigeria',
       copy: '© 2026 PPG Solutions Global Trading Co. All rights reserved.',
@@ -84,7 +84,7 @@ const T = {
     steps: [
       { n: '01', title: 'Get a Member Referral', desc: 'PPG Trading Club is invitation-only. You must receive a referral code from an existing verified member before you can register. This keeps our community trusted and accountable.' },
       { n: '02', title: 'Pay the Monthly Subscription', desc: 'Activate your account with the $4.99 monthly platform fee. Accepted payment methods include Opay, Zenith Bank, Bitcoin, Ethereum, or USDT TRC20.' },
-      { n: '03', title: 'Verify Your Identity', desc: 'Upload a valid government-issued ID to complete your Digital Passport (DP) verification. This is required for all members and cannot be transferred.' },
+      { n: '03', title: 'Complete Setup Profiles', desc: 'Provide your basic operational parameters to initialize your internal trading desk layout records correctly.' },
       { n: '04', title: 'Refer at Least One Member', desc: 'To activate full account access, you must refer at least one new participant into the club. This ensures every member has a stake in the quality of the community.' },
       { n: '05', title: 'Open Your Broker Account', desc: 'Create your own private trading account directly with one of our recommended brokers. Your funds stay in your name at all times — PPG never holds or touches your money.' },
       { n: '06', title: 'Choose Your Earnings Target', desc: 'Select a daily earnings target tier based on how much risk you are willing to take. Your assigned manager will trade on MT5 using view-only access to your account — they cannot withdraw your funds.' },
@@ -107,8 +107,8 @@ const T = {
     about: {
       eyebrow: 'À propos',
       heading: 'Penny Partners Group',
-      p1: 'Penny Partners Group (PPG Solutions) est une société de services financiers enregistrée qui met en relation des traders individuels avec des gestionnaires de trading professionnels opérant sur MT5.',
-      p2: 'Nos gestionnaires sont soigneusement vérifiés et doivent rejoindre la plateforme via une recommandation d\'un membre existant — tout comme les traders. Votre capital reste toujours dans votre propre compte de courtage, sous votre contrôle total.',
+      p1: 'Penny Partners Group (PPG Solutions) is a registered financial services company that connects individual traders with professional trading managers operating on MT5.',
+      p2: 'Nos gestionnaires sont soigneusement vérifiés et doivent rejoindre la plateforme via une recommandation d\'un membre existant. Votre capital reste toujours dans votre propre compte de courtage, sous votre contrôle total.',
       card1Title: 'Votre argent reste chez vous',
       card1Desc: 'Vos fonds sont détenus dans votre compte de courtage personnel. Les gestionnaires PPG bénéficient d\'un accès lecture seule MT5 pour exécuter les trades — ils ne peuvent pas retirer ni transférer votre argent.',
       card2Title: 'Transparence totale',
@@ -133,8 +133,8 @@ const T = {
       card2Desc: 'En rejoignant PPG Trading Club, vous confirmez que vous comprenez les risques liés au trading forex, que vos fonds restent dans votre propre compte de courtage, et que les gestionnaires PPG opèrent uniquement en lecture seule.',
       card3Title: 'Avertissement de risque',
       card3Desc: 'Le trading forex comporte un niveau élevé de risque. Vous pouvez perdre tout ou partie de votre capital investi. Les objectifs de gains quotidiens ne sont pas garantis. Ne participez qu\'avec de l\'argent que vous pouvez vous permettre de perdre.',
-      card4Title: 'Identité & Conformité',
-      card4Desc: 'Tous les membres doivent compléter la vérification d\'identité via notre système Digital Passport (DP). Ce processus protège la communauté et garantit que chaque participant est responsable.',
+      card4Title: 'Compte & Conformité',
+      card4Desc: 'Tous les membres participent au sein d\'un réseau de parrainage structuré. Ce processus de sélection interne protège la communauté et assure la responsabilité.',
     },
     modal: {
       heading: 'Demande d\'adhésion',
@@ -152,7 +152,7 @@ const T = {
       desc: 'Un réseau privé sur recommandation reliant les traders à des gestionnaires professionnels vérifiés pour le trading forex géré sur MT5.',
       col1: 'Plateforme', col2: 'Compte', col3: 'Légal',
       col1Links: ['À propos de PPG', 'Comment ça marche', 'Niveaux de gains'],
-      col2Links: ['Vérification d\'identité', 'Passeport numérique', 'Système de parrainage'],
+      col2Links: ['Système de parrainage', 'Tableau de bord', 'Canaux de support'],
       col3Links: ['Conditions d\'utilisation', 'Avertissement de risque', 'Politique de confidentialité'],
       address: '10 Arab Road, Calabar, Nigéria',
       copy: '© 2026 PPG Solutions Global Trading Co. Tous droits réservés.',
@@ -163,14 +163,14 @@ const T = {
       { pct: '0.5%', label: 'Prudent', risk: 'Risque très faible', desc: 'Focus sur la croissance conservative. La protection du capital reste la priorité absolue dans des conditions de marché actives.', daily: '0,50$', color: '#86efac' },
       { pct: '1%', label: 'Conservateur', risk: 'Faible risque', desc: 'Objectif équilibré avec un potentiel de capitalisation réaliste. Un point de départ populaire pour les nouveaux traders.', daily: '1,00$', color: '#fbbf24', badge: 'Populaire' },
       { pct: '5%', label: 'Modéré', risk: 'Risque moyen', desc: 'Des objectifs plus élevés nécessitent des positions plus importantes. Adapté aux traders qui comprennent et acceptent les fluctuations régulières.', daily: '5,00$', color: '#f97316' },
-      { pct: '10%', label: 'Équilibré', risk: 'Risque moyen-élevé', desc: 'Des fluctuations quotidiennes importantes sont courantes à ce niveau. Les marchés ne se déplacent pas de manière prévisible.', daily: '10,00$', color: '#fb923c' },
+      { pct: '10%', label: 'Équilibré', risk: 'Risque moyen-elevé', desc: 'Des fluctuations quotidiennes importantes sont courantes à ce niveau. Les marchés ne se déplacent pas de manière prévisible.', daily: '10,00$', color: '#fb923c' },
       { pct: '15%', label: 'Agressif', risk: 'Risque élevé', desc: 'De grandes variations de capital sont attendues. Ce niveau convient uniquement aux traders expérimentés pouvant absorber des pertes importantes.', daily: '15,00$', color: '#f43f5e' },
       { pct: '20%', label: 'Maximum', risk: 'Risque très élevé', desc: 'Exposition maximale sur chaque transaction. L\'intégralité de votre capital est à risque significatif. Choisissez cela uniquement si vous pouvez tout perdre.', daily: '20,00$', color: '#dc2626' },
     ],
     steps: [
       { n: '01', title: 'Obtenez une recommandation', desc: 'PPG Trading Club est sur invitation uniquement. Vous devez recevoir un code de parrainage d\'un membre vérifié existant avant de pouvoir vous inscrire.' },
       { n: '02', title: 'Payez l\'abonnement mensuel', desc: 'Activez votre compte avec les frais mensuels de 4,99$. Modes de paiement acceptés : Opay, Zenith Bank, Bitcoin, Ethereum ou USDT TRC20.' },
-      { n: '03', title: 'Vérifiez votre identité', desc: 'Téléchargez une pièce d\'identité officielle pour compléter votre vérification Digital Passport (DP). Obligatoire pour tous les membres.' },
+      { n: '03', title: 'Configuration du profil', desc: 'Fournissez vos paramètres opérationnels de base pour initialiser correctement vos enregistrements de compte.' },
       { n: '04', title: 'Parrainez au moins un membre', desc: 'Pour activer l\'accès complet au compte, vous devez parrainer au moins un nouveau participant dans le club.' },
       { n: '05', title: 'Ouvrez votre compte courtier', desc: 'Créez votre propre compte de trading privé directement avec l\'un de nos courtiers recommandés. Vos fonds restent en votre nom à tout moment.' },
       { n: '06', title: 'Choisissez votre objectif de gains', desc: 'Sélectionnez un niveau d\'objectif de gains quotidien selon votre tolérance au risque. Votre gestionnaire tradent sur MT5 avec un accès lecture seule.' },
@@ -207,7 +207,7 @@ const T = {
     risk: {
       eyebrow: 'Elige tu objetivo',
       heading: 'Niveles de ganancias diarias potenciales',
-      subtitle: 'Cada nivel representa un objetivo de ganancias diarias potenciales — no una garantía. Los objetivos más altos requieren operaciones más grandes y agresivas. Cuanto mayor sea tu objetivo, mayor será el riesgo para todo tu capital.',
+      subtitle: 'Cada nivel representa un objetivo de ganancias diarias potenciales — no una garantía. Los objetivos más altos requieren operaciones más grandes y agresivas. Cuanto mayor sea tu objetivo, mayor sea el riesgo para todo tu capital.',
       warning: 'Importante: Estos porcentajes son objetivos de ganancias diarias, no rendimientos garantizados. Alcanzar tu objetivo todos los días no es realista y no debe esperarse.',
     },
     legal: {
@@ -219,8 +219,8 @@ const T = {
       card2Desc: 'Al unirte a PPG Trading Club, confirmas que entiendes los riesgos del trading de forex, que tus fondos permanecen en tu propia cuenta de broker, y que los gestores de PPG operan estrictamente en modo de solo lectura.',
       card3Title: 'Aviso de riesgo',
       card3Desc: 'El trading de forex conlleva un alto nivel de riesgo. Puedes perder parte o todo tu capital invertido. Los objetivos de ganancias diarias no están garantizados. Solo participa con dinero que puedas permitirte perder.',
-      card4Title: 'Identidad y cumplimiento',
-      card4Desc: 'Todos los miembros deben completar la verificación de identidad a través de nuestro sistema Digital Passport (DP). Este proceso protege a la comunidad y garantiza que cada participante sea responsable.',
+      card4Title: 'Cuenta y Cumplimiento',
+      card4Desc: 'Todos los miembros participan dentro de una red de referencias estructurada. Este proceso de selección interna protege a la comunidad y garantiza la responsabilidad.',
     },
     modal: {
       heading: 'Solicitud de membresía',
@@ -238,7 +238,7 @@ const T = {
       desc: 'Una red privada por referidos que conecta traders con gestores profesionales verificados para trading de forex gestionado en MT5.',
       col1: 'Plataforma', col2: 'Cuenta', col3: 'Legal',
       col1Links: ['Sobre PPG', 'Cómo funciona', 'Niveles de ganancias'],
-      col2Links: ['Verificación de identidad', 'Pasaporte digital', 'Sistema de referidos'],
+      col2Links: ['Sistema de referidos', 'Panel de Control', 'Canales de Soporte'],
       col3Links: ['Términos de servicio', 'Aviso de riesgo', 'Política de privacidad'],
       address: '10 Arab Road, Calabar, Nigeria',
       copy: '© 2026 PPG Solutions Global Trading Co. Todos los derechos reservados.',
@@ -250,13 +250,13 @@ const T = {
       { pct: '1%', label: 'Conservador', risk: 'Riesgo bajo', desc: 'Objetivo equilibrado con potencial de capitalización realista. Un punto de partida popular para nuevos traders.', daily: '$1.00', color: '#fbbf24', badge: 'Popular' },
       { pct: '5%', label: 'Moderado', risk: 'Riesgo medio', desc: 'Los objetivos más altos requieren posiciones más grandes. Adecuado para traders que entienden y aceptan fluctuaciones regulares.', daily: '$5.00', color: '#f97316' },
       { pct: '10%', label: 'Equilibrado', risk: 'Riesgo medio-alto', desc: 'Las oscilaciones diarias significativas son comunes a este nivel. Los mercados no se mueven de forma predecible.', daily: '$10.00', color: '#fb923c' },
-      { pct: '15%', label: 'Agresivo', risk: 'Riesgo alto', desc: 'Se esperan grandes variaciones de capital. Este nivel solo es adecuado para traders experimentados que pueden absorber pérdidas importantes.', daily: '$15.00', color: '#f43f5e' },
+      { pct: '15%', label: 'Agresivo', risk: 'Riesgo alto', desc: 'Se esperan grandes variaciones de capital. Este nivel solo es adecuado para traders experimentado que pueden absorber pérdidas importantes.', daily: '$15.00', color: '#f43f5e' },
       { pct: '20%', label: 'Máximo', risk: 'Riesgo muy alto', desc: 'Exposición máxima en cada operación. Todo tu capital está en riesgo significativo. Solo elige esto si puedes permitirte perderlo todo.', daily: '$20.00', color: '#dc2626' },
     ],
     steps: [
       { n: '01', title: 'Obtén una referencia', desc: 'PPG Trading Club es solo por invitación. Debes recibir un código de referido de un miembro verificado existente antes de poder registrarte.' },
       { n: '02', title: 'Paga la suscripción mensual', desc: 'Activa tu cuenta con la tarifa mensual de $4.99. Métodos de pago aceptados: Opay, Zenith Bank, Bitcoin, Ethereum o USDT TRC20.' },
-      { n: '03', title: 'Verifica tu identidad', desc: 'Sube un documento de identidad oficial para completar tu verificación Digital Passport (DP). Es obligatorio para todos los miembros.' },
+      { n: '03', title: 'Configuración del perfil', desc: 'Proporcione sus parámetros operativos básicos para inicializar correctamente los registros de su cuenta.' },
       { n: '04', title: 'Refiere al menos un miembro', desc: 'Para activar el acceso completo a la cuenta, debes referir al menos a un nuevo participante al club.' },
       { n: '05', title: 'Abre tu cuenta de broker', desc: 'Crea tu propia cuenta de trading privada directamente con uno de nuestros brokers recomendados. Tus fondos siempre permanecen a tu nombre.' },
       { n: '06', title: 'Elige tu objetivo de ganancias', desc: 'Selecciona un nivel de objetivo de ganancias diarias según cuánto riesgo estás dispuesto a asumir. Tu gestor operará en MT5 con acceso de solo lectura.' },
@@ -393,7 +393,6 @@ function Navbar({ onOpenRegister, lang, setLang, t }) {
         <a href="#" style={{ textDecoration:'none' }}><Logo /></a>
         <div style={{ display:'flex', alignItems:'center', gap:'20px' }}>
 
-          {/* Unified Global Dropdown Selector */}
           <div ref={langRef} style={{ position:'relative', borderRight:'1px solid rgba(196,160,80,0.2)', paddingRight:'20px', display:'flex', alignItems:'center' }}>
             <button onClick={() => setLangDropdownOpen(!langDropdownOpen)} style={{
               background: 'rgba(196,160,80,0.1)',
@@ -464,14 +463,6 @@ function Navbar({ onOpenRegister, lang, setLang, t }) {
           </div>
         </div>
       </div>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap');
-        * { box-sizing:border-box; margin:0; padding:0; }
-        body { background:#050814; scroll-behavior:smooth; }
-        @keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
-        @keyframes fadeDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes fadeUp   { from{opacity:0;transform:translateY(8px)}  to{opacity:1;transform:translateY(0)} }
-      `}</style>
     </nav>
   );
 }
@@ -658,7 +649,7 @@ function LegalSection({ t }) {
 }
 
 // ─── REGISTER MODAL ───────────────────────────────────────────────────────────
-function RegisterModal({ isOpen, onClose, t, lang }) {
+function RegisterModal({ isOpen, onClose, t }) {
   const [form, setForm] = useState({ fullName:'', email:'', password:'', phone:'', country: WORLD_COUNTRIES[0], referralId:'', riskTier:'1%', broker:'0' });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -698,9 +689,8 @@ function RegisterModal({ isOpen, onClose, t, lang }) {
               full_name: form.fullName,
               email: form.email,
               referral_code: form.referralId,
-              status: 'pending',
-              role: 'trader',
-              kyc_status: 'pending'
+              status: 'active',
+              role: 'trader'
             }
           ]);
 
@@ -856,9 +846,9 @@ function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      setError(error.message);
+    const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+    if (loginError) {
+      setError(loginError.message);
       setLoading(false);
     } else {
       navigate('/dashboard');
@@ -937,7 +927,7 @@ function DashboardPage() {
           <h2 style={{ fontFamily:'Georgia,serif', fontSize:'2rem', fontWeight:900, color:'#f0e8d0', marginBottom:'16px' }}>Welcome to the Club</h2>
           <div style={{ fontFamily:'sans-serif', fontSize:'14px', color:'#8080a0', lineHeight:1.8 }}>
             <p><strong>Registered Email:</strong> {user.email}</p>
-            <p><strong>Digital Passport (DP) Status:</strong> <span style={{ color:'#fbbf24' }}>Pending Verification</span></p>
+            <p><strong>Account Level:</strong> <span style={{ color:'#4ade80' }}>Standard Access</span></p>
           </div>
         </div>
       </div>
@@ -960,7 +950,7 @@ function LandingPage() {
       <RiskTiers t={t} />
       <LegalSection t={t} />
       <Footer t={t} />
-      <RegisterModal isOpen={modalActive} onClose={() => setModalActive(false)} t={t} lang={lang} />
+      <RegisterModal isOpen={modalActive} onClose={() => setModalActive(false)} t={t} />
 
       <a href="https://wa.me/2348130500659" target="_blank" rel="noreferrer"
         style={{ position:'fixed', bottom:'24px', right:'24px', width:'56px', height:'56px', background:'#25D366', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 6px 24px rgba(37,211,102,0.35)', textDecoration:'none', zIndex:150, transition:'transform 0.2s, box-shadow 0.2s' }}
@@ -970,27 +960,47 @@ function LandingPage() {
           <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 0 0 1.333 4.993L2 22l5.13-1.344a9.94 9.94 0 0 0 4.881 1.281h.004c5.505 0 9.989-4.478 9.99-9.985.001-2.667-1.034-5.176-2.917-7.061A9.927 9.927 0 0 0 12.012 2Zm7.067 14.126c-.29.407-1.427 1.393-1.954 1.492-.486.092-.962.152-3.32-.782-3.013-1.194-4.92-4.248-5.07-4.45-.152-.201-1.226-1.63-1.226-3.111 0-1.48.775-2.208 1.05-2.51.226-.248.601-.365.96-.365.116 0 .221.006.313.01.272.013.407.032.584.453.22.527.75 1.83.816 1.964.065.134.108.29.02.467-.09.177-.134.29-.265.444-.132.153-.277.34-.395.457-.133.13-.273.272-.116.541.157.27.7 1.147 1.498 1.854.1.09.2.174.3.253 1.03.818 1.884 1.077 2.19 1.224.282.135.446.113.612-.08.22-.257.946-1.101 1.2-1.479.2-.298.416-.248.702-.142.29.105 1.836.865 2.146 1.018.31.153.517.226.592.355.075.13.075.753-.215 1.16Z" />
         </svg>
       </a>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap');
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body { background:#050814; scroll-behavior:smooth; }
+        @keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
+        @keyframes fadeDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeUp   { from{opacity:0;transform:translateY(8px)}  to{opacity:1;transform:translateY(0)} }
+      `}</style>
     </div>
   );
 }
 
-// ─── ROOT APP WITH ROUTING ────────────────────────────────────────────────────
-export default function App() {
+// ─── AUTH CONTROLLER ROUTER ───────────────────────────────────────────────────
+function AuthRouteController() {
+  const navigate = useNavigate();
+
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && window.location.pathname !== '/dashboard') {
-        window.location.href = '/dashboard';
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        navigate('/dashboard');
+      } else if (event === 'SIGNED_OUT') {
+        navigate('/');
       }
     });
-  }, []);
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
+    </Routes>
+  );
+}
+
+export default function App() {
+  return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-      </Routes>
+      <AuthRouteController />
     </BrowserRouter>
   );
 }
