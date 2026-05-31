@@ -269,7 +269,7 @@ export default function Dashboard() {
       <Card style={{ maxWidth: '480px', textAlign: 'center' }}>
         <div style={{ fontSize: '40px', marginBottom: '16px' }}>⏳</div>
         <h2 style={{ fontFamily: 'Georgia,serif', color: C.text, marginBottom: '10px' }}>Application Under Review</h2>
-        <p style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '14px', lineHeight: 1.6 }}>Your account is pending admin approval. Our team will contact you on WhatsApp within 24 hours once your account is activated.</p>
+        <p style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '14px', lineHeight: 1.6 }}>Your account is pending operational review. Once processed, updates will structuralize across your profile rails.</p>
         <div style={{ marginTop: '20px' }}>
           <GoldBtn variant="ghost" onClick={handleLogout}>Sign Out</GoldBtn>
         </div>
@@ -283,7 +283,7 @@ export default function Dashboard() {
       <Card style={{ maxWidth: '480px', textAlign: 'center' }}>
         <div style={{ fontSize: '40px', marginBottom: '16px' }}>🚫</div>
         <h2 style={{ fontFamily: 'Georgia,serif', color: C.red, marginBottom: '10px' }}>Account {profile.status === 'suspended' ? 'Suspended' : 'Rejected'}</h2>
-        <p style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '14px', lineHeight: 1.6 }}>Please contact support at contact.ppgsolutions@gmail.com or WhatsApp +234 813 050 0659 for assistance.</p>
+        <p style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '14px', lineHeight: 1.6 }}>Please contact system parameters or designated entry terminals for configuration adjustments.</p>
         <div style={{ marginTop: '20px' }}><GoldBtn variant="ghost" onClick={handleLogout}>Sign Out</GoldBtn></div>
       </Card>
     </div>
@@ -322,7 +322,7 @@ function AuthScreen({ authMode, setAuthMode, authForm, setAuthForm, authError, a
             {authMode === 'register' && (
               <>
                 <Input label="Full Legal Name" value={authForm.fullName} onChange={e => set('fullName', e.target.value)} required />
-                <Input label="Phone / WhatsApp" value={authForm.phone} onChange={e => set('phone', e.target.value)} />
+                <Input label="Phone Contact" value={authForm.phone} onChange={e => set('phone', e.target.value)} />
                 <Select label="Joining As" value={authForm.role} onChange={e => set('role', e.target.value)} options={[{ value:'trader', label:'Trader' }, { value:'manager', label:'Manager' }]} />
                 <Input label="Referral Code" value={authForm.referralCode} onChange={e => set('referralCode', e.target.value)} placeholder="Required to join" required />
               </>
@@ -333,7 +333,7 @@ function AuthScreen({ authMode, setAuthMode, authForm, setAuthForm, authError, a
             <GoldBtn disabled={authLoading}>{authLoading ? 'Please wait...' : authMode === 'login' ? 'Sign In' : 'Create Account'}</GoldBtn>
           </form>
           <p style={{ fontFamily: 'sans-serif', fontSize: '11px', color: C.dim, marginTop: '16px', textAlign: 'center', lineHeight: 1.5 }}>
-            By accessing this portal you confirm you are 18+ and accept all risk disclosures.
+            By accessing this portal you confirm execution criteria and accept all risk disclosures.
           </p>
         </Card>
         <p style={{ textAlign: 'center', marginTop: '16px' }}>
@@ -346,7 +346,6 @@ function AuthScreen({ authMode, setAuthMode, authForm, setAuthForm, authError, a
 
 // ─── DASHBOARD SHELL ──────────────────────────────────────────
 function DashboardShell({ profile, onLogout, nav, activeSection, setActiveSection, children }) {
-  const roleColor = { trader: '#60a5fa', manager: C.gold, admin: C.red };
   return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex' }}>
       {/* Sidebar */}
@@ -447,7 +446,6 @@ function TraderDashboard({ profile, onLogout, refreshProfile }) {
 
 function TraderOverview({ account, trades, assignment, profile, loading }) {
   if (loading) return <Loader />;
-  const lastTrade = trades[0];
   const totalChange = account ? account.total_profit - account.total_loss : 0;
   const pct = account?.initial_deposit > 0 ? ((totalChange / account.initial_deposit) * 100).toFixed(2) : '0.00';
   return (
@@ -474,10 +472,10 @@ function TraderOverview({ account, trades, assignment, profile, loading }) {
                   <div style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '12px' }}>{assignment.manager.email}</div>
                 </div>
               </div>
-              <div style={{ fontFamily: 'sans-serif', fontSize: '12px', color: C.dim }}>Risk Tier: <span style={{ color: C.gold, fontWeight: 700 }}>{profile.risk_tier}</span></div>
+              <div style={{ fontFamily: 'sans-serif', fontSize: '12px', color: C.dim }}>Risk Configuration: <span style={{ color: C.gold, fontWeight: 700 }}>{profile.risk_tier}</span></div>
             </div>
           ) : (
-            <p style={{ color: C.dim, fontFamily: 'sans-serif', fontSize: '13px' }}>No manager assigned yet. An admin will assign your manager shortly.</p>
+            <p style={{ color: C.dim, fontFamily: 'sans-serif', fontSize: '13px' }}>Manager allocation pending. System variables will refresh upon baseline structural updates.</p>
           )}
         </Card>
         <Card>
@@ -609,9 +607,9 @@ function TraderDeposit({ deposits, profile, onSubmit }) {
       <Card style={{ marginBottom: '20px' }}>
         <h3 style={{ fontFamily: 'Georgia,serif', color: C.text, marginBottom: '16px', fontSize: '1rem' }}>How to Deposit</h3>
         <p style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '13.5px', lineHeight: 1.7, marginBottom: '12px' }}>
-          Deposits go directly into your broker account — not to PPG. Follow these steps:
+          Deposits route directly into your chosen broker terminal. Follow these baseline criteria:
         </p>
-        {['Log into your broker account (Exness, HFM, or FXTM).','Navigate to the Deposit section.','Transfer your desired amount.','Log your deposit here so your manager is notified.'].map((s, i) => (
+        {['Access your external broker portal (Exness, HFM, or FXTM).','Locate the specialized entry panel.','Process your chosen volume parameter.','Log your submission here to synchronize with manager workflows.'].map((s, i) => (
           <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
             <span style={{ color: C.gold, fontFamily: 'sans-serif', fontWeight: 900, fontSize: '12px', minWidth: '20px' }}>0{i+1}</span>
             <span style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '13px' }}>{s}</span>
@@ -636,7 +634,7 @@ function TraderDeposit({ deposits, profile, onSubmit }) {
             ]} />
             <Input label="Transaction Reference (optional)" value={form.reference} onChange={e => set('reference', e.target.value)} placeholder="e.g. TXN123456" />
             <p style={{ color: C.dim, fontFamily: 'sans-serif', fontSize: '11.5px', marginBottom: '16px', lineHeight: 1.5 }}>
-              This notifies your manager. An admin will confirm once verified. Your balance will be updated after confirmation.
+              This flags your allocation log. Verification will restructure account parameters across platform rails after verification.
             </p>
             <GoldBtn disabled={submitting}>{submitting ? 'Saving...' : 'Log Deposit'}</GoldBtn>
           </form>
@@ -659,7 +657,7 @@ function TraderReferrals({ referrals, profile }) {
           <code style={{ background: C.bg, border: `1px solid ${C.border}`, borderRadius: '7px', padding: '10px 16px', color: C.gold, fontFamily: 'monospace', fontSize: '18px', fontWeight: 900, letterSpacing: '0.15em' }}>{profile.referral_code}</code>
           <GoldBtn variant="ghost" onClick={copy}>{copied ? '✓ Copied!' : 'Copy Link'}</GoldBtn>
         </div>
-        <p style={{ color: C.dim, fontFamily: 'sans-serif', fontSize: '12px', marginTop: '10px' }}>Share this code with people you want to invite. They must enter it during registration.</p>
+        <p style={{ color: C.dim, fontFamily: 'sans-serif', fontSize: '12px', marginTop: '10px' }}>Provide this parameter to onboarding profiles. It serves as a necessary condition during registration workflows.</p>
       </Card>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: '14px', marginBottom: '20px' }}>
         <StatCard label="Total Referred" value={referrals.length} icon="👥" />
@@ -729,19 +727,25 @@ function ProfileSettings({ profile, onSaved }) {
           <h3 style={{ fontFamily: 'Georgia,serif', color: C.text, marginBottom: '20px', fontSize: '1rem' }}>Personal Details</h3>
           <form onSubmit={save}>
             <Input label="Full Name" value={form.full_name} onChange={e => set('full_name', e.target.value)} required />
-            <Input label="Phone / WhatsApp" value={form.phone} onChange={e => set('phone', e.target.value)} />
+            <Input label="Phone Contact" value={form.phone} onChange={e => set('phone', e.target.value)} />
             <Input label="Country" value={form.country} onChange={e => set('country', e.target.value)} />
-            <Select label="Risk Tier" value={form.risk_tier} onChange={e => set('risk_tier', e.target.value)} options={['0.1%','0.5%','1%','5%','10%','15%','20%'].map(v => ({ value: v, label: v }))} />
-            <Select label="Broker" value={form.broker} onChange={e => set('broker', e.target.value)} options={[
+            <Select label="Risk Parameters" value={form.risk_tier} onChange={e => set('risk_tier', e.target.value)} options={['0.1%','0.5%','1%','5%','10%','15%','20%'].map(v => ({ value: v, label: v }))} />
+            <Select label="Broker Platform" value={form.broker} onChange={e => set('broker', e.target.value)} options={[
               { value: '', label: 'No preference' }, { value: 'Exness', label: 'Exness' }, { value: 'HFM', label: 'HFM' }, { value: 'FXTM', label: 'FXTM' },
             ]} />
-            {saved && <div style={{ color: C.green, fontFamily: 'sans-serif', fontSize: '12.5px', marginBottom: '12px' }}>✓ Profile saved successfully.</div>}
+            {saved && <div style={{ color: C.green, fontFamily: 'sans-serif', fontSize: '12.5px', marginBottom: '12px' }}>✓ Parameters updated successfully.</div>}
             <GoldBtn disabled={saving}>{saving ? 'Saving...' : 'Save Changes'}</GoldBtn>
           </form>
         </Card>
         <Card>
           <h3 style={{ fontFamily: 'Georgia,serif', color: C.text, marginBottom: '16px', fontSize: '1rem' }}>Account Info</h3>
-          {[['Email', profile.email], ['Role', profile.role], ['Member Since', fmtDate(profile.created_at)], ['KYC Status', profile.kyc_status], ['Subscription', profile.subscription_active ? 'Active' : 'Inactive']].map(([k, v]) => (
+          {[
+            ['Email', profile.email], 
+            ['Role Hierarchy', profile.role], 
+            ['Member Since', fmtDate(profile.created_at)], 
+            ['Verification Status', profile.kyc_status], 
+            ['Subscription State', profile.subscription_active ? 'Active' : 'Inactive']
+          ].map(([k, v]) => (
             <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: `1px solid ${C.border}`, fontFamily: 'sans-serif', fontSize: '13px' }}>
               <span style={{ color: C.muted }}>{k}</span>
               <span style={{ color: C.text, fontWeight: 600 }}>{v}</span>
@@ -753,9 +757,7 @@ function ProfileSettings({ profile, onSaved }) {
   );
 }
 
-// ══════════════════════════════════════════════════════════════
-// MANAGER DASHBOARD
-// ══════════════════════════════════════════════════════════════
+// ─── MANAGER DASHBOARD ────────────────────────────────────────
 function ManagerDashboard({ profile, onLogout, refreshProfile }) {
   const [section, setSection] = useState('overview');
   const [traders, setTraders] = useState([]);
@@ -810,7 +812,6 @@ function ManagerOverview({ traders, tradeLogs, profile, loading }) {
   if (loading) return <Loader />;
   const totalManaged = traders.reduce((s, t) => s + (t.trader?.account?.current_balance || 0), 0);
   const totalProfit = tradeLogs.filter(l => l.amount > 0).reduce((s, l) => s + l.amount, 0);
-  const totalLoss = tradeLogs.filter(l => l.amount < 0).reduce((s, l) => s + Math.abs(l.amount), 0);
   const winRate = tradeLogs.length > 0 ? ((tradeLogs.filter(l => l.amount > 0).length / tradeLogs.length) * 100).toFixed(1) : '0.0';
   return (
     <div>
@@ -820,7 +821,7 @@ function ManagerOverview({ traders, tradeLogs, profile, loading }) {
         <StatCard label="Traders Managed" value={traders.length} icon="👥" />
         <StatCard label="Capital Under Management" value={fmt(totalManaged)} icon="💼" />
         <StatCard label="Total Profits Logged" value={fmt(totalProfit)} color={C.green} icon="📈" />
-        <StatCard label="Win Rate" value={`${winRate}%`} color={parseFloat(winRate) >= 50 ? C.green : C.red} icon="🏆" />
+        <StatCard label="Success Ratio" value={`${winRate}%`} color={parseFloat(winRate) >= 50 ? C.green : C.red} icon="🏆" />
       </div>
       <Card>
         <h3 style={{ fontFamily: 'Georgia,serif', color: C.text, marginBottom: '16px', fontSize: '1rem' }}>Recent Trade Logs</h3>
@@ -855,7 +856,7 @@ function ManagerTraders({ traders, loading }) {
               <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'rgba(96,165,250,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#60a5fa', fontWeight: 900, fontFamily: 'sans-serif', fontSize: '18px' }}>{t?.full_name?.[0]}</div>
               <div>
                 <div style={{ color: C.text, fontFamily: 'sans-serif', fontWeight: 700, fontSize: '14px' }}>{t?.full_name}</div>
-                <div style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '12px' }}>{t?.email} · Risk: {t?.risk_tier}</div>
+                <div style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '12px' }}>{t?.email} · Profile: {t?.risk_tier}</div>
               </div>
               <div style={{ textAlign: 'right' }}>
                 <div style={{ color: C.dim, fontFamily: 'sans-serif', fontSize: '10px', marginBottom: '2px' }}>Balance</div>
@@ -890,7 +891,7 @@ function ManagerLogTrade({ traders, profile, onLogged }) {
       amount: parseFloat(form.amount), note: form.note, trade_date: form.trade_date,
     });
     if (error) setErr(error.message);
-    else { setSuccess('Trade logged successfully. Trader balance has been updated.'); setForm(f => ({ ...f, trader_id: '', amount: '', note: '' })); onLogged(); }
+    else { setSuccess('Trade log entered. Associated balances have updated.'); setForm(f => ({ ...f, trader_id: '', amount: '', note: '' })); onLogged(); }
     setSubmitting(false);
   }
 
@@ -898,12 +899,12 @@ function ManagerLogTrade({ traders, profile, onLogged }) {
     <div>
       <h2 style={{ fontFamily: 'Georgia,serif', fontSize: '1.6rem', color: C.text, marginBottom: '24px' }}>Log a Trade</h2>
       <Card style={{ maxWidth: '480px' }}>
-        <p style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '13px', marginBottom: '20px', lineHeight: 1.6 }}>Enter the profit or loss amount for a specific trader. Use a positive number for profit, negative for loss (e.g. -50.00). The trader's balance will update automatically.</p>
+        <p style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '13px', marginBottom: '20px', lineHeight: 1.6 }}>Record a performance metric for a specific user profile. Input positive values for profit allocations and negative markers for drawdowns. Balance tables update automatically.</p>
         <form onSubmit={submit}>
           <Select label="Select Trader" value={form.trader_id} onChange={e => set('trader_id', e.target.value)} options={[{ value: '', label: '— Select a trader —' }, ...traders.map(a => ({ value: a.trader_id, label: a.trader?.full_name || a.trader_id }))]} />
           <Input label="Trade Date" type="date" value={form.trade_date} onChange={e => set('trade_date', e.target.value)} required />
-          <Input label="Amount (USD) — use negative for loss" type="number" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="e.g. 25.00 or -15.00" required />
-          <Input label="Note (optional)" value={form.note} onChange={e => set('note', e.target.value)} placeholder="e.g. EURUSD scalp session" />
+          <Input label="Volume (USD) — negative values represent drawdowns" type="number" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="e.g. 25.00 or -15.00" required />
+          <Input label="Note (optional)" value={form.note} onChange={e => set('note', e.target.value)} placeholder="e.g. Execution parameters note" />
           {err && <div style={{ color: C.red, fontFamily: 'sans-serif', fontSize: '12.5px', marginBottom: '14px' }}>{err}</div>}
           {success && <div style={{ color: C.green, fontFamily: 'sans-serif', fontSize: '12.5px', marginBottom: '14px' }}>✓ {success}</div>}
           <GoldBtn disabled={submitting}>{submitting ? 'Logging...' : 'Log Trade'}</GoldBtn>
@@ -935,45 +936,6 @@ function ManagerHistory({ tradeLogs, loading }) {
   );
 }
 
-function ManagerPerformance({ tradeLogs, traders, profile, loading }) {
-  if (loading) return <Loader />;
-  const wins = tradeLogs.filter(l => l.amount > 0);
-  const losses = tradeLogs.filter(l => l.amount < 0);
-  const winRate = tradeLogs.length > 0 ? ((wins.length / tradeLogs.length) * 100).toFixed(1) : '0.0';
-  const avgWin = wins.length > 0 ? wins.reduce((s, l) => s + l.amount, 0) / wins.length : 0;
-  const avgLoss = losses.length > 0 ? losses.reduce((s, l) => s + Math.abs(l.amount), 0) / losses.length : 0;
-  return (
-    <div>
-      <h2 style={{ fontFamily: 'Georgia,serif', fontSize: '1.6rem', color: C.text, marginBottom: '24px' }}>My Performance</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '16px', marginBottom: '24px' }}>
-        <StatCard label="Total Trades Logged" value={tradeLogs.length} icon="📋" />
-        <StatCard label="Win Rate" value={`${winRate}%`} color={parseFloat(winRate) >= 50 ? C.green : C.red} icon="🏆" />
-        <StatCard label="Avg Winning Trade" value={fmt(avgWin)} color={C.green} icon="📈" />
-        <StatCard label="Avg Losing Trade" value={fmt(avgLoss)} color={C.red} icon="📉" />
-        <StatCard label="Total Traders" value={traders.length} icon="👥" />
-        <StatCard label="Total Capital Managed" value={fmt(traders.reduce((s, t) => s + (t.trader?.account?.current_balance || 0), 0))} icon="💼" />
-      </div>
-      <Card>
-        <h3 style={{ fontFamily: 'Georgia,serif', color: C.text, marginBottom: '16px', fontSize: '1rem' }}>Performance Per Trader</h3>
-        <Table
-          cols={['Trader', 'Trades', 'Total P&L', 'Current Balance']}
-          rows={traders.map(a => {
-            const logs = tradeLogs.filter(l => l.trader_id === a.trader_id);
-            const pnl = logs.reduce((s, l) => s + l.amount, 0);
-            return [
-              a.trader?.full_name || '—',
-              logs.length,
-              <span style={{ color: pnl >= 0 ? C.green : C.red, fontWeight: 700 }}>{pnl >= 0 ? '+' : ''}{fmt(pnl)}</span>,
-              fmt(a.trader?.account?.current_balance),
-            ];
-          })}
-          emptyMsg="No data yet."
-        />
-      </Card>
-    </div>
-  );
-}
-
 // ══════════════════════════════════════════════════════════════
 // ADMIN DASHBOARD
 // ══════════════════════════════════════════════════════════════
@@ -995,7 +957,7 @@ function AdminDashboard({ profile, onLogout, refreshProfile }) {
     { id: 'withdrawals',  icon: '💸', label: 'Withdrawals' },
     { id: 'deposits',     icon: '💰', label: 'Deposits' },
     { id: 'balances',     icon: '⚖️', label: 'Adjust Balances' },
-    { id: 'kyc',          icon: '🪪', label: 'KYC Review' },
+    { id: 'kyc',          icon: '🪪', label: 'Identity Review' },
     { id: 'announce',     icon: '📣', label: 'Announcements' },
     { id: 'analytics',    icon: '📈', label: 'Analytics' },
   ];
@@ -1095,7 +1057,7 @@ function AdminUsers({ users, loading, onRefresh }) {
     <div>
       <h2 style={{ fontFamily: 'Georgia,serif', fontSize: '1.6rem', color: C.text, marginBottom: '24px' }}>All Members ({filtered.length})</h2>
       <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name or email..."
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search records..."
           style={{ flex: 1, minWidth: '200px', background: C.bg3, border: `1px solid ${C.border}`, borderRadius: '7px', padding: '10px 14px', color: C.text, fontFamily: 'sans-serif', fontSize: '13px', outline: 'none' }} />
         {['all','trader','manager','admin'].map(f => (
           <button key={f} onClick={() => setFilter(f)} style={{ padding: '8px 14px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontFamily: 'sans-serif', fontSize: '12px', fontWeight: 700, background: filter === f ? 'rgba(196,160,80,0.15)' : C.bg3, color: filter === f ? C.gold : C.muted, border: `1px solid ${filter === f ? C.borderHi : C.border}` }}>
@@ -1136,7 +1098,7 @@ function AdminApplications({ applications, loading, onRefresh, adminId }) {
       <h2 style={{ fontFamily: 'Georgia,serif', fontSize: '1.6rem', color: C.text, marginBottom: '24px' }}>Membership Applications ({applications.length})</h2>
       <Card>
         <Table
-          cols={['Name', 'Email', 'Phone', 'Role', 'Risk Tier', 'Referral', 'Applied', 'Status', 'Actions']}
+          cols={['Name', 'Email', 'Phone', 'Role', 'Risk Parameters', 'Referral', 'Applied', 'Status', 'Actions']}
           rows={applications.map(a => [
             a.full_name,
             <span style={{ color: C.muted, fontSize: '12px' }}>{a.email}</span>,
@@ -1149,7 +1111,7 @@ function AdminApplications({ applications, loading, onRefresh, adminId }) {
             a.status === 'pending' ? (
               <div style={{ display: 'flex', gap: '6px' }}>
                 <GoldBtn small variant="success" onClick={() => review(a.id, 'approved')}>Approve</GoldBtn>
-                <GoldBtn small variant="danger" onClick={() => review(a.id, 'rejected', 'Not approved.')}>Reject</GoldBtn>
+                <GoldBtn small variant="danger" onClick={() => review(a.id, 'rejected', 'Criteria unmet.')}>Reject</GoldBtn>
               </div>
             ) : '—',
           ])}
@@ -1241,7 +1203,6 @@ function AdminDeposits({ deposits, loading, onRefresh, adminId }) {
   async function confirmDeposit(dep) {
     await supabase.from('deposits').update({ status: 'confirmed', confirmed_by: adminId, confirmed_at: new Date().toISOString() }).eq('id', dep.id);
     await supabase.from('trader_accounts').upsert({ trader_id: dep.trader_id, initial_deposit: dep.amount, current_balance: dep.amount }, { onConflict: 'trader_id', ignoreDuplicates: false });
-    // Add to balance (if account exists, increment)
     const { data: acct } = await supabase.from('trader_accounts').select('current_balance, initial_deposit').eq('trader_id', dep.trader_id).single();
     if (acct) {
       await supabase.from('trader_accounts').update({ current_balance: (acct.current_balance || 0) + dep.amount, initial_deposit: (acct.initial_deposit || 0) + dep.amount }).eq('trader_id', dep.trader_id);
@@ -1289,9 +1250,8 @@ function AdminBalances({ users, loading, onRefresh, adminId }) {
     const current = trader.account?.current_balance || 0;
     let newBal = type === 'set' ? parseFloat(amount) : type === 'add' ? current + parseFloat(amount) : current - parseFloat(amount);
     await supabase.from('trader_accounts').update({ current_balance: newBal }).eq('trader_id', selected);
-    // Log as admin trade entry
     if (type !== 'set') {
-      await supabase.from('trade_logs').insert({ trader_id: selected, manager_id: adminId, amount: type === 'add' ? parseFloat(amount) : -parseFloat(amount), note: `Admin adjustment: ${note || 'manual'}`, balance_after: newBal });
+      await supabase.from('trade_logs').insert({ trader_id: selected, manager_id: adminId, amount: type === 'add' ? parseFloat(amount) : -parseFloat(amount), note: `System adjustment: ${note || 'manual correction'}`, balance_after: newBal });
     }
     setAmount(''); setNote(''); onRefresh(); setSaving(false);
   }
@@ -1305,7 +1265,7 @@ function AdminBalances({ users, loading, onRefresh, adminId }) {
           <Select label="Select Trader" value={selected} onChange={e => setSelected(e.target.value)} options={[{ value: '', label: '— Select —' }, ...users.map(u => ({ value: u.id, label: `${u.full_name} (${fmt(u.account?.current_balance)})` }))]} />
           <Select label="Adjustment Type" value={type} onChange={e => setType(e.target.value)} options={[{ value: 'set', label: 'Set to exact amount' }, { value: 'add', label: 'Add to balance' }, { value: 'subtract', label: 'Subtract from balance' }]} />
           <Input label="Amount (USD)" type="number" value={amount} onChange={e => setAmount(e.target.value)} required placeholder="0.00" />
-          <Input label="Reason / Note" value={note} onChange={e => setNote(e.target.value)} placeholder="e.g. manual correction" />
+          <Input label="Reason / Note" value={note} onChange={e => setNote(e.target.value)} placeholder="e.g. manual alignment" />
           <GoldBtn disabled={saving || !selected || !amount}>{saving ? 'Updating...' : 'Apply Adjustment'}</GoldBtn>
         </form>
       </Card>
@@ -1329,23 +1289,22 @@ function AdminBalances({ users, loading, onRefresh, adminId }) {
 
 function AdminKYC({ users, loading, onRefresh }) {
   if (loading) return <Loader />;
-  const pending = users.filter(u => u.kyc_status !== 'approved');
   async function updateKYC(id, kyc_status) {
     await supabase.from('profiles').update({ kyc_status }).eq('id', id);
     onRefresh();
   }
   return (
     <div>
-      <h2 style={{ fontFamily: 'Georgia,serif', fontSize: '1.6rem', color: C.text, marginBottom: '24px' }}>KYC / Identity Review</h2>
+      <h2 style={{ fontFamily: 'Georgia,serif', fontSize: '1.6rem', color: C.text, marginBottom: '24px' }}>Identity Review</h2>
       <Card>
         <Table
-          cols={['Name', 'Email', 'Role', 'KYC Status', 'Doc URL', 'Actions']}
+          cols={['Name', 'Email', 'Role', 'Status', 'Document', 'Actions']}
           rows={users.map(u => [
             u.full_name,
             <span style={{ color: C.muted, fontSize: '12px' }}>{u.email}</span>,
             <Badge status={u.role} />,
             <Badge status={u.kyc_status || 'pending'} />,
-            u.kyc_doc_url ? <a href={u.kyc_doc_url} target="_blank" rel="noreferrer" style={{ color: C.gold, fontSize: '12px', textDecoration: 'none' }}>View Doc</a> : '—',
+            u.kyc_doc_url ? <a href={u.kyc_doc_url} target="_blank" rel="noreferrer" style={{ color: C.gold, fontSize: '12px', textDecoration: 'none' }}>View File</a> : '—',
             u.kyc_status !== 'approved' ? (
               <div style={{ display: 'flex', gap: '6px' }}>
                 <GoldBtn small variant="success" onClick={() => updateKYC(u.id, 'approved')}>Approve</GoldBtn>
@@ -1447,7 +1406,11 @@ function AdminAnalytics({ users, withdrawals, deposits, applications, loading })
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: '20px' }}>
         <Card>
           <h3 style={{ fontFamily: 'Georgia,serif', color: C.text, marginBottom: '16px', fontSize: '1rem' }}>Membership Breakdown</h3>
-          {[['Active', users.filter(u=>u.status==='active').length, C.green], ['Pending', users.filter(u=>u.status==='pending').length, '#fbbf24'], ['Suspended', users.filter(u=>u.status==='suspended').length, C.red]].map(([l,v,c]) => (
+          {[
+            ['Active', users.filter(u=>u.status==='active').length, C.green], 
+            ['Pending', users.filter(u=>u.status==='pending').length, '#fbbf24'], 
+            ['Suspended', users.filter(u=>u.status==='suspended').length, C.red]
+          ].map(([l,v,c]) => (
             <div key={l} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: `1px solid ${C.border}`, fontFamily: 'sans-serif', fontSize: '13px' }}>
               <span style={{ color: C.muted }}>{l}</span>
               <span style={{ color: c, fontWeight: 700 }}>{v}</span>
