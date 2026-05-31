@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { supabase } from './supabase'; // Adjusted to match your import layout path
+import { supabase } from './supabaseClient'; // Corrected filename path to match your active file
 import { BrowserRouter, Routes, Route, useNavigate, Link } from 'react-router-dom';
 
 // Import your custom external components to handle real-time database validation
@@ -162,7 +162,7 @@ const T = {
       riskNote: 'Avertissement : Le trading forex comporte des risques substantiels. Les objectifs de gains affichés ne sont pas garantis.',
     },
     tiers: [
-      { pct: '0.1%', label: 'Micro', risk: 'Risque minimal', desc: 'Approche ultra-conservatrice. Votre gestionnaire vise de très petits gains quotidiens pour préserver votre capital avant tout.', daily: '0,10$', color: '#4ade80' },
+      { pct: '0.1%', label: 'Micro', risk: 'Risque minimal', desc: 'Approche ultra-conservatrice. Votre gestionnaire vise de très petits gains quotidiens pour préserve votre capital avant tout.', daily: '0,10$', color: '#4ade80' },
       { pct: '0.5%', label: 'Prudent', risk: 'Risque très faible', desc: 'Focus sur la croissance conservative. La protection du capital reste la priorité absolue dans des conditions de marché actives.', daily: '0,50$', color: '#86efac' },
       { pct: '1%', label: 'Conservateur', risk: 'Faible risque', desc: 'Objectif équilibré avec un potentiel de capitalisation réaliste. Un point de départ populaire pour les nouveaux traders.', daily: '1,00$', color: '#fbbf24', badge: 'Populaire' },
       { pct: '5%', label: 'Modéré', risk: 'Risque moyen', desc: 'Des objectifs plus élevés nécessitent des positions plus importantes. Adapté aux traders qui comprennent et acceptent les fluctuations régulières.', daily: '5,00$', color: '#f97316' },
@@ -238,7 +238,7 @@ const T = {
       disclaimer: 'Aviso de riesgo: El trading de forex implica un riesgo significativo de pérdida. Al enviar esta solicitud, confirmas que los fondos que deposites son dinero que puedes permitirte perder.',
     },
     footer: {
-      desc: 'Una red privada por referidos que conecta traders con gestores profesionales verificados para trading de forex gestionado en MT5.',
+      desc: 'Una red privada por referidos que conecta traders con gestores profesionales verificados para trading de forex de gestión en MT5.',
       col1: 'Plataforma', col2: 'Cuenta', col3: 'Legal',
       col1Links: ['Sobre PPG', 'Cómo funciona', 'Nivel de ganancias'],
       col2Links: ['Sistema de referidos', 'Panel de Control', 'Canales de Soporte'],
