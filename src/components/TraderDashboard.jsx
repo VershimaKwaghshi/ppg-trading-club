@@ -15,15 +15,19 @@ const C = {
 };
 
 export default function TraderDashboard({ profile, onLogout }) {
-  // Normalize verification metrics coming from the database
-  const kycRawStatus = profile?.kyc_status || 'VERIFIED';
+  // Safe extraction fallbacks to catch varying backend column naming patterns
+  const accountStatus = profile?.status || profile?.account_status || 'Active Verified';
+  const groupIdentifier = profile?.referral_code || profile?.group_id || 'Ppg0028';
+  const registrationEmail = profile?.email || 'Not Provided';
+  
+  const kycRawStatus = profile?.kyc_status || profile?.kyc || 'VERIFIED';
   const normalizedKyc = kycRawStatus.toUpperCase();
   const kycTextColor = normalizedKyc === 'VERIFIED' ? C.green : C.orange;
 
   return (
     <div style={{ minHeight: '100vh', background: C.bg, color: C.text, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', paddingBottom: '60px' }}>
       
-      {/* Structural Mobile CSS Head Overrides */}
+      {/* Structural Responsive Viewport Injection */}
       <style>{`
         .layout-grid {
           display: grid;
@@ -38,19 +42,33 @@ export default function TraderDashboard({ profile, onLogout }) {
           margin: 0 auto;
           width: 100%;
         }
+        .metric-card-container {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
         .metric-row {
           display: flex;
           justify-content: space-between;
-          align-items: baseline;
+          align-items: center;
           border-bottom: 1px solid ${C.border};
           padding-bottom: 14px;
           gap: 16px;
+        }
+        .metric-label {
+          color: ${C.muted};
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          white-space: nowrap;
+          flex-shrink: 0;
         }
         .metric-value {
           text-align: right;
           word-break: break-all;
           font-size: 14px;
           font-weight: 600;
+          color: ${C.text};
         }
         @media (max-width: 850px) {
           .layout-grid {
@@ -65,15 +83,16 @@ export default function TraderDashboard({ profile, onLogout }) {
           .metric-row {
             flex-direction: column !important;
             align-items: flex-start !important;
-            gap: 4px !important;
+            gap: 6px !important;
           }
           .metric-value {
             text-align: left !important;
+            width: 100%;
           }
         }
       `}</style>
 
-      {/* ─── PRIVATE CLUB BRANDING HEADER RAIL ──────────────────────────── */}
+      {/* Header */}
       <header style={{ padding: '24px', borderBottom: `1px solid ${C.border}`, background: C.bg2, boxShadow: '0 4px 40px rgba(0,0,0,0.5)' }}>
         <div className="header-box">
           <div>
@@ -86,7 +105,7 @@ export default function TraderDashboard({ profile, onLogout }) {
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <div style={{ textAlign: 'right' }}>
+            <div style={{ textAlign: 'center' }}>
               <span style={{ fontSize: '10px', color: C.muted, display: 'block', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Authenticated Member</span>
               <span style={{ fontSize: '14px', color: C.text, fontWeight: '600', letterSpacing: '0.02em' }}>{profile?.full_name || 'Kwaghshi Vershima'}</span>
             </div>
@@ -97,11 +116,11 @@ export default function TraderDashboard({ profile, onLogout }) {
         </div>
       </header>
 
-      {/* ─── TERMINAL VIEWPORT ─────────────────────────────────────────── */}
+      {/* Main Content Viewport */}
       <main style={{ padding: '40px 24px', maxWidth: '1200px', margin: '0 auto' }}>
         <div className="layout-grid">
           
-          {/* LEFT INTERFACE: Premium Performance Mapping Area */}
+          {/* Chart Placement Module */}
           <section style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ background: `linear-gradient(145deg, ${C.bg2}, ${C.bg3})`, border: `1px solid ${C.border}`, borderRadius: '4px', padding: '32px', boxShadow: '0 12px 50px rgba(0,0,0,0.4)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
@@ -116,43 +135,33 @@ export default function TraderDashboard({ profile, onLogout }) {
             </div>
           </section>
 
-          {/* RIGHT INTERFACE: Account Verification Parameters (Digital Passport) */}
+          {/* Account Integrity Credentials Parameter Card */}
           <aside style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ background: `linear-gradient(145deg, ${C.bg2}, ${C.bg3})`, border: `1px solid ${C.border}`, borderRadius: '4px', padding: '32px', boxShadow: '0 12px 50px rgba(0,0,0,0.4)' }}>
               <h3 style={{ color: C.gold, marginBottom: '24px', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.12em', marginTop: 0, fontWeight: '700', borderBottom: `1px solid ${C.border}`, paddingBottom: '12px' }}>
                 Account Execution
               </h3>
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div className="metric-card-container">
                 
-                <div className="layout-grid" style={{ gridTemplateColumns: '1fr', gap: '20px' }}>
-                  <div className="metric-row">
-                    <span style={{ color: C.muted, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Identity Status</span>
-                    <span className="metric-value" style={{ color: C.text }}>
-                      {profile?.status || 'Active Verified'}
-                    </span>
-                  </div>
+                <div className="metric-row">
+                  <span className="metric-label">Identity Status</span>
+                  <span className="metric-value">{accountStatus}</span>
+                </div>
 
-                  <div className="metric-row">
-                    <span style={{ color: C.muted, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Trading Group ID</span>
-                    <span className="metric-value" style={{ color: C.gold, fontFamily: 'monospace', fontSize: '15px' }}>
-                      {profile?.referral_code || 'Ppg0028'}
-                    </span>
-                  </div>
+                <div className="metric-row">
+                  <span className="metric-label">Trading Group ID</span>
+                  <span className="metric-value" style={{ color: C.gold, fontFamily: 'monospace', fontSize: '15px' }}>{groupIdentifier}</span>
+                </div>
 
-                  <div className="metric-row">
-                    <span style={{ color: C.muted, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Registered Email</span>
-                    <span className="metric-value" style={{ color: C.text, fontFamily: 'monospace', fontSize: '13px' }}>
-                      {profile?.email || 'user@example.com'}
-                    </span>
-                  </div>
+                <div className="metric-row">
+                  <span className="metric-label">Registered Email</span>
+                  <span className="metric-value" style={{ fontFamily: 'monospace', fontSize: '13px' }}>{registrationEmail}</span>
+                </div>
 
-                  <div className="metric-row" style={{ borderBottom: 'none', paddingBottom: 0 }}>
-                    <span style={{ color: C.muted, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>KYC Validation</span>
-                    <span className="metric-value" style={{ color: kycTextColor, fontWeight: '900', letterSpacing: '0.05em' }}>
-                      {normalizedKyc}
-                    </span>
-                  </div>
+                <div className="metric-row" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+                  <span className="metric-label">KYC Validation</span>
+                  <span className="metric-value" style={{ color: kycTextColor, fontWeight: '900', letterSpacing: '0.05em' }}>{normalizedKyc}</span>
                 </div>
 
               </div>
