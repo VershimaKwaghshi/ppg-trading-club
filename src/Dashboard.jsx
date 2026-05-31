@@ -1,12 +1,11 @@
-import TraderDashboard from './components/TraderDashboard';
-import ManagerDashboard from './components/ManagerDashboard';
-import AdminDashboard from './components/AdminDashboard';
 // Dashboard.jsx — PPG Trading Club
-// Requires: @supabase/supabase-js, react, react-dom
-// Place supabase.js in the same directory and fill in your credentials.
+// Requires: @supabase/supabase-js, react
 
 import { useState, useEffect } from 'react';
 import { supabase } from './supabase';
+import TraderDashboard from './components/TraderDashboard';
+import ManagerDashboard from './components/ManagerDashboard';
+import AdminDashboard from './components/AdminDashboard';
 
 // ─── DESIGN TOKENS ───────────────────────────────────────────
 const C = {
@@ -34,7 +33,7 @@ const shimmer = {
   animation: 'shimmer 4s linear infinite',
 };
 
-// ─── SHARED UI ────────────────────────────────────────────────
+// ─── SHARED UI COMPONENTS ────────────────────────────────────
 function GoldBtn({ children, onClick, disabled, variant = 'primary', small }) {
   const base = {
     border: 'none', borderRadius: '7px', cursor: disabled ? 'not-allowed' : 'pointer',
@@ -57,29 +56,6 @@ function Card({ children, style = {} }) {
     <div style={{ background: C.bg3, border: `1px solid ${C.border}`, borderRadius: '12px', padding: '24px', ...style }}>
       {children}
     </div>
-  );
-}
-
-function Badge({ status }) {
-  const map = {
-    pending:    { bg: 'rgba(251,191,36,0.1)',  color: '#fbbf24', label: 'Pending' },
-    active:     { bg: 'rgba(74,222,128,0.1)',  color: C.green,   label: 'Active' },
-    approved:   { bg: 'rgba(74,222,128,0.1)',  color: C.green,   label: 'Approved' },
-    confirmed:  { bg: 'rgba(74,222,128,0.1)',  color: C.green,   label: 'Confirmed' },
-    paid:       { bg: 'rgba(74,222,128,0.1)',  color: C.green,   label: 'Paid' },
-    rejected:   { bg: 'rgba(244,63,94,0.1)',   color: C.red,     label: 'Rejected' },
-    suspended:  { bg: 'rgba(244,63,94,0.1)',   color: C.red,     label: 'Suspended' },
-    reviewing:  { bg: 'rgba(147,51,234,0.1)',  color: '#a78bfa', label: 'Reviewing' },
-    submitted:  { bg: 'rgba(147,51,234,0.1)',  color: '#a78bfa', label: 'Submitted' },
-    manager:    { bg: 'rgba(196,160,80,0.1)',  color: C.gold,    label: 'Manager' },
-    trader:     { bg: 'rgba(96,165,250,0.1)',  color: '#60a5fa', label: 'Trader' },
-    admin:      { bg: 'rgba(244,63,94,0.1)',   color: C.red,     label: 'Admin' },
-  };
-  const s = map[status] || { bg: 'rgba(120,120,160,0.1)', color: C.muted, label: status };
-  return (
-    <span style={{ background: s.bg, color: s.color, fontFamily: 'sans-serif', fontSize: '10px', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-      {s.label}
-    </span>
   );
 }
 
@@ -106,7 +82,7 @@ function Select({ label, value, onChange, name, options }) {
   );
 }
 
-// ─── AUTH WRAPPER ─────────────────────────────────────────────
+// ─── MAIN AUTH/ROUTING WRAPPER ────────────────────────────────
 export default function Dashboard() {
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -122,11 +98,13 @@ export default function Dashboard() {
       if (session) fetchProfile(session.user.id);
       else setLoading(false);
     });
+    
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
       setSession(session);
       if (session) fetchProfile(session.user.id);
       else { setProfile(null); setLoading(false); }
     });
+    
     return () => subscription.unsubscribe();
   }, []);
 
@@ -186,15 +164,18 @@ export default function Dashboard() {
 
   if (!session || !profile) return <AuthScreen authMode={authMode} setAuthMode={setAuthMode} authForm={authForm} setAuthForm={setAuthForm} authError={authError} authLoading={authLoading} handleAuth={handleAuth} />;
 
+  // Enforce account approval gate
   if (profile.status === 'pending') return (
     <div style={{ minHeight: '100vh', background: C.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
       <GlobalStyles />
       <Card style={{ maxWidth: '480px', textAlign: 'center' }}>
         <div style={{ fontSize: '40px', marginBottom: '16px' }}>⏳</div>
-        <h2 style={{ fontFamily: 'Georgia,serif', color: C.text, marginBottom: '10px' }}>Application Under Review</h2>
-        <p style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '14px', lineHeight: 1.6 }}>Your account is pending operational review. Once processed, updates will structuralize across your profile rails.</p>
+        <h2 style={{ fontFamily: 'Georgia,serif', color: C.text, marginBottom: '10px' }}>Welcome to the Club</h2>
+        <p style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '14px', lineHeight: 1.6 }}>Registered Email: {profile.email}</p>
+        <p style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '14px', lineHeight: 1.6, marginTop: '8px' }}>Account Level: <span style={{ color: C.green }}>Standard Access</span></p>
+        <p style={{ color: C.dim, fontFamily: 'sans-serif', fontSize: '13px', lineHeight: 1.6, marginTop: '12px' }}>Your profile parameters are pending administrative validation. Once approved by an operation desk, active trading tools will map onto this container workspace.</p>
         <div style={{ marginTop: '20px' }}>
-          <GoldBtn variant="ghost" onClick={handleLogout}>Sign Out</GoldBtn>
+          <GoldBtn variant="ghost" onClick={handleLogout}>Secure Logout</GoldBtn>
         </div>
       </Card>
     </div>
@@ -207,7 +188,7 @@ export default function Dashboard() {
         <div style={{ fontSize: '40px', marginBottom: '16px' }}>🚫</div>
         <h2 style={{ fontFamily: 'Georgia,serif', color: C.red, marginBottom: '10px' }}>Account {profile.status === 'suspended' ? 'Suspended' : 'Rejected'}</h2>
         <p style={{ color: C.muted, fontFamily: 'sans-serif', fontSize: '14px', lineHeight: 1.6 }}>Please contact system parameters or designated entry terminals for configuration adjustments.</p>
-        <div style={{ marginTop: '20px' }}><GoldBtn variant="ghost" onClick={handleLogout}>Sign Out</GoldBtn></div>
+        <div style={{ marginTop: '20px' }}><GoldBtn variant="ghost" onClick={handleLogout}>Secure Logout</GoldBtn></div>
       </Card>
     </div>
   );
@@ -230,13 +211,13 @@ function AuthScreen({ authMode, setAuthMode, authForm, setAuthForm, authError, a
       <GlobalStyles />
       <div style={{ width: '100%', maxWidth: '440px' }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{ fontFamily: 'Georgia,serif', fontSize: '28px', fontWeight: 900, fontStyle: 'italic', ...shimmer, marginBottom: '4px' }}>PPG Trading Club</div>
-          <div style={{ fontFamily: 'sans-serif', fontSize: '11px', color: C.muted, letterSpacing: '0.15em', textTransform: 'uppercase' }}>Member Portal</div>
+          <div style={{ fontFamily: 'Georgia,serif', fontSize: '28px', fontWeight: 900, fontStyle: 'italic', ...shimmer, marginBottom: '4px' }}>Trading Club</div>
+          <div style={{ fontFamily: 'sans-serif', fontSize: '11px', color: C.muted, letterSpacing: '0.15em', textTransform: 'uppercase' }}>Penny Partners Group</div>
         </div>
         <Card>
           <div style={{ display: 'flex', gap: '8px', marginBottom: '28px' }}>
             {['login','register'].map(m => (
-              <button key={m} onClick={() => setAuthMode(m)} style={{ flex: 1, padding: '10px', borderRadius: '7px', border: 'none', cursor: 'pointer', fontFamily: 'sans-serif', fontWeight: 700, fontSize: '13px', background: authMode === m ? 'linear-gradient(135deg,#c4a050,#f0d080)' : C.bg2, color: authMode === m ? '#050814' : C.muted, transition: 'all 0.2s' }}>
+              <button key={m} type="button" onClick={() => setAuthMode(m)} style={{ flex: 1, padding: '10px', borderRadius: '7px', border: 'none', cursor: 'pointer', fontFamily: 'sans-serif', fontWeight: 700, fontSize: '13px', background: authMode === m ? 'linear-gradient(135deg,#c4a050,#f0d080)' : C.bg2, color: authMode === m ? '#050814' : C.muted, transition: 'all 0.2s' }}>
                 {m === 'login' ? 'Sign In' : 'Register'}
               </button>
             ))}
