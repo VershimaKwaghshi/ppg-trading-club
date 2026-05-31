@@ -125,32 +125,34 @@ export default function TraderDashboard({ profile, onLogout }) {
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 
-                <div className="metric-row">
-                  <span style={{ color: C.muted, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Identity Status</span>
-                  <span className="metric-value" style={{ color: C.text }}>
-                    {profile?.status || 'Active Verified'}
-                  </span>
-                </div>
+                <div className="layout-grid" style={{ gridTemplateColumns: '1fr', gap: '20px' }}>
+                  <div className="metric-row">
+                    <span style={{ color: C.muted, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Identity Status</span>
+                    <span className="metric-value" style={{ color: C.text }}>
+                      {profile?.status || 'Active Verified'}
+                    </span>
+                  </div>
 
-                <div className="metric-row">
-                  <span style={{ color: C.muted, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Trading Group ID</span>
-                  <span className="metric-value" style={{ color: C.gold, fontFamily: 'monospace', fontSize: '15px' }}>
-                    {profile?.referral_code || 'Ppg0028'}
-                  </span>
-                </div>
+                  <div className="metric-row">
+                    <span style={{ color: C.muted, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Trading Group ID</span>
+                    <span className="metric-value" style={{ color: C.gold, fontFamily: 'monospace', fontSize: '15px' }}>
+                      {profile?.referral_code || 'Ppg0028'}
+                    </span>
+                  </div>
 
-                <div className="metric-row">
-                  <span style={{ color: C.muted, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Registered Email</span>
-                  <span className="metric-value" style={{ color: C.text, fontFamily: 'monospace', fontSize: '13px' }}>
-                    {profile?.email || 'user@example.com'}
-                  </span>
-                </div>
+                  <div className="metric-row">
+                    <span style={{ color: C.muted, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Registered Email</span>
+                    <span className="metric-value" style={{ color: C.text, fontFamily: 'monospace', fontSize: '13px' }}>
+                      {profile?.email || 'user@example.com'}
+                    </span>
+                  </div>
 
-                <div className="metric-row" style={{ borderBottom: 'none', paddingBottom: 0 }}>
-                  <span style={{ color: C.muted, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>KYC Validation</span>
-                  <span className="metric-value" style={{ color: kycTextColor, fontWeight: '900', letterSpacing: '0.05em' }}>
-                    {normalizedKyc}
-                  </span>
+                  <div className="metric-row" style={{ borderBottom: 'none', paddingBottom: 0 }}>
+                    <span style={{ color: C.muted, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>KYC Validation</span>
+                    <span className="metric-value" style={{ color: kycTextColor, fontWeight: '900', letterSpacing: '0.05em' }}>
+                      {normalizedKyc}
+                    </span>
+                  </div>
                 </div>
 
               </div>
