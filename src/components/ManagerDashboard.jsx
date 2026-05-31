@@ -156,7 +156,7 @@ export default function ManagerDashboard({ profile, onLogout }) {
             <form onSubmit={handleLogTrade} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div>
                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '11px', textTransform: 'uppercase', color: C.muted, letterSpacing: '0.05em' }}>Allocated Trader Target</label>
-                <select value={selectedTrader} onChange={(e) => setSelectedTrader(e.target.value)} className="input-box" style={{ appearance: 'none', backgroundImage: 'radial-gradient(rgba(196,160,80,0.3) 1px, transparent 1px)' }}>
+                <select value={selectedTrader} onChange={(e) => setSelectedTrader(e.target.value)} className="input-box" style={{ appearance: 'none' }}>
                   <option value="" style={{ background: C.bg2 }}>-- Choose Profile Node --</option>
                   {traders.map(t => <option key={t.id} value={t.id} style={{ background: C.bg2 }}>{t.full_name}</option>)}
                 </select>
