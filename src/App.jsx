@@ -237,7 +237,7 @@ const T = {
     footer: {
       desc: 'Una red privada por referidos que conecta traders con gestores profesionales verificados para trading de forex gestionado en MT5.',
       col1: 'Plataforma', col2: 'Cuenta', col3: 'Legal',
-      col1Links: ['Sobre PPG', 'Cómo funciona', 'Niveles de ganancias'],
+      col1Links: ['Sobre PPG', 'Cómo funciona', 'Nivel de ganancias'],
       col2Links: ['Sistema de referidos', 'Panel de Control', 'Canales de Soporte'],
       col3Links: ['Términos de servicio', 'Aviso de riesgo', 'Política de privacidad'],
       address: '10 Arab Road, Calabar, Nigeria',
@@ -254,7 +254,7 @@ const T = {
       { pct: '20%', label: 'Máximo', risk: 'Riesgo muy alto', desc: 'Exposición máxima en cada operación. Todo tu capital está en riesgo significativo. Solo elige esto si puedes permitirte perderlo todo.', daily: '$20.00', color: '#dc2626' },
     ],
     steps: [
-      { n: '01', title: 'Obtén una referencia', desc: 'PPG Trading Club es solo por invitación. Debes recibir un código de referido de un miembro verificado existente antes de poder registrarte.' },
+      { n: '01', title: 'Obtén una referencia', desc: 'PPG Trading Club es solo por invitación. Debes recibir un código de referido de un miembro verificado existente antes de poder registrarse.' },
       { n: '02', title: 'Paga la suscripción mensual', desc: 'Activa tu cuenta con la tarifa mensual de $4.99. Métodos de pago aceptados: Opay, Zenith Bank, Bitcoin, Ethereum o USDT TRC20.' },
       { n: '03', title: 'Configuración del perfil', desc: 'Proporcione sus parámetros operativos básicos para inicializar correctamente los registros de su cuenta.' },
       { n: '04', title: 'Refiere al menos un miembro', desc: 'Para activar el acceso completo a la cuenta, debes referir al menos a un nuevo participante al club.' },
@@ -303,7 +303,7 @@ function useScrollReveal(options = {}) {
     }, { threshold: 0.12, ...options });
     obs.observe(el);
     return () => obs.disconnect();
-  }, []);
+  }, [options]);
   return [ref, visible];
 }
 
@@ -328,7 +328,6 @@ function AgeRestrictionBadge() {
     background: 'linear-gradient(90deg,#8a6520,#f5e098,#c4a050,#f5e098,#8a6520)',
     backgroundSize: '200% auto', WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-    animation: 'shimmer 4s linear infinite',
   };
   return (
     <span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', background:'#03050d', border:'1px solid rgba(196,160,80,0.4)', height:'16px', padding:'0 5px', borderRadius:'4px', marginLeft:'6px', verticalAlign:'middle', boxShadow:'0 2px 6px rgba(196,160,80,0.15)' }}>
@@ -342,7 +341,6 @@ function Logo() {
     background: 'linear-gradient(90deg,#8a6520,#f5e098,#c4a050,#f5e098,#8a6520)',
     backgroundSize: '200% auto', WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-    animation: 'shimmer 4s linear infinite',
   };
   return (
     <div style={{ lineHeight:1, display:'inline-block' }}>
@@ -390,7 +388,7 @@ function Navbar({ onOpenRegister, lang, setLang, t }) {
   return (
     <nav style={{ position:'fixed', top:0, left:0, right:0, zIndex:100, background:(scrolled||menuOpen)?'rgba(5,8,20,0.98)':'transparent', backdropFilter:'blur(16px)', borderBottom:'1px solid rgba(196,160,80,0.12)', transition:'all 0.3s' }}>
       <div style={{ maxWidth:'1280px', margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', height:'76px', padding:'0 24px' }}>
-        <a href="#" style={{ textDecoration:'none' }}><Logo /></a>
+        <Link to="/" style={{ textDecoration:'none' }}><Logo /></Link>
         <div style={{ display:'flex', alignItems:'center', gap:'20px' }}>
 
           <div ref={langRef} style={{ position:'relative', borderRight:'1px solid rgba(196,160,80,0.2)', paddingRight:'20px', display:'flex', alignItems:'center' }}>
@@ -415,7 +413,7 @@ function Navbar({ onOpenRegister, lang, setLang, t }) {
                     color: lang === l.code ? '#c4a050' : '#b0b0d0',
                     fontFamily: 'sans-serif', fontSize: '13px', textAlign: 'left',
                     display: 'flex', alignItems: 'center', gap: '8px', width: '100%', transition: 'background 0.15s'
-                  }} onMouseEnter={e => e.currentTarget.style.background='rgba(196,160,80,0.05)'} onMouseLeave={e => e.currentTarget.style.background=lang===l.code?'rgba(196,160,80,0.15)':'transparent'}>
+                  }}>
                     <span>{l.flag}</span> {l.label}
                   </button>
                 ))}
@@ -425,13 +423,11 @@ function Navbar({ onOpenRegister, lang, setLang, t }) {
           </div>
 
           <div ref={dropdownRef} style={{ position:'relative' }}>
-            <button onClick={() => setMenuOpen(!menuOpen)} style={{ background:'linear-gradient(135deg,#c4a050,#f0d080)', color:'#050814', border:'none', padding:'10px 18px', borderRadius:'6px', fontFamily:'sans-serif', fontSize:'14px', fontWeight:800, cursor:'pointer', display:'flex', alignItems:'center', gap:'8px', transition:'transform 0.15s, box-shadow 0.15s' }}
-              onMouseEnter={e => { e.currentTarget.style.transform='scale(1.04)'; e.currentTarget.style.boxShadow='0 4px 20px rgba(196,160,80,0.4)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform='scale(1)'; e.currentTarget.style.boxShadow='none'; }}>
+            <button onClick={() => setMenuOpen(!menuOpen)} style={{ background:'linear-gradient(135deg,#c4a050,#f0d080)', color:'#050814', border:'none', padding:'10px 18px', borderRadius:'6px', fontFamily:'sans-serif', fontSize:'14px', fontWeight:800, cursor:'pointer', display:'flex', alignItems:'center', gap:'8px', transition:'transform 0.15s, box-shadow 0.15s' }}>
               {t.nav.register.split(' ')[0]} {menuOpen ? '✕' : '☰'}
             </button>
             {menuOpen && (
-              <div style={{ position:'absolute', top:'130%', right:0, width:'220px', background:'#0a0d1e', border:'1px solid rgba(196,160,80,0.3)', borderRadius:'8px', boxShadow:'0 12px 40px rgba(0,0,0,0.8)', overflow:'hidden', display:'flex', flexDirection:'column', animation:'fadeDown 0.2s ease' }}>
+              <div style={{ position:'absolute', top:'130%', right:0, width:'220px', background:'#0a0d1e', border:'1px solid rgba(196,160,80,0.3)', borderRadius:'8px', boxShadow:'0 12px 40px rgba(0,0,0,0.8)', overflow:'hidden', display:'flex', flexDirection:'column' }}>
                 {[
                   { label: t.nav.register, href: '#', click: (e) => { e.preventDefault(); setMenuOpen(false); onOpenRegister(); }, gold: true },
                   { label: t.nav.login, isRouterLink: true, to: '/login' },
@@ -444,16 +440,12 @@ function Navbar({ onOpenRegister, lang, setLang, t }) {
                 ].map((item, i, arr) => (
                   item.isRouterLink ? (
                     <Link key={i} to={item.to} onClick={() => setMenuOpen(false)}
-                      style={{ padding:'14px 20px', color: item.gold ? '#c4a050' : '#f0e8d0', textDecoration:'none', fontFamily:'sans-serif', fontSize: item.gold ? '14px' : '13px', fontWeight: item.gold ? 700 : 400, borderBottom: i < arr.length-1 ? '1px solid rgba(196,160,80,0.1)' : 'none', transition:'background 0.15s' }}
-                      onMouseEnter={e => e.currentTarget.style.background='rgba(196,160,80,0.05)'}
-                      onMouseLeave={e => e.currentTarget.style.background='transparent'}>
+                      style={{ padding:'14px 20px', color: item.gold ? '#c4a050' : '#f0e8d0', textDecoration:'none', fontFamily:'sans-serif', fontSize: item.gold ? '14px' : '13px', fontWeight: item.gold ? 700 : 400, borderBottom: i < arr.length-1 ? '1px solid rgba(196,160,80,0.1)' : 'none', transition:'background 0.15s' }}>
                       {item.label}
                     </Link>
                   ) : (
-                    <a key={i} href={item.href} onClick={item.click || (() => setMenuOpen(false))}
-                      style={{ padding:'14px 20px', color: item.gold ? '#c4a050' : '#f0e8d0', textDecoration:'none', fontFamily:'sans-serif', fontSize: item.gold ? '14px' : '13px', fontWeight: item.gold ? 700 : 400, borderBottom: i < arr.length-1 ? '1px solid rgba(196,160,80,0.1)' : 'none', transition:'background 0.15s' }}
-                      onMouseEnter={e => e.currentTarget.style.background='rgba(196,160,80,0.05)'}
-                      onMouseLeave={e => e.currentTarget.style.background='transparent'}>
+                    <a key={i} href={item.href} onClick={(e) => { if(item.click) { item.click(e); } else { setMenuOpen(false); } }}
+                      style={{ padding:'14px 20px', color: item.gold ? '#c4a050' : '#f0e8d0', textDecoration:'none', fontFamily:'sans-serif', fontSize: item.gold ? '14px' : '13px', fontWeight: item.gold ? 700 : 400, borderBottom: i < arr.length-1 ? '1px solid rgba(196,160,80,0.1)' : 'none', transition:'background 0.15s' }}>
                       {item.label}
                     </a>
                   )
@@ -476,7 +468,7 @@ function Hero({ onOpenRegister, t }) {
         <Reveal delay={0}>
           <h1 style={{ fontFamily:'Georgia,serif', fontSize:'clamp(2.2rem,6vw,4.2rem)', fontWeight:900, color:'#f0e8d0', lineHeight:1.15, marginBottom:'24px' }}>
             {t.hero.line1}<br />
-            <span style={{ background:'linear-gradient(90deg,#8a6520,#f5e098,#c4a050,#f5e098,#8a6520)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text', animation:'shimmer 4s linear infinite' }}>{t.hero.line2}</span>
+            <span style={{ background:'linear-gradient(90deg,#8a6520,#f5e098,#c4a050,#f5e098,#8a6520)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>{t.hero.line2}</span>
           </h1>
         </Reveal>
         <Reveal delay={120}>
@@ -484,14 +476,10 @@ function Hero({ onOpenRegister, t }) {
         </Reveal>
         <Reveal delay={240}>
           <div style={{ display:'flex', gap:'14px', justifyContent:'center', flexWrap:'wrap' }}>
-            <button onClick={onOpenRegister} style={{ background:'linear-gradient(135deg,#c4a050,#f0d080)', color:'#050814', fontFamily:'sans-serif', fontWeight:700, fontSize:'14px', padding:'15px 32px', borderRadius:'8px', border:'none', cursor:'pointer', boxShadow:'0 4px 20px rgba(196,160,80,0.25)', transition:'transform 0.2s, box-shadow 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 8px 30px rgba(196,160,80,0.4)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 4px 20px rgba(196,160,80,0.25)'; }}>
+            <button onClick={onOpenRegister} style={{ background:'linear-gradient(135deg,#c4a050,#f0d080)', color:'#050814', fontFamily:'sans-serif', fontWeight:700, fontSize:'14px', padding:'15px 32px', borderRadius:'8px', border:'none', cursor:'pointer', boxShadow:'0 4px 20px rgba(196,160,80,0.25)', transition:'transform 0.2s, box-shadow 0.2s' }}>
               {t.hero.cta}
             </button>
-            <a href="#how" style={{ border:'1px solid rgba(196,160,80,0.25)', color:'#c4a050', fontFamily:'sans-serif', fontWeight:600, fontSize:'14px', padding:'15px 32px', borderRadius:'8px', textDecoration:'none', transition:'background 0.2s, border-color 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.background='rgba(196,160,80,0.06)'; e.currentTarget.style.borderColor='rgba(196,160,80,0.5)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background='transparent'; e.currentTarget.style.borderColor='rgba(196,160,80,0.25)'; }}>
+            <a href="#how" style={{ border:'1px solid rgba(196,160,80,0.25)', color:'#c4a050', fontFamily:'sans-serif', fontWeight:600, fontSize:'14px', padding:'15px 32px', borderRadius:'8px', textDecoration:'none', transition:'background 0.2s, border-color 0.2s' }}>
               {t.hero.secondary}
             </a>
           </div>
@@ -520,9 +508,7 @@ function About({ t }) {
             { title: t.about.card2Title, desc: t.about.card2Desc },
           ].map((item, i) => (
             <Reveal key={i} delay={i * 120} direction="right">
-              <div style={{ background:'#050814', border:'1px solid rgba(196,160,80,0.1)', borderRadius:'12px', padding:'24px', transition:'transform 0.25s, border-color 0.25s, box-shadow 0.25s' }}
-                onMouseEnter={e => { e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.borderColor='rgba(196,160,80,0.25)'; e.currentTarget.style.boxShadow='0 12px 32px rgba(0,0,0,0.4)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.borderColor='rgba(196,160,80,0.1)'; e.currentTarget.style.boxShadow='none'; }}>
+              <div style={{ background:'#050814', border:'1px solid rgba(196,160,80,0.1)', borderRadius:'12px', padding:'24px', transition:'transform 0.25s, border-color 0.25s, box-shadow 0.25s' }}>
                 <h3 style={{ fontFamily:'Georgia,serif', fontSize:'1.1rem', color:'#f0e8d0', marginBottom:'8px' }}>{item.title}</h3>
                 <p style={{ fontFamily:'sans-serif', fontSize:'13.5px', color:'#686888', lineHeight:1.6 }}>{item.desc}</p>
               </div>
@@ -548,9 +534,7 @@ function HowItWorks({ t }) {
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))', gap:'20px' }}>
           {t.steps.map((step, i) => (
             <Reveal key={i} delay={i * 80}>
-              <div style={{ background:'#070a1a', border:'1px solid rgba(196,160,80,0.08)', borderRadius:'12px', padding:'28px', transition:'transform 0.25s, border-color 0.25s, box-shadow 0.25s', height:'100%' }}
-                onMouseEnter={e => { e.currentTarget.style.transform='translateY(-5px)'; e.currentTarget.style.borderColor='rgba(196,160,80,0.2)'; e.currentTarget.style.boxShadow='0 16px 40px rgba(0,0,0,0.5)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.borderColor='rgba(196,160,80,0.08)'; e.currentTarget.style.boxShadow='none'; }}>
+              <div style={{ background:'#070a1a', border:'1px solid rgba(196,160,80,0.08)', borderRadius:'12px', padding:'28px', transition:'transform 0.25s, border-color 0.25s, box-shadow 0.25s', height:'100%' }}>
                 <div style={{ fontFamily:'sans-serif', fontSize:'12px', fontWeight:700, color:'#c4a050', marginBottom:'16px', opacity:0.5 }}>{step.n}</div>
                 <h3 style={{ fontFamily:'Georgia,serif', fontSize:'1.1rem', fontWeight:700, color:'#f0e8d0', marginBottom:'10px' }}>{step.title}</h3>
                 <p style={{ fontFamily:'sans-serif', fontSize:'13.5px', color:'#686888', lineHeight:1.6 }}>{step.desc}</p>
@@ -578,9 +562,7 @@ function RiskTiers({ t }) {
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))', gap:'16px' }}>
           {t.tiers.map((tier, i) => (
             <Reveal key={i} delay={i * 70}>
-              <div style={{ background:'#050814', border:'1px solid rgba(196,160,80,0.08)', borderRadius:'12px', padding:'24px', position:'relative', transition:'transform 0.25s, border-color 0.25s, box-shadow 0.25s' }}
-                onMouseEnter={e => { e.currentTarget.style.transform='translateY(-5px)'; e.currentTarget.style.borderColor=`${tier.color}44`; e.currentTarget.style.boxShadow=`0 12px 32px rgba(0,0,0,0.5)`; }}
-                onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.borderColor='rgba(196,160,80,0.08)'; e.currentTarget.style.boxShadow='none'; }}>
+              <div style={{ background:'#050814', border:'1px solid rgba(196,160,80,0.08)', borderRadius:'12px', padding:'24px', position:'relative', transition:'transform 0.25s, border-color 0.25s, box-shadow 0.25s' }}>
                 {tier.badge && <div style={{ position:'absolute', top:12, right:12, background:tier.color, color:'#050814', fontFamily:'sans-serif', fontSize:'9px', fontWeight:800, padding:'2px 8px', borderRadius:'4px' }}>{tier.badge}</div>}
                 <div style={{ fontFamily:'Georgia,serif', fontSize:'2rem', fontWeight:900, color:tier.color }}>{tier.pct}</div>
                 <div style={{ fontFamily:'sans-serif', fontWeight:700, color:'#f0e8d0', fontSize:'14px', margin:'6px 0 2px' }}>{tier.label}</div>
@@ -623,9 +605,7 @@ function LegalSection({ t }) {
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))', gap:'24px' }}>
           {cards.map((card, i) => (
             <Reveal key={i} delay={i * 100}>
-              <div id={card.id || undefined} style={{ background:'#070a1a', border:'1px solid rgba(196,160,80,0.12)', borderRadius:'12px', padding:'32px', textAlign:'center', transition:'transform 0.25s, border-color 0.25s, box-shadow 0.25s', height:'100%' }}
-                onMouseEnter={e => { e.currentTarget.style.transform='translateY(-5px)'; e.currentTarget.style.borderColor='rgba(196,160,80,0.28)'; e.currentTarget.style.boxShadow='0 16px 40px rgba(0,0,0,0.5)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.borderColor='rgba(196,160,80,0.12)'; e.currentTarget.style.boxShadow='none'; }}>
+              <div id={card.id || undefined} style={{ background:'#070a1a', border:'1px solid rgba(196,160,80,0.12)', borderRadius:'12px', padding:'32px', textAlign:'center', transition:'transform 0.25s, border-color 0.25s, box-shadow 0.25s', height:'100%' }}>
                 {card.isCAC ? (
                   <div style={{ width:'84px', height:'84px', margin:'0 auto 20px', borderRadius:'50%', overflow:'hidden', border:'2px solid #c4a050', boxShadow:'0 0 20px rgba(196,160,80,0.2)' }}>
                     <img src="/cac-logo.png" alt="CAC Nigeria" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
@@ -711,9 +691,8 @@ function RegisterModal({ isOpen, onClose, t }) {
   return (
     <div style={{ position:'fixed', inset:0, zIndex:200, display:'flex', alignItems:'center', justifyContent:'center', padding:'20px' }}>
       <div onClick={onClose} style={{ position:'absolute', inset:0, background:'rgba(3,5,13,0.96)', backdropFilter:'blur(16px)' }} />
-      <div style={{ position:'relative', zIndex:210, width:'100%', maxWidth:'480px', background:'#0a0d1e', border:'1px solid rgba(196,160,80,0.3)', borderRadius:'16px', padding:'40px 32px', maxHeight:'90vh', overflowY:'auto', boxShadow:'0 24px 64px rgba(0,0,0,0.7)', animation:'fadeUp 0.3s ease' }}>
-        <button onClick={onClose} style={{ position:'absolute', top:20, right:20, background:'transparent', border:'none', color:'#b0a080', fontSize:'20px', cursor:'pointer', transition:'color 0.2s' }}
-          onMouseEnter={e => e.currentTarget.style.color='#f0e8d0'} onMouseLeave={e => e.currentTarget.style.color='#b0a080'}>✕</button>
+      <div style={{ position:'relative', zIndex:210, width:'100%', maxWidth:'480px', background:'#0a0d1e', border:'1px solid rgba(196,160,80,0.3)', borderRadius:'16px', padding:'40px 32px', maxHeight:'90vh', overflowY:'auto', boxShadow:'0 24px 64px rgba(0,0,0,0.7)' }}>
+        <button onClick={onClose} style={{ position:'absolute', top:20, right:20, background:'transparent', border:'none', color:'#b0a080', fontSize:'20px', cursor:'pointer', transition:'color 0.2s' }}>✕</button>
         <div style={{ textAlign:'center', marginBottom:'32px' }}>
           <h2 style={{ fontFamily:'Georgia,serif', fontSize:'1.9rem', fontWeight:900, color:'#f0e8d0', marginBottom:'6px' }}>{t.modal.heading}</h2>
           <p style={{ fontFamily:'sans-serif', color:'#8080a0', fontSize:'13px' }}>{t.modal.sub}</p>
@@ -742,8 +721,7 @@ function RegisterModal({ isOpen, onClose, t }) {
             ].map(f => (
               <div key={f.name}>
                 <label style={lbl}>{f.label} {f.required && '*'}</label>
-                <input type={f.type} name={f.name} value={form[f.name]} onChange={handleChange} placeholder={f.placeholder} required={f.required} style={inp}
-                  onFocus={e => e.target.style.borderColor='rgba(196,160,80,0.6)'} onBlur={e => e.target.style.borderColor='rgba(196,160,80,0.25)'} />
+                <input type={f.type} name={f.name} value={form[f.name]} onChange={handleChange} placeholder={f.placeholder} required={f.required} style={inp} />
               </div>
             ))}
             <div>
@@ -754,8 +732,7 @@ function RegisterModal({ isOpen, onClose, t }) {
             </div>
             <div>
               <label style={lbl}>{t.modal.referral} *</label>
-              <input type="text" name="referralId" value={form.referralId} onChange={handleChange} placeholder={t.modal.referralPlaceholder} required style={inp}
-                onFocus={e => e.target.style.borderColor='rgba(196,160,80,0.6)'} onBlur={e => e.target.style.borderColor='rgba(196,160,80,0.25)'} />
+              <input type="text" name="referralId" value={form.referralId} onChange={handleChange} placeholder={t.modal.referralPlaceholder} required style={inp} />
             </div>
             <div>
               <label style={lbl}>{t.modal.earningsTarget}</label>
@@ -770,9 +747,7 @@ function RegisterModal({ isOpen, onClose, t }) {
               </select>
             </div>
             <div style={{ marginTop:'6px' }}>
-              <button type="submit" disabled={loading} style={{ width:'100%', background:'linear-gradient(135deg,#c4a050,#f0d080)', color:'#050814', border:'none', borderRadius:'8px', padding:'16px', fontFamily:'sans-serif', fontWeight:800, fontSize:'14.5px', cursor:loading?'not-allowed':'pointer', boxShadow:'0 4px 16px rgba(196,160,80,0.25)', transition:'transform 0.15s, box-shadow 0.15s', opacity: loading ? 0.7 : 1 }}
-                onMouseEnter={e => { if (!loading) { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 8px 24px rgba(196,160,80,0.4)'; }}}
-                onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 4px 16px rgba(196,160,80,0.25)'; }}>
+              <button type="submit" disabled={loading} style={{ width:'100%', background:'linear-gradient(135deg,#c4a050,#f0d080)', color:'#050814', border:'none', borderRadius:'8px', padding:'16px', fontFamily:'sans-serif', fontWeight:800, fontSize:'14.5px', cursor:loading?'not-allowed':'pointer', boxShadow:'0 4px 16px rgba(196,160,80,0.25)', transition:'transform 0.15s, box-shadow 0.15s', opacity: loading ? 0.7 : 1 }}>
                 {loading ? t.modal.submitting : t.modal.submit}
               </button>
             </div>
@@ -786,7 +761,7 @@ function RegisterModal({ isOpen, onClose, t }) {
   );
 }
 
-// ─── FOOTER ───────────────────────────────────────────────────────────────────
+// ─── BACKGROUND FOOTER ────────────────────────────────────────────────────────
 function Footer({ t }) {
   return (
     <footer id="contact" style={{ background:'#03050d', borderTop:'1px solid rgba(196,160,80,0.08)' }}>
@@ -812,8 +787,7 @@ function Footer({ t }) {
                 <div style={{ fontFamily:'sans-serif', fontSize:'9px', color:'#c4a050', letterSpacing:'0.12em', textTransform:'uppercase', fontWeight:700, marginBottom:'16px' }}>{col.title}</div>
                 <div style={{ display:'flex', flexDirection:'column', gap:'10px' }}>
                   {col.links.map(l => (
-                    <a key={l} href="#" style={{ fontFamily:'sans-serif', fontSize:'12.5px', color:'#585878', textDecoration:'none', transition:'color 0.2s' }}
-                      onMouseEnter={e => e.currentTarget.style.color='#c4a050'} onMouseLeave={e => e.currentTarget.style.color='#585878'}>{l}</a>
+                    <a key={l} href="#" style={{ fontFamily:'sans-serif', fontSize:'12.5px', color:'#585878', textDecoration:'none', transition:'color 0.2s' }}>{l}</a>
                   ))}
                 </div>
               </div>
@@ -859,7 +833,7 @@ function LoginPage() {
 
   return (
     <div style={{ minHeight:'100vh', background:'#050814', display:'flex', alignItems:'center', justifyContent:'center', padding:'20px' }}>
-      <div style={{ width:'100%', maxWidth:'400px', background:'#0a0d1e', border:'1px solid rgba(196,160,80,0.3)', borderRadius:'16px', padding:'40px 32px', boxShadow:'0 24px 64px rgba(0,0,0,0.7)', animation:'fadeUp 0.3s ease' }}>
+      <div style={{ width:'100%', maxWidth:'400px', background:'#0a0d1e', border:'1px solid rgba(196,160,80,0.3)', borderRadius:'16px', padding:'40px 32px', boxShadow:'0 24px 64px rgba(0,0,0,0.7)' }}>
         <div style={{ textAlign:'center', marginBottom:'32px' }}>
           <Logo />
           <h2 style={{ fontFamily:'Georgia,serif', fontSize:'1.8rem', fontWeight:900, color:'#f0e8d0', marginTop:'24px' }}>Member Login</h2>
@@ -870,13 +844,9 @@ function LoginPage() {
               {error}
             </div>
           )}
-          <input type="email" placeholder="Email Address" value={email} onChange={e => setEmail(e.target.value)} required style={inp}
-            onFocus={e => e.target.style.borderColor='rgba(196,160,80,0.6)'} onBlur={e => e.target.style.borderColor='rgba(196,160,80,0.25)'} />
-          <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required style={inp}
-            onFocus={e => e.target.style.borderColor='rgba(196,160,80,0.6)'} onBlur={e => e.target.style.borderColor='rgba(196,160,80,0.25)'} />
-          <button type="submit" disabled={loading} style={{ width:'100%', background:'linear-gradient(135deg,#c4a050,#f0d080)', color:'#050814', border:'none', borderRadius:'8px', padding:'16px', fontFamily:'sans-serif', fontWeight:800, fontSize:'14.5px', cursor:loading?'not-allowed':'pointer', boxShadow:'0 4px 16px rgba(196,160,80,0.25)', transition:'transform 0.15s, box-shadow 0.15s', opacity: loading ? 0.7 : 1, marginTop:'8px' }}
-            onMouseEnter={e => { if (!loading) { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 8px 24px rgba(196,160,80,0.4)'; }}}
-            onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 4px 16px rgba(196,160,80,0.25)'; }}>
+          <input type="email" placeholder="Email Address" value={email} onChange={e => setEmail(e.target.value)} required style={inp} />
+          <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required style={inp} />
+          <button type="submit" disabled={loading} style={{ width:'100%', background:'linear-gradient(135deg,#c4a050,#f0d080)', color:'#050814', border:'none', borderRadius:'8px', padding:'16px', fontFamily:'sans-serif', fontWeight:800, fontSize:'14.5px', cursor:loading?'not-allowed':'pointer', boxShadow:'0 4px 16px rgba(196,160,80,0.25)', transition:'transform 0.15s, box-shadow 0.15s', opacity: loading ? 0.7 : 1, marginTop:'8px' }}>
             {loading ? 'Authenticating...' : 'Secure Login'}
           </button>
         </form>
@@ -917,9 +887,7 @@ function DashboardPage() {
       <div style={{ maxWidth:'1000px', margin:'0 auto' }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', borderBottom:'1px solid rgba(196,160,80,0.2)', paddingBottom:'24px', marginBottom:'40px' }}>
           <Logo />
-          <button onClick={handleLogout} style={{ background:'transparent', border:'1px solid rgba(196,160,80,0.5)', color:'#c4a050', padding:'10px 20px', borderRadius:'8px', fontFamily:'sans-serif', fontSize:'13px', fontWeight:700, cursor:'pointer', transition:'all 0.2s' }}
-            onMouseEnter={e => { e.currentTarget.style.background='rgba(196,160,80,0.1)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background='transparent'; }}>
+          <button onClick={handleLogout} style={{ background:'transparent', border:'1px solid rgba(196,160,80,0.5)', color:'#c4a050', padding:'10px 20px', borderRadius:'8px', fontFamily:'sans-serif', fontSize:'13px', fontWeight:700, cursor:'pointer', transition:'all 0.2s' }}>
             Secure Logout
           </button>
         </div>
@@ -953,21 +921,11 @@ function LandingPage() {
       <RegisterModal isOpen={modalActive} onClose={() => setModalActive(false)} t={t} />
 
       <a href="https://wa.me/2348130500659" target="_blank" rel="noreferrer"
-        style={{ position:'fixed', bottom:'24px', right:'24px', width:'56px', height:'56px', background:'#25D366', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 6px 24px rgba(37,211,102,0.35)', textDecoration:'none', zIndex:150, transition:'transform 0.2s, box-shadow 0.2s' }}
-        onMouseEnter={e => { e.currentTarget.style.transform='scale(1.1)'; e.currentTarget.style.boxShadow='0 10px 32px rgba(37,211,102,0.5)'; }}
-        onMouseLeave={e => { e.currentTarget.style.transform='scale(1)'; e.currentTarget.style.boxShadow='0 6px 24px rgba(37,211,102,0.35)'; }}>
+        style={{ position:'fixed', bottom:'24px', right:'24px', width:'56px', height:'56px', background:'#25D366', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 6px 24px rgba(37,211,102,0.35)', textDecoration:'none', zIndex:150, transition:'transform 0.2s, box-shadow 0.2s' }}>
         <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
           <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 0 0 1.333 4.993L2 22l5.13-1.344a9.94 9.94 0 0 0 4.881 1.281h.004c5.505 0 9.989-4.478 9.99-9.985.001-2.667-1.034-5.176-2.917-7.061A9.927 9.927 0 0 0 12.012 2Zm7.067 14.126c-.29.407-1.427 1.393-1.954 1.492-.486.092-.962.152-3.32-.782-3.013-1.194-4.92-4.248-5.07-4.45-.152-.201-1.226-1.63-1.226-3.111 0-1.48.775-2.208 1.05-2.51.226-.248.601-.365.96-.365.116 0 .221.006.313.01.272.013.407.032.584.453.22.527.75 1.83.816 1.964.065.134.108.29.02.467-.09.177-.134.29-.265.444-.132.153-.277.34-.395.457-.133.13-.273.272-.116.541.157.27.7 1.147 1.498 1.854.1.09.2.174.3.253 1.03.818 1.884 1.077 2.19 1.224.282.135.446.113.612-.08.22-.257.946-1.101 1.2-1.479.2-.298.416-.248.702-.142.29.105 1.836.865 2.146 1.018.31.153.517.226.592.355.075.13.075.753-.215 1.16Z" />
         </svg>
       </a>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap');
-        * { box-sizing:border-box; margin:0; padding:0; }
-        body { background:#050814; scroll-behavior:smooth; }
-        @keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
-        @keyframes fadeDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes fadeUp   { from{opacity:0;transform:translateY(8px)}  to{opacity:1;transform:translateY(0)} }
-      `}</style>
     </div>
   );
 }
@@ -1001,6 +959,12 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthRouteController />
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap');
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body { background:#050814; scroll-behavior:smooth; }
+        @keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
+      `}</style>
     </BrowserRouter>
   );
 }
