@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-base-js';
+import { createClient } from '@supabase/supabase-js';
 
 // Replace these placeholders with your actual Supabase Project URL and API Anon Key
 const supabaseUrl = 'https://your-project-id.supabase.co';
