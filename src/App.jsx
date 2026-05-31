@@ -1,6 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-import { supabase } from './supabase';
+import React, { useState, useEffect, useRef } from 'react';
+import { supabase } from './supabase'; // Adjusted to match your import layout path
 import { BrowserRouter, Routes, Route, useNavigate, Link } from 'react-router-dom';
+
+// Import your custom external components to handle real-time database validation
+import Dashboard from './Dashboard'; 
 
 // ─── TRANSLATIONS ────────────────────────────────────────────────────────────
 const T = {
@@ -128,7 +131,7 @@ const T = {
       eyebrow: 'Légal & Conformité',
       heading: 'Statut réglementaire & divulgations',
       card1Title: 'Enregistrement d\'entreprise',
-      card1Desc: 'Penny Partners Group est une entité commerciale formellement enregistrée, pleinement conforme et enregistrée auprès de la Commission des affaires d\'entreprise du Nigeria.',
+      card1Desc: 'Penny Partners Group is a formant enregistré, pleinement conforme et enregistré auprès de la Commission des affaires d\'entreprise du Nigeria.',
       card2Title: 'Conditions d\'utilisation',
       card2Desc: 'En rejoignant PPG Trading Club, vous confirmez que vous comprenez les risques liés au trading forex, que vos fonds restent dans votre propre compte de courtage, et que les gestionnaires PPG opèrent uniquement en lecture seule.',
       card3Title: 'Avertissement de risque',
@@ -164,7 +167,7 @@ const T = {
       { pct: '1%', label: 'Conservateur', risk: 'Faible risque', desc: 'Objectif équilibré avec un potentiel de capitalisation réaliste. Un point de départ populaire pour les nouveaux traders.', daily: '1,00$', color: '#fbbf24', badge: 'Populaire' },
       { pct: '5%', label: 'Modéré', risk: 'Risque moyen', desc: 'Des objectifs plus élevés nécessitent des positions plus importantes. Adapté aux traders qui comprennent et acceptent les fluctuations régulières.', daily: '5,00$', color: '#f97316' },
       { pct: '10%', label: 'Équilibré', risk: 'Risque moyen-elevé', desc: 'Des fluctuations quotidiennes importantes sont courantes à ce niveau. Les marchés ne se déplacent pas de manière prévisible.', daily: '10,00$', color: '#fb923c' },
-      { pct: '15%', label: 'Agressif', risk: 'Risque élevé', desc: 'De grandes variations de capital sont attendues. Ce niveau convient uniquement aux traders expérimentés pouvant absorber des pertes importantes.', daily: '15,00$', color: '#f43f5e' },
+      { pct: '15%', label: 'Agressif', risk: 'Risque élevé', desc: 'De grande variations de capital sont attendues. Ce niveau convient uniquement aux traders expérimentés pouvant absorber des pertes importantes.', daily: '15,00$', color: '#f43f5e' },
       { pct: '20%', label: 'Maximum', risk: 'Risque très élevé', desc: 'Exposition maximale sur chaque transaction. L\'intégralité de votre capital est à risque significatif. Choisissez cela uniquement si vous pouvez tout perdre.', daily: '20,00$', color: '#dc2626' },
     ],
     steps: [
@@ -824,7 +827,7 @@ function Footer({ t }) {
   );
 }
 
-// ─── LOGIN PAGE ───────────────────────────────────────────────────────────────
+// ─── CLEANUP INDEPENDENT LOGIN COMPONENT ──────────────────────────────────────
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -836,6 +839,7 @@ function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    
     const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
     if (loginError) {
       setError(loginError.message);
@@ -874,52 +878,7 @@ function LoginPage() {
   );
 }
 
-// ─── DASHBOARD PAGE ───────────────────────────────────────────────────────────
-function DashboardPage() {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate('/login');
-      } else {
-        setUser(session.user);
-      }
-    };
-    checkUser();
-  }, [navigate]);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/');
-  };
-
-  if (!user) return <div style={{ minHeight:'100vh', background:'#050814', display:'flex', alignItems:'center', justifyContent:'center', color:'#c4a050', fontFamily:'sans-serif', fontWeight:700 }}>Authenticating Session...</div>;
-
-  return (
-    <div style={{ minHeight:'100vh', background:'#050814', color:'#f0e8d0', padding:'40px 24px' }}>
-      <div style={{ maxWidth:'1000px', margin:'0 auto' }}>
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', borderBottom:'1px solid rgba(196,160,80,0.2)', paddingBottom:'24px', marginBottom:'40px' }}>
-          <Logo />
-          <button onClick={handleLogout} style={{ background:'transparent', border:'1px solid rgba(196,160,80,0.5)', color:'#c4a050', padding:'10px 20px', borderRadius:'8px', fontFamily:'sans-serif', fontSize:'13px', fontWeight:700, cursor:'pointer', transition:'all 0.2s' }}>
-            Secure Logout
-          </button>
-        </div>
-        <div style={{ background:'#0a0d1e', padding:'40px', borderRadius:'16px', border:'1px solid rgba(196,160,80,0.2)', boxShadow:'0 16px 40px rgba(0,0,0,0.5)' }}>
-          <h2 style={{ fontFamily:'Georgia,serif', fontSize:'2rem', fontWeight:900, color:'#f0e8d0', marginBottom:'16px' }}>Welcome to the Club</h2>
-          <div style={{ fontFamily:'sans-serif', fontSize:'14px', color:'#8080a0', lineHeight:1.8 }}>
-            <p><strong>Registered Email:</strong> {user.email}</p>
-            <p><strong>Account Level:</strong> <span style={{ color:'#4ade80' }}>Standard Access</span></p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── LANDING PAGE ─────────────────────────────────────────────────────────────
+// ─── LANDING PAGE ROOT layout ──────────────────────────────────────────────────
 function LandingPage() {
   const [modalActive, setModalActive] = useState(false);
   const [lang, setLang] = useState('en');
@@ -966,7 +925,8 @@ function AuthRouteController() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
+      {/* Point directly to your custom Dashboard.jsx file which reads your profiles table schema */}
+      <Route path="/dashboard" element={<Dashboard />} />
     </Routes>
   );
 }
