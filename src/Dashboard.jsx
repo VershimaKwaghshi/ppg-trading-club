@@ -1,108 +1,71 @@
+// src/components/Dashboard.jsx — The Central Switchboard Router
 import React, { useState, useEffect } from 'react';
-import { supabase } from './supabaseClient';
-import { useNavigate } from 'react-router-dom';
-
-// IMPORT THE DISTRIBUTED SUB-COMPONENTS FROM YOUR FILE PATHS
-import TraderDashboard from './components/TraderDashboard';
-import ManagerDashboard from './components/ManagerDashboard';
-import AdminDashboard from './components/AdminDashboard';
+import { supabase } from '../supabaseClient';
+import AdminDashboard from './AdminDashboard';
+import ManagerDashboard from './ManagerDashboard';
+import TraderDashboard from './TraderDashboard';
 
 export default function Dashboard() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchProfile() {
-      try {
-        setLoading(true);
-        // 1. Authenticate user logging credentials from Supabase session storage
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        
-        if (authError || !user) {
-          navigate('/login');
-          return;
-        }
+    fetchUserProfile();
+  }, []);
 
-        // 2. Fetch data parameters matching the current identity tracking ID
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        if (profileError) throw profileError;
-        setProfile(profileData);
-      } catch (err) {
-        setError(err.message || 'Failed to load user profile configuration.');
-      } finally {
-        setLoading(false);
+  const fetchUserProfile = async () => {
+    try {
+      setLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        window.location.href = '/login';
+        return;
       }
+
+      // Read role and user profile traits from the authenticated database stream
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error) throw error;
+      
+      // Inject authentic fallback email if missing from the profile structure
+      if (data && !data.email) {
+        data.email = user.email;
+      }
+
+      setProfile(data);
+    } catch (err) {
+      console.error('System Routing Intercept Error:', err);
+    } finally {
+      setLoading(false);
     }
-
-    fetchProfile();
-  }, [navigate]);
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/');
   };
 
-  const refreshProfile = async () => {
-    // Re-trigger sync protocols to fetch updated database parameters dynamically
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-      if (data) setProfile(data);
-    }
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/login';
   };
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', background: '#050814', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'sans-serif', color: '#c4a050' }}>
-        <p>Loading Live Terminal Session...</p>
+      <div style={{ minHeight: '100vh', backgroundColor: '#02040a', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#c4a050', fontFamily: 'Georgia, serif', fontStyle: 'italic', letterSpacing: '0.05em' }}>
+        Synchronizing Secure Terminal Connection...
       </div>
     );
   }
 
-  if (error) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#050814', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'sans-serif', color: '#f43f5e', padding: '20px' }}>
-        <p>Configuration Error: {error}</p>
-      </div>
-    );
+  // Multi-tenant operational switchboard router
+  if (profile?.role === 'admin') {
+    return <AdminDashboard profile={profile} onLogout={handleLogout} />;
   }
 
-  // Read role property parameters directly from current database configuration
-  const userRole = profile?.role?.toLowerCase() || 'trader';
-
-  // CONTROL SWITCH ROUTER: Dynamically forwards session tokens to matching layouts
-  switch (userRole) {
-    case 'admin':
-      return (
-        <AdminDashboard 
-          profile={profile} 
-          onLogout={handleSignOut} 
-          refreshProfile={refreshProfile} 
-        />
-      );
-    case 'manager':
-      return (
-        <ManagerDashboard 
-          profile={profile} 
-          onLogout={handleSignOut} 
-          refreshProfile={refreshProfile} 
-        />
-      );
-    case 'trader':
-    default:
-      return (
-        <TraderDashboard 
-          profile={profile} 
-          onLogout={handleSignOut} 
-          refreshProfile={refreshProfile} 
-        />
-      );
+  if (profile?.role === 'manager') {
+    return <ManagerDashboard profile={profile} onLogout={handleLogout} />;
   }
+
+  // Fallback defaults natively to the institutional Trader Workspace Terminal
+  return <TraderDashboard profile={profile} onLogout={handleLogout} refreshProfile={fetchUserProfile} />;
 }
