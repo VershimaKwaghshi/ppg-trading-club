@@ -30,11 +30,15 @@ export default function ManagerDashboard({ profile, onLogout }) {
   }, []);
 
   const fetchAssignedTraders = async () => {
-    const { data } = await supabase
-      .from('profiles')
-      .select('id, full_name')
-      .eq('role', 'trader');
-    if (data) setTraders(data);
+    try {
+      const { data } = await supabase
+        .from('profiles')
+        .select('id, full_name')
+        .eq('role', 'trader');
+      if (data) setTraders(data);
+    } catch (err) {
+      console.error('Error fetching data nodes:', err);
+    }
   };
 
   const handleLogTrade = async (e) => {
@@ -126,9 +130,9 @@ export default function ManagerDashboard({ profile, onLogout }) {
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <div style={{ textAlign: 'right' }}>
+            <div style={{ textAlign: 'center' }}>
               <span style={{ fontSize: '10px', color: C.muted, display: 'block', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Account Manager</span>
-              <span style={{ fontSize: '14px', color: C.text, fontWeight: '600' }}>{profile?.full_name}</span>
+              <span style={{ fontSize: '14px', color: C.text, fontWeight: '600' }}>{profile?.full_name || 'System Operator'}</span>
             </div>
             <button onClick={onLogout} style={{ background: 'transparent', border: `1px solid ${C.gold}`, borderRadius: '4px', color: C.gold, padding: '10px 20px', cursor: 'pointer', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Secure Sign Out
@@ -137,11 +141,10 @@ export default function ManagerDashboard({ profile, onLogout }) {
         </div>
       </header>
 
-      {/* Main Panel Content */}
+      {/* Main Content Area */}
       <main style={{ padding: '40px 24px', maxWidth: '1200px', margin: '0 auto' }}>
         <div className="split-panel">
           
-          {/* Left Block: Logging Entry Interface */}
           <div style={{ background: `linear-gradient(145deg, ${C.bg2}, ${C.bg3})`, border: `1px solid ${C.border}`, borderRadius: '4px', padding: '32px', boxShadow: '0 12px 50px rgba(0,0,0,0.4)' }}>
             <h2 style={{ color: C.gold, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: 0, marginBottom: '24px', borderBottom: `1px solid ${C.border}`, paddingBottom: '12px' }}>
               Log Performance Execution
@@ -156,8 +159,8 @@ export default function ManagerDashboard({ profile, onLogout }) {
             <form onSubmit={handleLogTrade} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div>
                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '11px', textTransform: 'uppercase', color: C.muted, letterSpacing: '0.05em' }}>Allocated Trader Target</label>
-                <select value={selectedTrader} onChange={(e) => setSelectedTrader(e.target.value)} className="input-box" style={{ appearance: 'none' }}>
-                  <option value="" style={{ background: C.bg2 }}>-- Choose Profile Node --</option>
+                <select value={selectedTrader} onChange={(e) => setSelectedTrader(e.target.value)} className="input-box">
+                  <option value="">-- Choose Profile Node --</option>
                   {traders.map(t => <option key={t.id} value={t.id} style={{ background: C.bg2 }}>{t.full_name}</option>)}
                 </select>
               </div>
@@ -166,17 +169,17 @@ export default function ManagerDashboard({ profile, onLogout }) {
                 <div>
                   <label style={{ display: 'block', marginBottom: '8px', fontSize: '11px', textTransform: 'uppercase', color: C.muted, letterSpacing: '0.05em' }}>Asset Instrument</label>
                   <select value={assetPair} onChange={(e) => setAssetPair(e.target.value)} className="input-box">
-                    <option value="EURUSD" style={{ background: C.bg2 }}>EURUSD</option>
-                    <option value="GBPUSD" style={{ background: C.bg2 }}>GBPUSD</option>
-                    <option value="XAUUSD" style={{ background: C.bg2 }}>XAUUSD (Gold)</option>
-                    <option value="BTCUSD" style={{ background: C.bg2 }}>BTCUSD</option>
+                    <option value="EURUSD">EURUSD</option>
+                    <option value="GBPUSD">GBPUSD</option>
+                    <option value="XAUUSD">XAUUSD (Gold)</option>
+                    <option value="BTCUSD">BTCUSD</option>
                   </select>
                 </div>
                 <div>
                   <label style={{ display: 'block', marginBottom: '8px', fontSize: '11px', textTransform: 'uppercase', color: C.muted, letterSpacing: '0.05em' }}>Market Vector</label>
                   <select value={tradeType} onChange={(e) => setTradeType(e.target.value)} className="input-box">
-                    <option value="BUY" style={{ background: C.bg2 }}>BUY (Long)</option>
-                    <option value="SELL" style={{ background: C.bg2 }}>SELL (Short)</option>
+                    <option value="BUY">BUY (Long)</option>
+                    <option value="SELL">SELL (Short)</option>
                   </select>
                 </div>
               </div>
@@ -188,7 +191,7 @@ export default function ManagerDashboard({ profile, onLogout }) {
                 </div>
                 <div>
                   <label style={{ display: 'block', marginBottom: '8px', fontSize: '11px', textTransform: 'uppercase', color: C.muted, letterSpacing: '0.05em' }}>Net PnL Impact ($)</label>
-                  <input type="number" step="0.01" value={pnl} onChange={(e) => setPnl(e.target.value)} placeholder="e.g. 500.00" className="input-box" />
+                  <input type="number" step="0.01" value={pnl} onChange={(e) => setPnl(e.target.value)} placeholder="500.00" className="input-box" />
                 </div>
               </div>
 
@@ -198,7 +201,6 @@ export default function ManagerDashboard({ profile, onLogout }) {
             </form>
           </div>
 
-          {/* Right Block: Explanatory Context Info */}
           <div style={{ background: `linear-gradient(145deg, ${C.bg2}, ${C.bg3})`, border: `1px solid ${C.border}`, borderRadius: '4px', padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <h3 style={{ fontFamily: '"Playfair Display", Georgia, serif', color: C.gold, fontStyle: 'italic', fontSize: '20px', margin: '0 0 12px 0' }}>The Assurance of Integrity</h3>
             <p style={{ color: C.muted, fontSize: '14px', lineHeight: '1.6', margin: 0 }}>
