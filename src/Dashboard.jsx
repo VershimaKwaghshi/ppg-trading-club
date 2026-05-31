@@ -1,3 +1,6 @@
+import TraderDashboard from './components/TraderDashboard';
+import ManagerDashboard from './components/ManagerDashboard';
+import AdminDashboard from './components/AdminDashboard';
 // Dashboard.jsx — PPG Trading Club
 // Requires: @supabase/supabase-js, react, react-dom
 // Place supabase.js in the same directory and fill in your credentials.
