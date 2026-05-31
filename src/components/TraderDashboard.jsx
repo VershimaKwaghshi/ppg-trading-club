@@ -1,4 +1,3 @@
-// TraderDashboard.jsx — PPG Trading Club Member Layout
 import React from 'react';
 
 const C = {
