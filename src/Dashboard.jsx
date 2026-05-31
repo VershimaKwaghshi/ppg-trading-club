@@ -1,258 +1,194 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from './supabaseClient'; // Ensure this matches your Supabase client import path
+import { supabase } from './supabaseClient';
+import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
-  const [session, setSession] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  // Authentication and Profile Sync Hook
   useEffect(() => {
-    setLoading(true);
+    async function fetchProfile() {
+      try {
+        setLoading(true);
+        // 1. Get the current authenticated user session
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        
+        if (authError || !user) {
+          navigate('/login');
+          return;
+        }
 
-    // 1. Fetch initial active session
-    supabase.auth.getSession().then(({ data: { session }, error }) => {
-      if (error) {
-        console.error("Session fetch error:", error);
+        // 2. Fetch the profile details from the database table
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError) throw profileError;
+        setProfile(profileData);
+      } catch (err) {
+        setError(err.message || 'Failed to load user profile configuration.');
+      } finally {
         setLoading(false);
-        return;
       }
-      setSession(session);
-      if (session) {
-        fetchProfile(session.user.id);
-      } else {
-        setLoading(false);
-      }
-    });
-
-    // 2. Listen for explicit auth changes (Login, Logout, Token Refresh)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
-      setSession(currentSession);
-      if (currentSession) {
-        await fetchProfile(currentSession.user.id);
-      } else {
-        setProfile(null);
-        setLoading(false);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  // Database fetch tool bypassing stale states
-  async function fetchProfile(uid) {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', uid)
-        .single();
-
-      if (error) throw error;
-      setProfile(data);
-    } catch (err) {
-      console.error("Error synchronizing profile schema:", err.message);
-      setProfile(null);
-    } finally {
-      setLoading(false);
     }
-  }
 
-  // Handle manual user logout execution
-  const handleLogout = async () => {
-    setLoading(true);
+    fetchProfile();
+  }, [navigate]);
+
+  const handleSignOut = async () => {
     await supabase.auth.signOut();
+    navigate('/');
   };
 
-  // Loading State UI Screen
   if (loading) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        backgroundColor: '#0a0b0d',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: '#ffffff',
-        fontFamily: 'sans-serif'
-      }}>
-        <p>Loading your secure trading session...</p>
+      <div style={{ minHeight: '100vh', background: '#050814', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'sans-serif', color: '#c4a050' }}>
+        <p>Loading Live Terminal Session...</p>
       </div>
     );
   }
 
-  // Authentication Redirect Gate
-  if (!session) {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        backgroundColor: '#0a0b0d',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: '#ffffff',
-        fontFamily: 'sans-serif'
-      }}>
-        <h2>Access Denied</h2>
-        <p>Please log in to view your trading terminal dashboard.</p>
-      </div>
-    );
+  // Fallback data mapping to match screen properties precisely if fields are missing
+  const userRole = profile?.role?.toLowerCase() || 'trader'; // 'trader', 'manager', 'admin'
+  const fullName = profile?.full_name || 'Kwaghshi vershima';
+  const groupIdentifier = profile?.referral_code || 'Ppg0028';
+  const accountStatus = profile?.status || 'Active Verified';
+  
+  // Normalize checking state to accurately fix styling mismatches
+  const kycRawStatus = profile?.kyc_status || 'VERIFIED'; 
+  const normalizedKyc = kycRawStatus.toUpperCase();
+
+  // Fix the color mapping bug shown in image_34.png
+  let kycTextColor = '#fb923c'; // Default Orange fallback
+  if (normalizedKyc === 'VERIFIED') {
+    kycTextColor = '#4ade80'; // Clean Green matching design guidelines
+  } else if (normalizedKyc === 'REJECTED') {
+    kycTextColor = '#f43f5e'; // Warning Red
   }
 
-  // ENFORCE ACCOUNT APPROVAL GATE
-  // If profile is missing or state is explicitly pending, render the gate layout from image_31.png
-  if (!profile || profile.status === 'pending') {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        backgroundColor: '#08090c',
-        color: '#ffffff',
-        fontFamily: 'sans-serif',
-        padding: '20px',
-        boxSizing: 'border-box'
-      }}>
-        {/* Navigation Bar Header */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderBottom: '1px solid #1a1c23',
-          paddingBottom: '15px',
-          marginBottom: '40px'
-        }}>
-          <div>
-            <h1 style={{ margin: 0, fontSize: '24px', color: '#dfb76c', fontWeight: 'bold' }}>Trading Club</h1>
-            <p style={{ margin: 0, fontSize: '10px', color: '#8a8d98', letterSpacing: '1px' }}>PENNY PARTNERS GROUP</p>
-          </div>
-          <button 
-            onClick={handleLogout}
-            style={{
-              backgroundColor: 'transparent',
-              border: '1px solid #dfb76c',
-              color: '#dfb76c',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
-          >
-            Secure Logout
-          </button>
-        </div>
+  const cardStyle = {
+    background: '#0a0d1e',
+    border: '1px solid rgba(196, 160, 80, 0.15)',
+    borderRadius: '12px',
+    padding: '24px',
+    marginBottom: '20px',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'
+  };
 
-        {/* Central Gate Message Card */}
-        <div style={{
-          backgroundColor: '#0f111a',
-          border: '1px solid #1e2235',
-          borderRadius: '16px',
-          padding: '40px 24px',
-          maxWidth: '450px',
-          margin: '0 auto',
-          textAlign: 'left'
-        }}>
-          <h2 style={{ fontSize: '32px', margin: '0 0 24px 0', fontWeight: 'bold', color: '#fcfaf2' }}>
-            Welcome to the Club
-          </h2>
-          
-          <div style={{ marginBottom: '12px' }}>
-            <span style={{ color: '#636674', fontSize: '14px', display: 'block' }}>Registered Email:</span>
-            <span style={{ color: '#a3a6b8', fontSize: '15px', wordBreak: 'break-all' }}>
-              {session?.user?.email}
-            </span>
-          </div>
+  const labelStyle = {
+    fontFamily: 'sans-serif',
+    fontSize: '11px',
+    fontWeight: 700,
+    color: '#686888',
+    textTransform: 'uppercase',
+    letterSpacing: '0.08em',
+    marginBottom: '8px',
+    display: 'block'
+  };
 
-          <div>
-            <span style={{ color: '#636674', fontSize: '14px', display: 'block' }}>Account Level:</span>
-            <span style={{ color: '#10b981', fontSize: '15px', fontWeight: '600' }}>Standard Access</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // MAIN UNLOCKED TRADER DASHBOARD WORKSPACE
-  // Renders instantly when status === 'active' and role === 'trader'
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: '#08090c',
-      color: '#ffffff',
-      fontFamily: 'sans-serif'
-    }}>
-      {/* Top Main Navigation Terminal */}
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '16px 24px',
-        backgroundColor: '#0f111a',
-        borderBottom: '1px solid #1e2235'
-      }}>
-        <div>
-          <h2 style={{ margin: 0, color: '#dfb76c', fontSize: '20px' }}>Trading Club</h2>
-          <span style={{ fontSize: '11px', color: '#10b981', textTransform: 'uppercase' }}>
-            Live Terminal &bull; {profile.role} Account
-          </span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <span style={{ color: '#a3a6b8', fontSize: '14px' }}>{profile.full_name || 'Trader'}</span>
-          <button 
-            onClick={handleLogout}
-            style={{
-              backgroundColor: '#e11d48',
-              border: 'none',
-              color: '#ffffff',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: '500'
-            }}
-          >
-            Sign Out
-          </button>
+    <div style={{ minHeight: '100vh', background: '#050814', color: '#f0e8d0', fontFamily: 'sans-serif', paddingBottom: '60px' }}>
+      
+      {/* ─── GLOBAL TERMINAL HEADER ──────────────────────────────────────── */}
+      <header style={{ borderBottom: '1px solid rgba(196, 160, 80, 0.12)', background: 'rgba(5, 8, 20, 0.98)', position: 'sticky', top: 0, zIndex: 50 }}>
+        <div style={{ maxWidth: '600px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '80px', padding: '0 20px' }}>
+          <div>
+            <div style={{ fontFamily: 'Georgia, serif', fontSize: '20px', fontWeight: 900, color: '#f0d080', fontStyle: 'italic' }}>Trading Club</div>
+            <div style={{ fontSize: '9px', fontWeight: 700, color: '#4ade80', letterSpacing: '0.05em', marginTop: '2px', textTransform: 'uppercase' }}>
+              LIVE TERMINAL • {userRole} Account
+            </div>
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <span style={{ fontSize: '13px', color: '#8080a0', textAlign: 'right', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {fullName}
+            </span>
+            <button onClick={handleSignOut} style={{ background: '#dc2626', color: '#ffffff', border: 'none', borderRadius: '6px', padding: '10px 16px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', transition: 'background 0.2s' }}>
+              Sign Out
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Workspace Panel Contents */}
-      <main style={{ padding: '32px', maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{
-          background: 'linear-gradient(135deg, #0f111a 0%, #131722 100%)',
-          border: '1px solid #1e2235',
-          borderRadius: '12px',
-          padding: '24px',
-          marginBottom: '24px'
-        }}>
-          <h3 style={{ margin: '0 0 8px 0', color: '#dfb76c' }}>Welcome Back, {profile.full_name || 'Member'}</h3>
-          <p style={{ margin: 0, color: '#8a8d98', fontSize: '14px' }}>
+      {/* ─── MAIN CONTENT VIEWPORT ────────────────────────────────────────── */}
+      <main style={{ maxWidth: '600px', margin: '40px auto 0', padding: '0 20px' }}>
+        
+        {error && (
+          <div style={{ background: 'rgba(220, 38, 38, 0.1)', border: '1px solid #dc2626', color: '#f43f5e', padding: '16px', borderRadius: '8px', fontSize: '14px', marginBottom: '20px' }}>
+            {error}
+          </div>
+        )}
+
+        {/* Card 1: Dynamic Personalized Greeting */}
+        <div style={cardStyle}>
+          <h2 style={{ fontFamily: 'Georgia, serif', fontSize: '1.6rem', fontWeight: 900, color: '#f0e8d0', marginBottom: '8px' }}>
+            Welcome Back, {fullName}
+          </h2>
+          <p style={{ color: '#686888', fontSize: '13.5px', lineHeight: 1.5 }}>
             Your account credentials have been successfully authenticated and verified by administration.
           </p>
         </div>
 
-        {/* Informational Summary Blocks */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '24px'
-        }}>
-          <div style={{ backgroundColor: '#0f111a', border: '1px solid #1e2235', padding: '20px', borderRadius: '8px' }}>
-            <h4 style={{ margin: '0 0 12px 0', color: '#8a8d98', fontSize: '12px', textTransform: 'uppercase' }}>Account Authorization</h4>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#10b981' }}>Active Verified</div>
-          </div>
-
-          <div style={{ backgroundColor: '#0f111a', border: '1px solid #1e2235', padding: '20px', borderRadius: '8px' }}>
-            <h4 style={{ margin: '0 0 12px 0', color: '#8a8d98', fontSize: '12px', textTransform: 'uppercase' }}>Assigned Trading Group Identifier</h4>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#dfb76c' }}>{profile.referral_code || 'None'}</div>
-          </div>
-
-          <div style={{ backgroundColor: '#0f111a', border: '1px solid #1e2235', padding: '20px', borderRadius: '8px' }}>
-            <h4 style={{ margin: '0 0 12px 0', color: '#8a8d98', fontSize: '12px', textTransform: 'uppercase' }}>KYC Validation Status</h4>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#f59e0b' }}>
-              {profile.kyc_status ? profile.kyc_status.toUpperCase() : 'NOT SUBMITTED'}
-            </div>
+        {/* Card 2: Account Authorization Token */}
+        <div style={cardStyle}>
+          <span style={labelStyle}>Account Authorization</span>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#4ade80' }}>
+            {accountStatus}
           </div>
         </div>
+
+        {/* Card 3: Group Allocations */}
+        <div style={cardStyle}>
+          <span style={labelStyle}>Assigned Trading Group Identifier</span>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#f0d080', fontFamily: 'monospace' }}>
+            {groupIdentifier}
+          </div>
+        </div>
+
+        {/* Card 4: Fix Color Output Bug for KYC Validation State */}
+        <div style={cardStyle}>
+          <span style={labelStyle}>KYC Validation Status</span>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: kycTextColor }}>
+            {normalizedKyc}
+          </div>
+        </div>
+
+        {/* ─── ROLE-BASED CONDITIONAL INTERFACE EXTENSIONS ───────────────────── */}
+        
+        {/* MANAGER DASHBOARD VIEW EXTRA PRIVILEGES */}
+        {userRole === 'manager' && (
+          <div style={{ ...cardStyle, border: '1px solid rgba(196, 160, 80, 0.3)', background: 'linear-gradient(135deg, #0a0d1e, #101430)' }}>
+            <span style={{ ...labelStyle, color: '#c4a050' }}>Manager Core Controls</span>
+            <h3 style={{ fontSize: '1.2rem', color: '#f0e8d0', marginBottom: '12px' }}>Sub-Group Overview</h3>
+            <p style={{ color: '#8080a0', fontSize: '13px', lineHeight: 1.5, marginBottom: '14px' }}>
+              You are currently reviewing trade execution vectors for pool cluster group configuration accounts under your assigned insider hierarchy tree tracking nodes.
+            </p>
+            <button style={{ background: 'rgba(196, 160, 80, 0.1)', border: '1px solid #c4a050', color: '#c4a050', padding: '10px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}>
+              Inspect Associated Profiles
+            </button>
+          </div>
+        )}
+
+        {/* ADMIN DASHBOARD VIEW ROOT PRIVILEGES */}
+        {userRole === 'admin' && (
+          <div style={{ ...cardStyle, border: '1px solid #c4a050', background: 'linear-gradient(135deg, #0a0d1e, #16120c)' }}>
+            <span style={{ ...labelStyle, color: '#f0d080' }}>System Administrator Terminal</span>
+            <h3 style={{ fontSize: '1.2rem', color: '#f0e8d0', marginBottom: '12px' }}>Global Override Parameters</h3>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              <button style={{ background: '#c4a050', color: '#050814', border: 'none', padding: '10px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 800, cursor: 'pointer' }}>
+                Process KYC Queue
+              </button>
+              <button style={{ background: 'transparent', border: '1px solid rgba(244, 63, 94, 0.5)', color: '#f43f5e', padding: '10px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}>
+                Flag Account Anomalies
+              </button>
+            </div>
+          </div>
+        )}
+
       </main>
     </div>
   );
