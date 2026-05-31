@@ -70,6 +70,7 @@ export default function AdminDashboard({ profile, onLogout }) {
         .table-wrapper {
           overflow-x: auto;
           margin-top: 24px;
+          width: 100%;
         }
         .premium-table {
           width: 100%;
@@ -88,6 +89,7 @@ export default function AdminDashboard({ profile, onLogout }) {
           padding: 18px 16px;
           font-size: 14px;
           border-bottom: 1px solid rgba(196,160,80,0.06);
+          white-space: nowrap;
         }
         @media (max-width: 850px) {
           .admin-header {
@@ -110,9 +112,9 @@ export default function AdminDashboard({ profile, onLogout }) {
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <div style={{ textAlign: 'right' }}>
+            <div style={{ textAlign: 'center' }}>
               <span style={{ fontSize: '10px', color: C.muted, display: 'block', textTransform: 'uppercase', letterSpacing: '0.08em' }}>System Administrator</span>
-              <span style={{ fontSize: '14px', color: C.text, fontWeight: '600' }}>{profile?.full_name}</span>
+              <span style={{ fontSize: '14px', color: C.text, fontWeight: '600' }}>{profile?.full_name || 'Admin Principal'}</span>
             </div>
             <button onClick={onLogout} style={{ background: 'transparent', border: `1px solid #dc2626`, borderRadius: '4px', color: '#ef4444', padding: '10px 20px', cursor: 'pointer', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Disconnect Node
