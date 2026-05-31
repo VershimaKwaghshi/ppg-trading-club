@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../supabase';
+import { supabase } from '../supabaseClient'; // CORRECTED IMPORT PATH
 
 export default function ManagerDashboard({ profile, onLogout }) {
   const [traders, setTraders] = useState([]);
@@ -61,18 +61,18 @@ export default function ManagerDashboard({ profile, onLogout }) {
 
   return (
     <div style={{ padding: '24px', backgroundColor: '#0B0F17', minHeight: '100vh', color: '#E2E8F0' }}>
-      <div style={{ display: 'flex', justifyContent: 'between', alignItems: 'center', marginBottom: '32px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#FFF' }}>Manager Workspace</h1>
-          <p style={{ color: '#94A3B8', fontSize: '14px' }}>Account Manager: {profile.full_name}</p>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#FFF', margin: 0 }}>Manager Workspace</h1>
+          <p style={{ color: '#94A3B8', fontSize: '14px', margin: '4px 0 0 0' }}>Account Manager: {profile?.full_name}</p>
         </div>
-        <button onClick={onLogout} style={{ backgroundColor: '#DC2626', color: '#FFF', padding: '8px 16px', borderRadius: '6px', border: 'none', cursor: 'pointer' }}>
+        <button onClick={onLogout} style={{ backgroundColor: '#DC2626', color: '#FFF', padding: '8px 16px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: '600' }}>
           Logout
         </button>
       </div>
 
       <div style={{ maxWidth: '600px', backgroundColor: '#1E293B', borderRadius: '8px', border: '1px solid #334155', padding: '24px' }}>
-        <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '20px', color: '#FFF' }}>Log Performance Execution</h2>
+        <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '20px', color: '#FFF', marginTop: 0 }}>Log Performance Execution</h2>
         
         {statusMsg.text && (
           <div style={{ padding: '12px', borderRadius: '6px', marginBottom: '16px', backgroundColor: statusMsg.type === 'success' ? '#065F46' : '#991B1B', color: '#FFF', fontSize: '14px' }}>
