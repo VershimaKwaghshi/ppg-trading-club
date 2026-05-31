@@ -1,9 +1,9 @@
-// src/components/Dashboard.jsx — The Central Switchboard Router
+// src/Dashboard.jsx — The Central Switchboard Router
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../supabaseClient';
-import AdminDashboard from './AdminDashboard';
-import ManagerDashboard from './ManagerDashboard';
-import TraderDashboard from './TraderDashboard';
+import { supabase } from './supabaseClient'; // CORRECTED DIRECTORY IMPORT PATH
+import AdminDashboard from './components/AdminDashboard';
+import ManagerDashboard from './components/ManagerDashboard';
+import TraderDashboard from './components/TraderDashboard';
 
 export default function Dashboard() {
   const [profile, setProfile] = useState(null);
