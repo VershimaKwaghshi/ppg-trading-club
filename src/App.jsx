@@ -258,7 +258,7 @@ const T = {
       { n: '02', title: 'Paga la suscripción mensual', desc: 'Activa tu cuenta con la tarifa mensual de $4.99. Métodos de pago aceptados: Opay, Zenith Bank, Bitcoin, Ethereum o USDT TRC20.' },
       { n: '03', title: 'Configuración del perfil', desc: 'Proporcione sus parámetros operativos básicos para inicializar correctamente los registros de su cuenta.' },
       { n: '04', title: 'Refiere al menos un miembro', desc: 'Para activar el acceso completo a la cuenta, debes referir al menos a un nuevo participante al club.' },
-      { n: '05', title: 'Abre tu cuenta de broker', desc: 'Crea tu propia cuenta de trading privada directamente con uno de nuestros brokers recomendados. Tus fondos siempre permanecen a tu nombre.' },
+      { n: '05', title: 'Abre tu cuenta de broker', desc: 'Crea tu propia cuenta de trading privada directamente con uno de nos otros brokers recomendados. Tus fondos siempre permanecen a tu nombre.' },
       { n: '06', title: 'Elige tu objetivo de ganancias', desc: 'Selecciona un nivel de objetivo de ganancias diarias según cuánto riesgo estás dispuesto a asumir. Tu gestor operará en MT5 con acceso de solo lectura.' },
     ],
   },
@@ -324,31 +324,38 @@ function Reveal({ children, delay = 0, direction = 'up', style = {} }) {
 
 // ─── SHARED COMPONENTS ────────────────────────────────────────────────────────
 function AgeRestrictionBadge() {
-  const g = {
-    background: 'linear-gradient(90deg,#8a6520,#f5e098,#c4a050,#f5e098,#8a6520)',
-    backgroundSize: '200% auto', WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+  const glowStyle = {
+    background: 'linear-gradient(90deg, #8a6520, #f5e098, #c4a050, #f5e098, #8a6520)',
+    backgroundSize: '200% auto',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    animation: 'shimmer 3s linear infinite',
+    textShadow: '0 0 8px rgba(245, 224, 152, 0.4)'
   };
   return (
-    <span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', background:'#03050d', border:'1px solid rgba(196,160,80,0.4)', height:'16px', padding:'0 5px', borderRadius:'4px', marginLeft:'6px', verticalAlign:'middle', boxShadow:'0 2px 6px rgba(196,160,80,0.15)' }}>
-      <span style={{ ...g, fontSize:'9px', fontWeight:900, letterSpacing:'0.05em' }}>18+</span>
+    <span style={{ display:'inline-flex', alignItems:'center', justifyContent:'center', background:'#03050d', border:'1px solid rgba(196,160,80,0.6)', height:'18px', padding:'0 6px', borderRadius:'4px', marginLeft:'6px', verticalAlign:'middle', boxShadow:'0 0 10px rgba(196,160,80,0.25)' }}>
+      <span style={{ ...glowStyle, fontSize:'10px', fontWeight:900, letterSpacing:'0.05em' }}>18+</span>
     </span>
   );
 }
 
 function Logo() {
-  const g = {
-    background: 'linear-gradient(90deg,#8a6520,#f5e098,#c4a050,#f5e098,#8a6520)',
-    backgroundSize: '200% auto', WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+  const logoGlow = {
+    background: 'linear-gradient(90deg, #8a6520, #f5e098, #c4a050, #f5e098, #8a6520)',
+    backgroundSize: '200% auto',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    animation: 'shimmer 4s linear infinite'
   };
   return (
     <div style={{ lineHeight:1, display:'inline-block' }}>
-      <div style={{ fontFamily:'Georgia,serif', fontSize:'24px', fontWeight:900, fontStyle:'italic', letterSpacing:'1px', ...g }}>Trading Club</div>
+      <div style={{ fontFamily:'Georgia,serif', fontSize:'24px', fontWeight:900, fontStyle:'italic', letterSpacing:'1px', ...logoGlow, filter: 'drop-shadow(0 0 6px rgba(196,160,80,0.3))' }}>Trading Club</div>
       <div style={{ display:'flex', alignItems:'center', gap:'4px', marginTop:'3px' }}>
-        <div style={{ flex:1, height:'1px', background:'rgba(196,160,80,0.3)' }} />
-        <div style={{ fontFamily:'sans-serif', fontSize:'7.5px', letterSpacing:'3.5px', fontWeight:800, ...g }}>PENNY PARTNERS GROUP</div>
-        <div style={{ flex:1, height:'1px', background:'rgba(196,160,80,0.3)' }} />
+        <div style={{ flex:1, height:'1px', background:'linear-gradient(90deg, transparent, rgba(196,160,80,0.5))' }} />
+        <div style={{ fontFamily:'sans-serif', fontSize:'7.5px', letterSpacing:'3.5px', fontWeight:800, ...logoGlow }}>PENNY PARTNERS GROUP</div>
+        <div style={{ flex:1, height:'1px', background:'linear-gradient(90deg, rgba(196,160,80,0.5), transparent)' }} />
       </div>
     </div>
   );
@@ -461,6 +468,15 @@ function Navbar({ onOpenRegister, lang, setLang, t }) {
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
 function Hero({ onOpenRegister, t }) {
+  const animatedGoldText = {
+    background: 'linear-gradient(90deg, #8a6520, #f5e098, #c4a050, #f5e098, #8a6520)',
+    backgroundSize: '200% auto',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    animation: 'shimmer 4s linear infinite',
+    filter: 'drop-shadow(0 0 12px rgba(245,224,152,0.25))'
+  };
   return (
     <section style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden', background:'#050814', padding:'120px 24px 60px' }}>
       <div style={{ position:'absolute', inset:0, backgroundImage:'linear-gradient(rgba(196,160,80,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(196,160,80,0.02) 1px,transparent 1px)', backgroundSize:'44px 44px' }} />
@@ -468,7 +484,7 @@ function Hero({ onOpenRegister, t }) {
         <Reveal delay={0}>
           <h1 style={{ fontFamily:'Georgia,serif', fontSize:'clamp(2.2rem,6vw,4.2rem)', fontWeight:900, color:'#f0e8d0', lineHeight:1.15, marginBottom:'24px' }}>
             {t.hero.line1}<br />
-            <span style={{ background:'linear-gradient(90deg,#8a6520,#f5e098,#c4a050,#f5e098,#8a6520)', backgroundSize:'200% auto', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>{t.hero.line2}</span>
+            <span style={animatedGoldText}>{t.hero.line2}</span>
           </h1>
         </Reveal>
         <Reveal delay={120}>
@@ -963,7 +979,10 @@ export default function App() {
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&display=swap');
         * { box-sizing:border-box; margin:0; padding:0; }
         body { background:#050814; scroll-behavior:smooth; }
-        @keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
+        @keyframes shimmer {
+          0% { background-position: 200% center; }
+          100% { background-position: -200% center; }
+        }
       `}</style>
     </BrowserRouter>
   );
