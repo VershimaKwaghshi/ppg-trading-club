@@ -1,71 +1,91 @@
-// src/Dashboard.jsx — The Central Switchboard Router
 import React, { useState, useEffect } from 'react';
-import { supabase } from './supabaseClient'; // CORRECTED DIRECTORY IMPORT PATH
-import AdminDashboard from './components/AdminDashboard';
-import ManagerDashboard from './components/ManagerDashboard';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from './supabaseClient';
 import TraderDashboard from './components/TraderDashboard';
+import ManagerDashboard from './components/ManagerDashboard';
+import AdminDashboard from './components/AdminDashboard';
 
 export default function Dashboard() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [errorr, setErrorr] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchUserProfile();
-  }, []);
+    async function fetchProfile() {
+      try {
+        setLoading(true);
+        
+        // 1. Resolve current active authentication metadata
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError || !user) {
+          navigate('/login');
+          return;
+        }
 
-  const fetchUserProfile = async () => {
-    try {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        window.location.href = '/login';
-        return;
+        // 2. Query target profile table row using the unique user ID constraint
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError) throw profileError;
+
+        // 3. Consolidate core auth metadata and profile columns into a single unified data object
+        const unifiedProfile = {
+          ...profileData,
+          email: user.email, // Safe insurance fallback if profile table omits an email column
+        };
+
+        setProfile(unifiedProfile);
+      } catch (err) {
+        console.error('Core Dashboard Router Intercept Error:', err);
+        setErrorr('Failed to load profile secure session.');
+      } finally {
+        setLoading(false);
       }
-
-      // Read role and user profile traits from the authenticated database stream
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-
-      if (error) throw error;
-      
-      // Inject authentic fallback email if missing from the profile structure
-      if (data && !data.email) {
-        data.email = user.email;
-      }
-
-      setProfile(data);
-    } catch (err) {
-      console.error('System Routing Intercept Error:', err);
-    } finally {
-      setLoading(false);
     }
-  };
+
+    fetchProfile();
+  }, [navigate]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', backgroundColor: '#02040a', display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#c4a050', fontFamily: 'Georgia, serif', fontStyle: 'italic', letterSpacing: '0.05em' }}>
-        Synchronizing Secure Terminal Connection...
+      <div style={{ minHeight: '100vh', backgroundColor: '#02040a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c4a050', fontFamily: 'sans-serif' }}>
+        <div style={{ textAlign: 'center', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '12px' }}>
+          Initializing Secure Environment Workspace...
+        </div>
       </div>
     );
   }
 
-  // Multi-tenant operational switchboard router
-  if (profile?.role === 'admin') {
+  if (errorr) {
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: '#02040a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', fontFamily: 'sans-serif', padding: '24px' }}>
+        <div style={{ textTransform: 'uppercase', fontSize: '12px', border: '1px solid #ef4444', padding: '20px', borderRadius: '4px' }}>
+          {errorr}
+        </div>
+      </div>
+    );
+  }
+
+  // Route explicitly based on verified role types
+  const userRole = profile?.role?.toLowerCase();
+
+  if (userRole === 'admin') {
     return <AdminDashboard profile={profile} onLogout={handleLogout} />;
   }
 
-  if (profile?.role === 'manager') {
+  if (userRole === 'manager') {
     return <ManagerDashboard profile={profile} onLogout={handleLogout} />;
   }
 
-  // Fallback defaults natively to the institutional Trader Workspace Terminal
-  return <TraderDashboard profile={profile} onLogout={handleLogout} refreshProfile={fetchUserProfile} />;
+  // Fallback default routing layer displays Trader interface topology
+  return <TraderDashboard profile={profile} onLogout={handleLogout} />;
 }
