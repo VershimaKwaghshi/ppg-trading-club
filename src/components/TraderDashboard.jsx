@@ -1,33 +1,31 @@
-// src/components/TraderDashboard.jsx — Premium Institutional Workspace Terminal
 import React from 'react';
 
 const C = {
-  bg:       '#02040a',                    // Deepest obsidian royal black
-  bg2:      '#050814',                    // Matte navy panel background
-  bg3:      '#0a0d1e',                    // Elevated card background
-  border:   'rgba(196, 160, 80, 0.15)',   // Ultra-thin architectural gold border thread
-  gold:     '#c4a050',                    // Signature PPG Premium Gold
-  goldMuted:'rgba(196, 160, 80, 0.40)',   // Subdued gold text label tint
-  text:     '#f4eee0',                    // High-contrast off-white reading layer
-  muted:    '#7884a6',                    // Muted technical metric label
-  green:    '#10b981',                    // Emerald execution validation color
-  orange:   '#f59e0b',                    // Amber caution execution color
+  bg:       '#02040a',
+  bg2:      '#050814',
+  bg3:      '#0a0d1e',
+  border:   'rgba(196, 160, 80, 0.15)',
+  gold:     '#c4a050',
+  goldMuted:'rgba(196, 160, 80, 0.40)',
+  text:     '#f4eee0',
+  muted:    '#7884a6',
+  green:    '#10b981',
+  orange:   '#f59e0b',
 };
 
 export default function TraderDashboard({ profile, onLogout }) {
-  // Safe extraction fallbacks to catch varying backend column naming patterns
+  // Normalize variable resolution from backend database naming conventions
   const accountStatus = profile?.status || profile?.account_status || 'Active Verified';
   const groupIdentifier = profile?.referral_code || profile?.group_id || 'Ppg0028';
   const registrationEmail = profile?.email || 'Not Provided';
-  
   const kycRawStatus = profile?.kyc_status || profile?.kyc || 'VERIFIED';
+  
   const normalizedKyc = kycRawStatus.toUpperCase();
   const kycTextColor = normalizedKyc === 'VERIFIED' ? C.green : C.orange;
 
   return (
     <div style={{ minHeight: '100vh', background: C.bg, color: C.text, fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', paddingBottom: '60px' }}>
       
-      {/* Structural Responsive Viewport Injection */}
       <style>{`
         .layout-grid {
           display: grid;
@@ -69,6 +67,7 @@ export default function TraderDashboard({ profile, onLogout }) {
           font-size: 14px;
           font-weight: 600;
           color: ${C.text};
+          max-width: 100%;
         }
         @media (max-width: 850px) {
           .layout-grid {
@@ -92,7 +91,7 @@ export default function TraderDashboard({ profile, onLogout }) {
         }
       `}</style>
 
-      {/* Header */}
+      {/* Corporate Platform Branding Header Rail */}
       <header style={{ padding: '24px', borderBottom: `1px solid ${C.border}`, background: C.bg2, boxShadow: '0 4px 40px rgba(0,0,0,0.5)' }}>
         <div className="header-box">
           <div>
@@ -104,10 +103,10 @@ export default function TraderDashboard({ profile, onLogout }) {
             </p>
           </div>
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '12px' }}>
             <div style={{ textAlign: 'center' }}>
               <span style={{ fontSize: '10px', color: C.muted, display: 'block', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Authenticated Member</span>
-              <span style={{ fontSize: '14px', color: C.text, fontWeight: '600', letterSpacing: '0.02em' }}>{profile?.full_name || 'Kwaghshi Vershima'}</span>
+              <span style={{ fontSize: '14px', color: C.text, fontWeight: '600' }}>{profile?.full_name || 'Club Operator'}</span>
             </div>
             <button onClick={onLogout} style={{ background: 'transparent', border: `1px solid ${C.gold}`, borderRadius: '4px', color: C.gold, padding: '10px 20px', cursor: 'pointer', fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.08em', transition: 'all 0.2s', backgroundColor: 'rgba(196,160,80,0.03)' }}>
               Secure Sign Out
@@ -116,11 +115,11 @@ export default function TraderDashboard({ profile, onLogout }) {
         </div>
       </header>
 
-      {/* Main Content Viewport */}
+      {/* Terminal Layout Viewport */}
       <main style={{ padding: '40px 24px', maxWidth: '1200px', margin: '0 auto' }}>
         <div className="layout-grid">
           
-          {/* Chart Placement Module */}
+          {/* Main Workspace Frame Panel */}
           <section style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ background: `linear-gradient(145deg, ${C.bg2}, ${C.bg3})`, border: `1px solid ${C.border}`, borderRadius: '4px', padding: '32px', boxShadow: '0 12px 50px rgba(0,0,0,0.4)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
@@ -129,13 +128,13 @@ export default function TraderDashboard({ profile, onLogout }) {
                   Market Terminal Engine
                 </h3>
               </div>
-              <div style={{ height: '360px', background: C.bg, borderRadius: '4px', border: `1px solid rgba(196,160,80,0.06)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.muted, fontSize: '13px', letterSpacing: '0.06em', fontStyle: 'italic', backgroundImage: `radial-gradient(rgba(196,160,80,0.05) 1px, transparent 1px)`, backgroundSize: '20px 20px' }}>
+              <div style={{ height: '300px', background: C.bg, borderRadius: '4px', border: `1px solid rgba(196,160,80,0.06)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.muted, fontSize: '13px', letterSpacing: '0.06em', fontStyle: 'italic', backgroundImage: `radial-gradient(rgba(196,160,80,0.05) 1px, transparent 1px)`, backgroundSize: '20px 20px' }}>
                 [ System Metrics Chart Engine Interface Placement ]
               </div>
             </div>
           </section>
 
-          {/* Account Integrity Credentials Parameter Card */}
+          {/* Account Credentials Validation Side-Panel Block */}
           <aside style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ background: `linear-gradient(145deg, ${C.bg2}, ${C.bg3})`, border: `1px solid ${C.border}`, borderRadius: '4px', padding: '32px', boxShadow: '0 12px 50px rgba(0,0,0,0.4)' }}>
               <h3 style={{ color: C.gold, marginBottom: '24px', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.12em', marginTop: 0, fontWeight: '700', borderBottom: `1px solid ${C.border}`, paddingBottom: '12px' }}>
@@ -143,7 +142,6 @@ export default function TraderDashboard({ profile, onLogout }) {
               </h3>
               
               <div className="metric-card-container">
-                
                 <div className="metric-row">
                   <span className="metric-label">Identity Status</span>
                   <span className="metric-value">{accountStatus}</span>
@@ -163,8 +161,8 @@ export default function TraderDashboard({ profile, onLogout }) {
                   <span className="metric-label">KYC Validation</span>
                   <span className="metric-value" style={{ color: kycTextColor, fontWeight: '900', letterSpacing: '0.05em' }}>{normalizedKyc}</span>
                 </div>
-
               </div>
+
             </div>
           </aside>
 
