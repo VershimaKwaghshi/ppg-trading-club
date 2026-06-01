@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from './supabaseClient';
+import { supabase } from './supabaseClient'; // Explicit lowercase file resolution matching directory configuration
 import TraderDashboard from './components/TraderDashboard';
 import ManagerDashboard from './components/ManagerDashboard';
 import AdminDashboard from './components/AdminDashboard';
@@ -16,14 +16,14 @@ export default function Dashboard() {
       try {
         setLoading(true);
         
-        // 1. Resolve current active authentication metadata
+        // Resolve underlying user identity session anchor
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         if (authError || !user) {
           navigate('/login');
           return;
         }
 
-        // 2. Query target profile table row using the unique user ID constraint
+        // Query database record using verified system identifier 
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('*')
@@ -32,10 +32,10 @@ export default function Dashboard() {
 
         if (profileError) throw profileError;
 
-        // 3. Consolidate core auth metadata and profile columns into a single unified data object
+        // Form unified data node with fallback variables
         const unifiedProfile = {
           ...profileData,
-          email: user.email, // Safe insurance fallback if profile table omits an email column
+          email: user.email || profileData?.email
         };
 
         setProfile(unifiedProfile);
@@ -58,7 +58,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#02040a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c4a050', fontFamily: 'sans-serif' }}>
-        <div style={{ textAlign: 'center', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '12px' }}>
+        <div style={{ textAlign: 'center', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '11px', fontWeight: '700' }}>
           Initializing Secure Environment Workspace...
         </div>
       </div>
@@ -68,14 +68,13 @@ export default function Dashboard() {
   if (errorr) {
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#02040a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', fontFamily: 'sans-serif', padding: '24px' }}>
-        <div style={{ textTransform: 'uppercase', fontSize: '12px', border: '1px solid #ef4444', padding: '20px', borderRadius: '4px' }}>
+        <div style={{ textTransform: 'uppercase', fontSize: '11px', fontWeight: '700', border: '1px solid #ef4444', padding: '20px', borderRadius: '4px', letterSpacing: '0.05em' }}>
           {errorr}
         </div>
       </div>
     );
   }
 
-  // Route explicitly based on verified role types
   const userRole = profile?.role?.toLowerCase();
 
   if (userRole === 'admin') {
@@ -86,6 +85,5 @@ export default function Dashboard() {
     return <ManagerDashboard profile={profile} onLogout={handleLogout} />;
   }
 
-  // Fallback default routing layer displays Trader interface topology
   return <TraderDashboard profile={profile} onLogout={handleLogout} />;
 }
