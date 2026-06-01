@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from './supabaseClient'; // Explicit lowercase file resolution matching directory configuration
+import { supabase } from './supabaseClient';
 import TraderDashboard from './components/TraderDashboard';
 import ManagerDashboard from './components/ManagerDashboard';
 import AdminDashboard from './components/AdminDashboard';
@@ -8,23 +8,23 @@ import AdminDashboard from './components/AdminDashboard';
 export default function Dashboard() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [errorr, setErrorr] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchProfile() {
+    async function fetchAndLinkProfile() {
       try {
         setLoading(true);
         
-        // Resolve underlying user identity session anchor
+        // 1. Retrieve current active user session from Supabase Auth
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         if (authError || !user) {
           navigate('/login');
           return;
         }
 
-        // Query database record using verified system identifier 
-        const { data: profileData, error: profileError } = await supabase
+        // 2. Fetch the corresponding profile row using the authenticated user ID
+        const { data: dbProfile, error: profileError } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', user.id)
@@ -32,22 +32,30 @@ export default function Dashboard() {
 
         if (profileError) throw profileError;
 
-        // Form unified data node with fallback variables
-        const unifiedProfile = {
-          ...profileData,
-          email: user.email || profileData?.email
+        // 3. Strict mapping bridge: Combines auth metadata and database columns 
+        // to match exactly what your child dashboards read.
+        const connectedProfile = {
+          id: dbProfile.id,
+          role: dbProfile.role || 'trader',
+          full_name: dbProfile.full_name || 'Club Member',
+          email: user.email || dbProfile.email,
+          
+          // Map potential variations in column naming schemas to secure data flow
+          status: dbProfile.status || dbProfile.account_status || 'active',
+          referral_code: dbProfile.referral_code || dbProfile.group_id || 'Ppg0028',
+          kyc_status: dbProfile.kyc_status || dbProfile.kyc || 'VERIFIED'
         };
 
-        setProfile(unifiedProfile);
+        setProfile(connectedProfile);
       } catch (err) {
-        console.error('Core Dashboard Router Intercept Error:', err);
-        setErrorr('Failed to load profile secure session.');
+        console.error('Data Propagation Intercept Error:', err);
+        setError('Failed to establish profile data connection.');
       } finally {
         setLoading(false);
       }
     }
 
-    fetchProfile();
+    fetchAndLinkProfile();
   }, [navigate]);
 
   const handleLogout = async () => {
@@ -58,32 +66,34 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#02040a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c4a050', fontFamily: 'sans-serif' }}>
-        <div style={{ textAlign: 'center', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '11px', fontWeight: '700' }}>
-          Initializing Secure Environment Workspace...
+        <div style={{ letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '11px', fontWeight: '700' }}>
+          Syncing Core Terminal Network...
         </div>
       </div>
     );
   }
 
-  if (errorr) {
+  if (error) {
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#02040a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', fontFamily: 'sans-serif', padding: '24px' }}>
-        <div style={{ textTransform: 'uppercase', fontSize: '11px', fontWeight: '700', border: '1px solid #ef4444', padding: '20px', borderRadius: '4px', letterSpacing: '0.05em' }}>
-          {errorr}
+        <div style={{ textTransform: 'uppercase', fontSize: '11px', fontWeight: '700', border: '1px solid #ef4444', padding: '20px', borderRadius: '4px' }}>
+          {error}
         </div>
       </div>
     );
   }
 
-  const userRole = profile?.role?.toLowerCase();
+  // 4. Component Routing: Passes the verified connectedProfile object forward
+  const currentRole = profile?.role?.toLowerCase();
 
-  if (userRole === 'admin') {
+  if (currentRole === 'admin') {
     return <AdminDashboard profile={profile} onLogout={handleLogout} />;
   }
 
-  if (userRole === 'manager') {
+  if (currentRole === 'manager') {
     return <ManagerDashboard profile={profile} onLogout={handleLogout} />;
   }
 
+  // Default fallback routing node ensures uninterrupted trader workspace visualization
   return <TraderDashboard profile={profile} onLogout={handleLogout} />;
 }
