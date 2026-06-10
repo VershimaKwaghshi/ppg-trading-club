@@ -1,99 +1,86 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from './supabaseClient';
-import TraderDashboard from './components/TraderDashboard';
-import ManagerDashboard from './components/ManagerDashboard';
-import AdminDashboard from './components/AdminDashboard';
+import { supabase } from '../supabaseClient';
+import OnboardingActivationFlow from './OnboardingActivationFlow';
+import AdminDashboard from './AdminDashboard';
+
+// Placeholder layouts for roles that remain unchanged
+function ManagerDashboard({ profile, onLogout }) {
+  return (
+    <div style={{ padding: '40px', color: '#fff' }}>
+      <h2>Manager Dashboard Terminal</h2>
+      <button onClick={onLogout}>Disconnect</button>
+    </div>
+  );
+}
+
+function TraderDashboard({ profile, onLogout }) {
+  return (
+    <div style={{ padding: '40px', color: '#fff' }}>
+      <h2>Verified Trader Active Terminal</h2>
+      <p>Welcome back, {profile.full_name}. Systems operational.</p>
+      <button onClick={onLogout}>Disconnect</button>
+    </div>
+  );
+}
 
 export default function Dashboard() {
-  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    async function fetchAndLinkProfile() {
-      try {
-        setLoading(true);
-        
-        // 1. Retrieve current active user session from Supabase Auth
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        if (authError || !user) {
-          navigate('/login');
-          return;
-        }
+    fetchProfileData();
+  }, []);
 
-        // 2. Fetch the corresponding profile row using the authenticated user ID
-        const { data: dbProfile, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
+  async function fetchProfileData() {
+    setLoading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No authorized session found.");
 
-        if (profileError) throw profileError;
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
 
-        // 3. Strict mapping bridge: Combines auth metadata and database columns 
-        // to match exactly what your child dashboards read.
-        const connectedProfile = {
-          id: dbProfile.id,
-          role: dbProfile.role || 'trader',
-          full_name: dbProfile.full_name || 'Club Member',
-          email: user.email || dbProfile.email,
-          
-          // Map potential variations in column naming schemas to secure data flow
-          status: dbProfile.status || dbProfile.account_status || 'active',
-          referral_code: dbProfile.referral_code || dbProfile.group_id || 'Ppg0028',
-          kyc_status: dbProfile.kyc_status || dbProfile.kyc || 'VERIFIED'
-        };
-
-        setProfile(connectedProfile);
-      } catch (err) {
-        console.error('Data Propagation Intercept Error:', err);
-        setError('Failed to establish profile data connection.');
-      } finally {
-        setLoading(false);
-      }
+      if (error) throw error;
+      setProfile(data);
+    } catch (err) {
+      console.error(err.message);
+    } finally {
+      setLoading(false);
     }
-
-    fetchAndLinkProfile();
-  }, [navigate]);
+  }
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate('/login');
+    window.location.reload();
   };
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', backgroundColor: '#02040a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c4a050', fontFamily: 'sans-serif' }}>
-        <div style={{ letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '11px', fontWeight: '700' }}>
-          Syncing Core Terminal Network...
-        </div>
+      <div style={{ minHeight: '100vh', backgroundColor: '#02040a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c4a050' }}>
+        <div>Syncing Core Terminal Network...</div>
       </div>
     );
   }
 
-  if (error) {
+  if (!profile) {
     return (
-      <div style={{ minHeight: '100vh', backgroundColor: '#02040a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', fontFamily: 'sans-serif', padding: '24px' }}>
-        <div style={{ textTransform: 'uppercase', fontSize: '11px', fontWeight: '700', border: '1px solid #ef4444', padding: '20px', borderRadius: '4px' }}>
-          {error}
-        </div>
+      <div style={{ minHeight: '100vh', backgroundColor: '#02040a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444' }}>
+        <div>Profile record unavailable. Please verify authentication status.</div>
       </div>
     );
   }
 
-  // 4. Component Routing: Passes the verified connectedProfile object forward
+  // Intercept unactivated user nodes before reaching core dashboard layouts
+  if (profile.role === 'trader' && profile.activation_stage !== 'ACTIVE') {
+    return <OnboardingActivationFlow profile={profile} onLogout={handleLogout} />;
+  }
+
   const currentRole = profile?.role?.toLowerCase();
-
-  if (currentRole === 'admin') {
-    return <AdminDashboard profile={profile} onLogout={handleLogout} />;
-  }
-
-  if (currentRole === 'manager') {
-    return <ManagerDashboard profile={profile} onLogout={handleLogout} />;
-  }
-
-  // Default fallback routing node ensures uninterrupted trader workspace visualization
+  if (currentRole === 'admin') return <AdminDashboard profile={profile} onLogout={handleLogout} />;
+  if (currentRole === 'manager') return <ManagerDashboard profile={profile} onLogout={handleLogout} />;
+  
   return <TraderDashboard profile={profile} onLogout={handleLogout} />;
 }
